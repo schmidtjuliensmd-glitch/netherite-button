@@ -19,6 +19,7 @@ public final class SleepClient implements ClientModInitializer {
             Identifier.fromNamespaceAndPath("sleepclient", "main")
     );
     private static KeyMapping openGui;
+    private static boolean licenseWarningShown;
 
     @Override
     public void onInitializeClient() {
@@ -43,10 +44,13 @@ public final class SleepClient implements ClientModInitializer {
                                 String key = StringArgumentType.getString(context, "key");
                                 context.getSource().sendFeedback(Component.literal("Sleep Client: checking license..."));
                                 LicenseManager.saveAndVerify(mcName, key).thenAccept(ok ->
-                                        client.execute(() -> context.getSource().sendFeedback(Component.literal(
-                                                ok ? "Sleep Client: signed in as " + mcName + " (" + LicenseManager.plan() + ")"
-                                                   : "Sleep Client: sign in failed (" + LicenseManager.message() + ")"
-                                        )))
+                                        client.execute(() -> {
+                                            context.getSource().sendFeedback(Component.literal(
+                                                    ok ? "Sleep Client: signed in as " + mcName + " (" + LicenseManager.plan() + ")"
+                                                       : "Sleep Client: sign in failed (" + LicenseManager.message() + ")"
+                                            ));
+                                            if (ok) UpdateManager.checkForUpdates();
+                                        })
                                 );
                                 return 1;
                             })));
@@ -78,8 +82,27 @@ public final class SleepClient implements ClientModInitializer {
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            LicenseManager.tick();
+
+            if (!LicenseManager.verified()) {
+                if (client.player != null && !licenseWarningShown && "license_expired".equals(LicenseManager.message())) {
+                    client.player.displayClientMessage(Component.literal(
+                            "Sleep Client: your license has expired. Renew your access and enter the new key with /sleepkey."
+                    ), false);
+                    licenseWarningShown = true;
+                }
+            } else {
+                licenseWarningShown = false;
+            }
+
             while (openGui.consumeClick()) {
-                client.setScreen(new SleepClickGuiScreen());
+                if (LicenseManager.verified()) {
+                    client.setScreen(new SleepClickGuiScreen());
+                } else if (client.player != null) {
+                    client.player.displayClientMessage(Component.literal(
+                            "Sleep Client: valid license required. Use /sleepkey <key>."
+                    ), false);
+                }
             }
             ModuleRuntime.tick(client);
             UpdateManager.tick(client);
