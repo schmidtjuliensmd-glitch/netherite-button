@@ -1,4 +1,7 @@
 jdk:
   - openjdk21
+before_install:
+  - wget -q https://services.gradle.org/distributions/gradle-9.2.1-bin.zip -O /tmp/gradle.zip
+  - unzip -q /tmp/gradle.zip -d /tmp
 install:
-  - cd mod && gradle clean build publishToMavenLocal -x test
+  - cd mod && /tmp/gradle-9.2.1/bin/gradle clean build publishToMavenLocal -x test --stacktrace
