@@ -165,3 +165,68 @@ document.querySelectorAll('[data-lightbox]').forEach(img=>{
 if(lightbox){
   lightbox.addEventListener('click',e=>{if(e.target===lightbox||e.target.classList.contains('lightbox-close'))lightbox.classList.remove('open')});
 }
+
+
+/* Sleep Client page interactions */
+const sleepDemoData={
+  combat:["Auto Crystal","Anchor Macro","Aim Assist","Auto Totem","Reach","Auto Mace","Trigger Bot","Auto Refill Hotbar"],
+  movement:["Sprint","No Slow","Step","Velocity","Freelook","Fast Place","Inventory Move","Safe Walk"],
+  donut:["Sus Chunk Finder","Chunk Finder","Auto Schematic Builder","Waypoints","StorageESP","BlockESP","Pearl Catch","Donut Config"],
+  visuals:["PlayerESP","StorageESP","BlockESP","Hole ESP","Name Tags","LootESP","Target ESP","Fullbright"],
+  misc:["Keybind Manager","Profiles","Update Center","Auto XP","Key Pearl","Notifications","Friends","Config Sync"],
+  gui:["Theme Editor","HUD Editor","GUI Scale","Animation Settings","Accent Color","Panel Opacity","Compact Layout","Search"],
+  settings:["General","Keybinds","Profiles","Updates","Account","Notifications","Privacy","About"]
+};
+document.querySelectorAll('.sleep-demo-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.sleep-demo-tab').forEach(x=>x.classList.remove('active'));
+    tab.classList.add('active');
+    const key=tab.dataset.demoCategory;
+    const list=sleepDemoData[key]||[];
+    const title=document.getElementById('sleep-demo-title');
+    const box=document.getElementById('sleep-demo-modules');
+    if(title)title.textContent=key==='donut'?'DonutSMP':key.charAt(0).toUpperCase()+key.slice(1);
+    if(box){
+      box.innerHTML=list.map((name,i)=>'<div class="sleep-module-row '+(i%3===0?'active':'')+'"><span>'+name+'</span><i></i></div>').join('');
+    }
+  });
+});
+document.addEventListener('click',e=>{
+  const row=e.target.closest('.sleep-module-row');
+  if(row)row.classList.toggle('active');
+});
+document.querySelectorAll('.sleep-category-button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.sleep-category-button').forEach(x=>x.classList.remove('active'));
+    btn.classList.add('active');
+    const filter=btn.dataset.moduleFilter;
+    document.querySelectorAll('.sleep-feature-card').forEach(card=>{
+      card.style.display=filter==='all'||card.dataset.moduleCategory===filter?'':'none';
+    });
+  });
+});
+document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const status=document.getElementById('sleep-form-status');
+    const form=document.getElementById('activation');
+    if(status){
+      const plan=btn.dataset.plan==='lifetime'?'Lifetime · 25M':'Monthly · 10M';
+      status.textContent=plan+' selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.';
+    }
+    if(form)form.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+});
+const sleepKeyForm=document.getElementById('sleep-key-form');
+if(sleepKeyForm){
+  sleepKeyForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    const name=(document.getElementById('sleep-mc-name')?.value||'').trim();
+    const key=(document.getElementById('sleep-product-key')?.value||'').trim();
+    const status=document.getElementById('sleep-form-status');
+    if(!name||!key){
+      if(status)status.textContent='Enter your Minecraft username and product key.';
+      return;
+    }
+    if(status)status.textContent='The activation form is ready, but secure key binding will only be enabled after the license backend and payment verification are connected.';
+  });
+}
