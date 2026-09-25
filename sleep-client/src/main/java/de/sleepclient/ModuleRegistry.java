@@ -39,9 +39,21 @@ public final class ModuleRegistry {
         add(ModuleCategory.COMBAT,"Key Pearl","One-key pearl workflow.");
         add(ModuleCategory.COMBAT,"Auto Aggro Pearl","Pearl reaction helper.");
 
-        add(ModuleCategory.DONUT_SMP,"Sus Chunk Finder","Suspicious chunk analysis.");
-        add(ModuleCategory.DONUT_SMP,"Chunk Finder","Chunk analysis tools.");
-        add(ModuleCategory.DONUT_SMP,"Auto Schematic Builder","Schematic building workflow.");
+        add(ModuleCategory.DONUT_SMP,"Auto Builder","Litematica-style schematic building workflow.");
+        add(ModuleCategory.DONUT_SMP,"Auto Area Miner","Mine a selected area with configurable automation.");
+        add(ModuleCategory.DONUT_SMP,"AutoMine","Straight-line mining workflow with lava avoidance.");
+        add(ModuleCategory.DONUT_SMP,"BoneDropper","Bone-farm collection and drop workflow.");
+        add(ModuleCategory.DONUT_SMP,"Auto Villager Trade","Configurable villager trading workflow.");
+        add(ModuleCategory.DONUT_SMP,"Chunk Finder","Find loaded chunks containing amethyst clusters.");
+        add(ModuleCategory.DONUT_SMP,"ChunkFinderV2","Extended loaded-chunk analysis.");
+        add(ModuleCategory.DONUT_SMP,"Sus Chunk Finder","Suspicious loaded-chunk analysis.");
+        add(ModuleCategory.DONUT_SMP,"SusChunkFinderV2","Extended suspicious-chunk analysis.");
+        add(ModuleCategory.DONUT_SMP,"Netherite Finder","Highlights ancient debris in loaded chunks.");
+        add(ModuleCategory.DONUT_SMP,"Auto Elytra Finder","End exploration workflow for elytra searches.");
+        add(ModuleCategory.DONUT_SMP,"Deep Player Finder","Highlights loaded players below a configured Y level.");
+        add(ModuleCategory.DONUT_SMP,"TraderFinder","Highlights loaded wandering traders and trader llamas.");
+        add(ModuleCategory.DONUT_SMP,"RegionMap","Region and chunk-grid HUD.");
+        add(ModuleCategory.DONUT_SMP,"SeedAnalyzer","World-seed analysis tools.");
 
         add(ModuleCategory.VISUALS,"Show HUD","Draggable HUD widgets.");
         add(ModuleCategory.VISUALS,"Spotify HUD","Now-playing HUD widget.");
