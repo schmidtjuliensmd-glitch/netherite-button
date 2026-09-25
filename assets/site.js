@@ -1,4 +1,9 @@
 const enToDe={
+"available":"verfügbar",
+"New version":"Neue Version",
+"Download latest version":"Neueste Version herunterladen",
+"Download the latest version to get the newest improvements and fixes.":"Lade die neueste Version herunter, um die aktuellen Verbesserungen und Fehlerbehebungen zu erhalten.",
+"A new Sleep Client version is available.":"Eine neue Sleep Client Version ist verfügbar.",
 "Download Sleep Client 1.21.11":"Sleep Client 1.21.11 herunterladen",
 "Your license is valid. Download the Fabric mod for Minecraft Java 1.21.11 and place the JAR file in your mods folder.":"Deine Lizenz ist gültig. Lade den Fabric-Mod für Minecraft Java 1.21.11 herunter und lege die JAR-Datei in deinen Mods-Ordner.",
 "Your Sleep Client is ready.":"Dein Sleep Client ist bereit.",
@@ -436,6 +441,7 @@ if(sleepKeyForm){
       };
       localStorage.setItem('sleep-client-account',JSON.stringify(accountData));
       refreshSleepDownload(accountData);
+      checkSleepWebsiteUpdate();
       const expiry=data.expiresAt?new Date(data.expiresAt).toLocaleDateString():'Lifetime';
       if(status)status.textContent='Signed in as '+data.username+' · '+data.plan+' · '+expiry;
     }catch{
@@ -443,3 +449,53 @@ if(sleepKeyForm){
     }
   });
 }
+
+
+async function checkSleepWebsiteUpdate(){
+  const account=JSON.parse(localStorage.getItem('sleep-client-account')||'null');
+  const notice=document.getElementById('sleep-update-notice');
+  const title=document.getElementById('sleep-update-title');
+  const text=document.getElementById('sleep-update-text');
+  if(!account||!notice)return;
+
+  const valid=account.username&&account.plan&&(!account.expiresAt||new Date(account.expiresAt).getTime()>Date.now());
+  if(!valid){
+    notice.hidden=true;
+    return;
+  }
+
+  try{
+    const res=await fetch('./downloads/version.json?ts='+Date.now(),{cache:'no-store'});
+    if(!res.ok)return;
+    const data=await res.json();
+    const latest=String(data.latestVersion||'').trim();
+    if(!latest)return;
+
+    const seen=localStorage.getItem('sleep-client-last-seen-version')||'';
+    if(seen!==latest){
+      notice.hidden=false;
+      if(title){
+        title.textContent=siteLanguage==='de'
+          ? 'Neue Version '+latest+' verfügbar'
+          : 'New version '+latest+' available';
+      }
+      if(text){
+        text.textContent=siteLanguage==='de'
+          ? 'Eine neue Sleep Client Version ist verfügbar. Lade die neueste Version herunter.'
+          : 'A new Sleep Client version is available. Download the latest version.';
+      }
+    }else{
+      notice.hidden=true;
+    }
+
+    const btn=document.getElementById('sleep-update-download');
+    if(btn){
+      btn.addEventListener('click',()=>{
+        localStorage.setItem('sleep-client-last-seen-version',latest);
+        setTimeout(()=>{notice.hidden=true;},150);
+      },{once:true});
+    }
+  }catch{}
+}
+
+checkSleepWebsiteUpdate();
