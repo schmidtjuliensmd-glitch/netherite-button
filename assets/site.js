@@ -31,7 +31,7 @@ const enToDe={
 "Reserved for an upcoming mod with preview image, description, version and download.":"Platz für einen kommenden Mod mit Vorschaubild, Beschreibung, Version und Download.",
 "Future resource packs will appear here with real in-game previews, version information, description and direct download.":"Hier erscheinen künftig Ressourcenpakete mit echten Ingame-Vorschaubildern, Versionsangabe, Beschreibung und direktem Download.",
 "Reserved for an upcoming resource pack with preview image, description, version and download.":"Platz für ein kommendes Ressourcenpaket mit Vorschaubild, Beschreibung, Version und Download.",
-"Different Minecraft clients can be added here later with preview image, features, version and download.":"Hier können später verschiedene Minecraft-Clients mit Vorschaubild, Funktionen, Version und Download eingebaut werden.",
+"One of the best cheat clients for Minecraft 1.21.11 with features like ESP, Chunk Finder, Sus Chunk Finder and more tools to help find bases.":"Einer der besten Cheat-Clients für Minecraft 1.21.11 mit Funktionen wie ESP, Chunk Finder, Sus Chunk Finder und weiteren Werkzeugen zum Finden von Basen.",
 "Reserved for an upcoming client with preview image, description, version and download.":"Platz für einen kommenden Client mit Vorschaubild, Beschreibung, Version und Download.",
 "Fabric Client Mod · Minecraft 1.21.11":"Fabric Client-Mod · Minecraft 1.21.11",
 "The spruce button is displayed as a Netherite Ingot on your Minecraft client.":"Der Fichtenknopf wird auf deinem Minecraft-Client als Netherite Ingot dargestellt.",
