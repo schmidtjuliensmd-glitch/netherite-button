@@ -187,3 +187,41 @@ button,input{font:inherit}
 .gallery-shot:hover img{transform:scale(1.02)}
 .gallery-shot figcaption{padding:13px 15px;color:var(--muted);font-size:.9rem}
 .gallery-shot figcaption strong{color:var(--text)}
+
+.sleep-client-nav{
+  display:inline-flex!important;
+  align-items:center;
+  gap:6px;
+}
+.sleep-moon{
+  display:inline-grid;
+  place-items:center;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  font-size:1rem;
+  line-height:1;
+  color:#ff8ac7;
+  text-shadow:0 0 12px rgba(255,79,159,.42);
+}
+.nav-mini{
+  display:inline-block;
+  margin-left:4px;
+  padding:3px 8px;
+  border-radius:999px;
+  font-size:.72rem;
+  line-height:1.1;
+  font-weight:800;
+  background:rgba(255,255,255,.08);
+  color:#ff8ac7;
+  border:1px solid rgba(255,255,255,.12);
+}
+.sleep-client-nav.active .nav-mini,
+.sleep-client-nav:hover .nav-mini{
+  background:rgba(255,79,159,.13);
+  border-color:rgba(255,79,159,.26);
+  color:#ffc0dc;
+}
+@media(max-width:720px){
+  .sleep-client-nav{justify-content:center}
+}
