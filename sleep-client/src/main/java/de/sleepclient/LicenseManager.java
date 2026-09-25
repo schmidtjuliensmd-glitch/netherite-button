@@ -25,6 +25,9 @@ public final class LicenseManager {
     private static volatile Long expiresAt;
     private static volatile String username = "";
     private static volatile String message = "Not signed in";
+    private static volatile long lastVerifiedAt;
+    private static volatile boolean checking;
+    private static final long RECHECK_INTERVAL_MS = 10L * 60L * 1000L;
 
     public static CompletableFuture<Boolean> saveAndVerify(String mcName, String productKey) {
         save(mcName, productKey);
@@ -44,6 +47,8 @@ public final class LicenseManager {
     }
 
     private static CompletableFuture<Boolean> verify(String mcName, String productKey) {
+        if (checking) return CompletableFuture.completedFuture(verified);
+        checking = true;
         username = mcName;
         message = "Checking license...";
 
@@ -67,6 +72,7 @@ public final class LicenseManager {
                             plan = json.has("plan") ? json.get("plan").getAsString() : "unknown";
                             expiresAt = json.has("expiresAt") && !json.get("expiresAt").isJsonNull()
                                     ? json.get("expiresAt").getAsLong() : null;
+                            lastVerifiedAt = System.currentTimeMillis();
                             message = "Signed in";
                             return true;
                         }
@@ -83,7 +89,8 @@ public final class LicenseManager {
                     verified = false;
                     message = "license_server_unreachable";
                     return false;
-                });
+                })
+                .whenComplete((ok, error) -> checking = false);
     }
 
     private static void save(String mcName, String productKey) {
@@ -107,6 +114,23 @@ public final class LicenseManager {
         } catch (IOException ignored) {
         }
         return props;
+    }
+
+    public static void tick() {
+        if (verified && expiresAt != null && System.currentTimeMillis() >= expiresAt) {
+            verified = false;
+            message = "license_expired";
+        }
+
+        if (checking) return;
+        if (System.currentTimeMillis() - lastVerifiedAt < RECHECK_INTERVAL_MS) return;
+
+        Properties props = load();
+        String mcName = props.getProperty("username", "");
+        String key = props.getProperty("key", "");
+        if (mcName.isBlank() || key.isBlank()) return;
+
+        verify(mcName, key);
     }
 
     public static boolean verified() { return verified; }
