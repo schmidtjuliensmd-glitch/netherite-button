@@ -37,9 +37,28 @@ public final class SleepClient implements ClientModInitializer {
                 Identifier.fromNamespaceAndPath("sleepclient", "player_esp_hud"),
                 (graphics, deltaTracker) -> PlayerEsp.renderHud(graphics)
         );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "block_search_hud"),
+                (graphics, deltaTracker) -> BlockSearchRuntime.renderHud(graphics)
+        );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "storage_esp_hud"),
+                (graphics, deltaTracker) -> StorageEsp.renderHud(graphics)
+        );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "trader_finder_hud"),
+                (graphics, deltaTracker) -> EntityEspModules.renderHud(graphics)
+        );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "totem_counter_hud"),
+                (graphics, deltaTracker) -> TotemCounterHud.render(graphics)
+        );
 
         WorldRenderEvents.AFTER_ENTITIES.register(SusChunkFinder::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(PlayerEsp::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(StorageEsp::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(BlockSearchRuntime::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(EntityEspModules::renderWorld);
         LicenseManager.verifySaved().thenAccept(ok -> {
             if (ok) UpdateManager.checkForUpdates();
         });
