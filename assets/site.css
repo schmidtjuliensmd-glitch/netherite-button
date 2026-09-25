@@ -517,3 +517,26 @@ button,input{font:inherit}
 @media(max-width:620px){
   .sleep-flow-grid{grid-template-columns:1fr}
 }
+
+.sleep-purchase-notice{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  margin:0 auto 22px;
+  max-width:920px;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(255,190,0,.22);
+  background:linear-gradient(135deg,rgba(255,190,0,.07),rgba(255,79,159,.035));
+  color:#cdbfca;
+  font-size:.9rem;
+  line-height:1.6;
+}
+.sleep-purchase-notice strong{
+  color:#ffd36b;
+  white-space:nowrap;
+}
+@media(max-width:620px){
+  .sleep-purchase-notice{display:block}
+  .sleep-purchase-notice strong{display:block;margin-bottom:4px}
+}
