@@ -42,9 +42,11 @@ jobs:
           JAR="$(find sleep-client/build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-sources.jar' | head -n 1)"
           test -n "$JAR"
           cp "$JAR" downloads/Sleep-Client-1.21.11.jar
+          VERSION="$(grep '^mod_version=' sleep-client/gradle.properties | cut -d= -f2)"
+          printf '{"latestVersion":"%s","minecraftVersion":"1.21.11","downloadUrl":"https://julienmcoption.vercel.app/clients.html"}\n' "$VERSION" > downloads/version.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add downloads/Sleep-Client-1.21.11.jar
+          git add downloads/Sleep-Client-1.21.11.jar downloads/version.json
           if git diff --cached --quiet; then
             echo "Download JAR is already current."
           else
