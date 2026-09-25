@@ -11,6 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import org.lwjgl.glfw.GLFW;
 
 public final class NetheriteButtonClient implements ClientModInitializer {
@@ -48,8 +49,15 @@ public final class NetheriteButtonClient implements ClientModInitializer {
 
             for (int i = 0; i < lines.size(); i++) {
                 String plain = lines.get(i).getString();
-                if (PRICE_LINE.matcher(plain).matches()) {
-                    lines.set(i, Component.literal(CONFIG.replacementText).withStyle(CONFIG.formatting()));
+                Matcher matcher = PRICE_LINE.matcher(plain);
+                if (matcher.matches()) {
+                    String prefix = matcher.group(1);
+                    String suffix = matcher.group(3);
+                    lines.set(i,
+                            Component.literal(prefix)
+                                    .append(Component.literal(CONFIG.replacementText).withStyle(CONFIG.formatting()))
+                                    .append(Component.literal(suffix))
+                    );
                     break;
                 }
             }
