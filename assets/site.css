@@ -258,44 +258,18 @@ button,input{font:inherit}
   100%{left:122%;opacity:0}
 }
 .sleep-moon{
-  position:relative;
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   width:24px;
   height:24px;
   flex:0 0 24px;
-  border-radius:50%;
-  font-size:0;
-  color:transparent;
-  background:
-    radial-gradient(circle at 34% 31%,#fff9e4 0 9%,transparent 10%),
-    radial-gradient(circle at 31% 28%,#ffe9ac 0 23%,#efc979 42%,#c9913f 67%,#8b5724 100%);
-  box-shadow:
-    inset 2px 2px 4px rgba(255,255,255,.26),
-    inset -4px -4px 6px rgba(80,39,10,.26),
-    0 0 8px rgba(255,210,125,.22),
-    0 0 16px rgba(255,181,93,.09);
+  filter:drop-shadow(0 0 5px rgba(255,227,169,.20));
 }
-.sleep-moon:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  background:
-    radial-gradient(circle at 28% 35%,rgba(112,74,29,.25) 0 7%,transparent 8%),
-    radial-gradient(circle at 48% 62%,rgba(103,67,24,.20) 0 6%,transparent 7%),
-    radial-gradient(circle at 57% 27%,rgba(121,78,31,.16) 0 5%,transparent 6%);
-  opacity:.8;
-}
-.sleep-moon:after{
-  content:"";
-  position:absolute;
-  top:-2px;
-  left:8px;
-  width:21px;
-  height:27px;
-  border-radius:50%;
-  background:linear-gradient(145deg,#120a11 15%,#0b080c 80%);
-  box-shadow:-2px 0 5px rgba(255,245,218,.10);
+.sleep-moon svg{
+  display:block;
+  width:24px;
+  height:24px;
 }
 .nav-mini{
   display:inline-block;
