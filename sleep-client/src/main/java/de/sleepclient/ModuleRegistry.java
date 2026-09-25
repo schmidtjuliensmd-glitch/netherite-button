@@ -226,8 +226,6 @@ public final class ModuleRegistry {
         add(ModuleCategory.GUI,"HUD Editor","Move and scale HUD widgets.");
         add(ModuleCategory.GUI,"Animation Settings","GUI animation speed.");
         add(ModuleCategory.GUI,"GUI Scale","ClickGUI scaling.");
-    }
-
         add(ModuleCategory.GUI,"Watermark","Sleep Client watermark controls.");
         add(ModuleCategory.GUI,"Module List","Active module list styling.");
         add(ModuleCategory.GUI,"Font Settings","GUI font size and weight controls.");
@@ -237,6 +235,7 @@ public final class ModuleRegistry {
         add(ModuleCategory.GUI,"Notification Style","Notification position and animation.");
         add(ModuleCategory.GUI,"Search Settings","ClickGUI module search behavior.");
         add(ModuleCategory.GUI,"Compact Mode","Compact ClickGUI layout option.");
+    }
 
     public static List<Module> all() {
         return Collections.unmodifiableList(MODULES);
