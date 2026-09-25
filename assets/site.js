@@ -218,15 +218,52 @@ document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
 });
 const sleepKeyForm=document.getElementById('sleep-key-form');
 if(sleepKeyForm){
-  sleepKeyForm.addEventListener('submit',e=>{
+  const status=document.getElementById('sleep-form-status');
+  const savedAccount=JSON.parse(localStorage.getItem('sleep-client-account')||'null');
+  if(savedAccount&&status){
+    const expiry=savedAccount.expiresAt?new Date(savedAccount.expiresAt).toLocaleDateString():'Lifetime';
+    status.textContent='Signed in as '+savedAccount.username+' · '+savedAccount.plan+' · '+expiry;
+  }
+
+  sleepKeyForm.addEventListener('submit',async e=>{
     e.preventDefault();
     const name=(document.getElementById('sleep-mc-name')?.value||'').trim();
     const key=(document.getElementById('sleep-product-key')?.value||'').trim();
-    const status=document.getElementById('sleep-form-status');
     if(!name||!key){
       if(status)status.textContent='Enter your Minecraft username and product key.';
       return;
     }
-    if(status)status.textContent='The activation form is ready, but secure key binding will only be enabled after the license backend and payment verification are connected.';
+
+    if(status)status.textContent='Checking your Sleep Client license…';
+
+    try{
+      const response=await fetch('/api/license/verify',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({username:name,key})
+      });
+      const data=await response.json();
+      if(!response.ok||!data.ok){
+        const messages={
+          invalid_key:'Invalid product key.',
+          key_not_bound_to_username:'This key belongs to another Minecraft username.',
+          license_expired:'This monthly license has expired.',
+          invalid_minecraft_username:'Enter a valid Minecraft username.',
+          server_not_configured:'License server is not configured yet.'
+        };
+        if(status)status.textContent=messages[data.error]||'Sign in failed.';
+        return;
+      }
+
+      localStorage.setItem('sleep-client-account',JSON.stringify({
+        username:data.username,
+        plan:data.plan,
+        expiresAt:data.expiresAt
+      }));
+      const expiry=data.expiresAt?new Date(data.expiresAt).toLocaleDateString():'Lifetime';
+      if(status)status.textContent='Signed in as '+data.username+' · '+data.plan+' · '+expiry;
+    }catch{
+      if(status)status.textContent='Could not reach the Sleep Client license server.';
+    }
   });
 }
