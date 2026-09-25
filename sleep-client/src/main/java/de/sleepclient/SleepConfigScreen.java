@@ -7,16 +7,26 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public final class SleepConfigScreen extends Screen {
-    private enum Page { MODULES, PLAYER_ESP, SUS_CHUNK, THEME }
+    private enum Page { MODULES, THEME }
 
-    private static final int W = 570;
-    private static final int H = 410;
-    private static final int SIDEBAR = 150;
+    private static final int W = 620;
+    private static final int H = 438;
+    private static final int SIDEBAR = 154;
+
+    private static final Set<String> FUNCTIONAL = Set.of(
+            "PlayerESP", "StorageESP", "BlockESP", "Chunk Finder", "Sus Chunk Finder",
+            "Netherite Finder", "LootESP", "TraderFinder", "Totem Counter",
+            "Fullbright", "Sprint"
+    );
 
     private Page page = Page.MODULES;
-    private int scrollOffset = 0;
+    private Module selectedModule;
+    private int moduleScroll;
+    private int settingsScroll;
 
     public SleepConfigScreen() {
         super(Component.literal("Sleep Client Config"));
@@ -41,128 +51,156 @@ public final class SleepConfigScreen extends Screen {
         SmoothShapeRenderer.roundedRect(g, x + 1, y + 1, SIDEBAR - 1, h - 2, 13, 0xFF0C0811);
         g.fill(x + SIDEBAR, y + 1, x + SIDEBAR + 1, y + h - 1, 0xFF25152B);
 
-        SmoothTextRenderer.draw(g, "Sleep Config", x + 18, y + 20, 12.0f, 0xFFF6F2F7, true);
-        SmoothTextRenderer.draw(g, "Alle Einstellungen", x + 18, y + 39, 8.2f, 0xFF756A7B, false);
-
-        drawNav(g, Page.MODULES, "Modules", x + 12, y + 76, mouseX, mouseY);
-        drawNav(g, Page.PLAYER_ESP, "PlayerESP", x + 12, y + 118, mouseX, mouseY);
-        drawNav(g, Page.SUS_CHUNK, "Sus Chunk", x + 12, y + 160, mouseX, mouseY);
-        drawNav(g, Page.THEME, "Theme", x + 12, y + 202, mouseX, mouseY);
-
-        SmoothTextRenderer.draw(g, "Zurück", x + 22, y + h - 30, 9.0f, 0xFFB6A9B8, true);
+        renderSidebar(g, x, y, h, mouseX, mouseY);
 
         int contentX = x + SIDEBAR + 18;
         int contentY = y + 18;
+        int contentW = w - SIDEBAR - 36;
+        int contentH = h - 36;
 
-        switch (page) {
-            case MODULES -> renderModules(g, contentX, contentY, w - SIDEBAR - 36, h - 36, mouseX, mouseY);
-            case PLAYER_ESP -> renderPlayerEsp(g, contentX, contentY, w - SIDEBAR - 36);
-            case SUS_CHUNK -> renderSusChunk(g, contentX, contentY, w - SIDEBAR - 36);
-            case THEME -> renderTheme(g, contentX, contentY, w - SIDEBAR - 36);
+        if (page == Page.THEME) {
+            renderTheme(g, contentX, contentY, contentW);
+        } else if (selectedModule != null) {
+            renderModuleSettings(g, contentX, contentY, contentW, contentH);
+        } else {
+            renderModules(g, contentX, contentY, contentW, contentH, mouseX, mouseY);
         }
     }
 
-    private void drawNav(GuiGraphics g, Page target, String label, int x, int y, int mouseX, int mouseY) {
-        boolean active = page == target;
-        boolean hover = inside(mouseX, mouseY, x, y, 126, 34);
+    private void renderSidebar(GuiGraphics g, int x, int y, int h, int mouseX, int mouseY) {
+        SmoothTextRenderer.draw(g, "Sleep Config", x + 18, y + 20, 12.0f, 0xFFF6F2F7, true);
+        SmoothTextRenderer.draw(g, "Module & Einstellungen", x + 18, y + 39, 7.8f, 0xFF756A7B, false);
 
+        drawNav(g, "Modules", x + 12, y + 78, 128, 36, page == Page.MODULES, mouseX, mouseY);
+        drawNav(g, "Theme", x + 12, y + 120, 128, 36, page == Page.THEME, mouseX, mouseY);
+
+        SmoothTextRenderer.draw(g, selectedModule != null ? "‹ Module" : "‹ Zurück",
+                x + 20, y + h - 30, 9.0f, 0xFFB6A9B8, true);
+    }
+
+    private void drawNav(GuiGraphics g, String label, int x, int y, int w, int h,
+                         boolean active, int mouseX, int mouseY) {
+        boolean hover = inside(mouseX, mouseY, x, y, w, h);
         if (active || hover) {
-            int bg = active ? 0xFF25132E : 0xFF151019;
-            SmoothShapeRenderer.roundedRect(g, x, y, 126, 34, 9, bg);
-            if (active) SmoothShapeRenderer.roundedRect(g, x + 1, y + 8, 2, 18, 2, ThemeConfig.accent);
+            SmoothShapeRenderer.roundedRect(g, x, y, w, h, 9, active ? 0xFF25132E : 0xFF151019);
+            if (active) SmoothShapeRenderer.roundedRect(g, x + 1, y + 9, 2, 18, 2, ThemeConfig.accent);
         }
-
-        SmoothTextRenderer.draw(g, label, x + 12, y + 10, 9.5f, active ? 0xFFFFFFFF : 0xFFAAA0AE, active);
+        SmoothTextRenderer.draw(g, label, x + 12, y + 11, 9.4f, active ? 0xFFFFFFFF : 0xFFAAA0AE, active);
     }
 
     private void renderModules(GuiGraphics g, int x, int y, int w, int h, int mouseX, int mouseY) {
-        SmoothTextRenderer.draw(g, "Alle Module", x, y + 2, 12.0f, 0xFFF6F2F7, true);
-        SmoothTextRenderer.draw(g, "Aktivierungen werden automatisch gespeichert.", x, y + 22, 8.2f, 0xFF85798A, false);
+        SmoothTextRenderer.draw(g, "Alle Module", x, y + 1, 12.0f, 0xFFF6F2F7, true);
+        SmoothTextRenderer.draw(g, "Klicke ein Modul für seine eigenen Einstellungen.", x, y + 22, 8.0f, 0xFF85798A, false);
 
         List<Module> modules = ModuleRegistry.all();
-        int top = y + 48 - scrollOffset;
-        int rowH = 36;
+        int top = y + 48 - moduleScroll;
+        int rowH = 42;
 
         for (int i = 0; i < modules.size(); i++) {
-            Module m = modules.get(i);
+            Module module = modules.get(i);
             int cy = top + i * rowH;
-            if (cy < y + 42 || cy > y + h - 32) continue;
+            if (cy < y + 40 || cy > y + h - 34) continue;
 
-            boolean hover = inside(mouseX, mouseY, x, cy, w, 30);
-            int bg = m.enabled() ? 0xFF201229 : (hover ? 0xFF17101C : 0xFF120C16);
-            SmoothShapeRenderer.roundedRect(g, x, cy, w, 30, 8, bg);
+            boolean hover = inside(mouseX, mouseY, x, cy, w, 36);
+            int bg = module.enabled() ? 0xFF211329 : (hover ? 0xFF18101D : 0xFF120C16);
+            SmoothShapeRenderer.roundedRect(g, x, cy, w, 36, 9, bg);
 
-            SmoothTextRenderer.draw(g, m.name(), x + 10, cy + 9, 8.8f, 0xFFE7E0EA, m.enabled());
-            String cat = m.category().displayName();
-            int cw = SmoothTextRenderer.width(cat, 7.7f, false);
-            SmoothTextRenderer.draw(g, cat, x + w - 54 - cw, cy + 10, 7.7f, 0xFF776C7C, false);
-            drawToggle(g, x + w - 40, cy + 8, m.enabled());
+            SmoothTextRenderer.draw(g, module.name(), x + 11, cy + 7, 8.9f, 0xFFE9E2EC, module.enabled());
+            SmoothTextRenderer.draw(g, module.category().displayName(), x + 11, cy + 22, 7.3f, 0xFF746979, false);
+
+            String status = FUNCTIONAL.contains(module.name()) ? "LIVE" : "CONFIG";
+            int statusColor = FUNCTIONAL.contains(module.name()) ? 0xFF55E6B1 : 0xFFB46CFF;
+            int sw = SmoothTextRenderer.width(status, 6.8f, true);
+            SmoothTextRenderer.draw(g, status, x + w - 79 - sw, cy + 14, 6.8f, statusColor, true);
+
+            drawToggle(g, x + w - 39, cy + 11, module.enabled());
         }
     }
 
-    private void renderPlayerEsp(GuiGraphics g, int x, int y, int w) {
-        title(g, x, y, "PlayerESP", "Boxen um geladene Spieler und optionale Distanzliste.");
+    private void renderModuleSettings(GuiGraphics g, int x, int y, int w, int h) {
+        Module module = selectedModule;
+        if (module == null) return;
 
-        setting(g, x, y + 58, w, "Reichweite", ConfigManager.playerEspRange + " Blöcke", "esp_range");
-        setting(g, x, y + 110, w, "Linienstärke", String.format("%.1f", ConfigManager.playerEspLineWidth), "esp_line");
-        toggleSetting(g, x, y + 162, w, "Distanz HUD", "Namen und Entfernung rechts oben", ConfigManager.playerEspDistanceHud);
+        SmoothTextRenderer.draw(g, module.name(), x, y + 1, 12.4f, 0xFFF7F3F8, true);
+        SmoothTextRenderer.draw(g, module.description(), x, y + 22, 7.8f, 0xFF85798A, false);
 
-        Module esp = ModuleRegistry.find("PlayerESP");
-        if (esp != null) toggleSetting(g, x, y + 224, w, "PlayerESP aktiv", "Modul direkt ein oder ausschalten", esp.enabled());
+        String status = FUNCTIONAL.contains(module.name())
+                ? "Runtime verfügbar"
+                : "Konfiguration vorbereitet · Runtime folgt";
+        SmoothTextRenderer.draw(g, status, x, y + 39, 7.2f,
+                FUNCTIONAL.contains(module.name()) ? 0xFF55E6B1 : 0xFFB8A2CC, true);
+
+        int toggleY = y + 58;
+        settingShell(g, x, toggleY, w, 48);
+        SmoothTextRenderer.draw(g, "Modul aktiv", x + 12, toggleY + 9, 8.8f, 0xFFE8E0EB, true);
+        SmoothTextRenderer.draw(g, module.enabled() ? "Eingeschaltet" : "Ausgeschaltet",
+                x + 12, toggleY + 25, 7.5f, 0xFF827689, false);
+        drawToggle(g, x + w - 40, toggleY + 17, module.enabled());
+
+        List<ModuleSettingsRegistry.SettingSpec> specs = ModuleSettingsRegistry.settingsFor(module);
+        int top = y + 118 - settingsScroll;
+        int rowH = 56;
+
+        for (int i = 0; i < specs.size(); i++) {
+            ModuleSettingsRegistry.SettingSpec spec = specs.get(i);
+            int cy = top + i * rowH;
+            if (cy < y + 108 || cy > y + h - 42) continue;
+            renderSetting(g, module, spec, x, cy, w);
+        }
     }
 
-    private void renderSusChunk(GuiGraphics g, int x, int y, int w) {
-        title(g, x, y, "Sus Chunk Finder", "Scanner für verdächtige bereits geladene Chunks.");
+    private void renderSetting(GuiGraphics g, Module module, ModuleSettingsRegistry.SettingSpec spec,
+                               int x, int y, int w) {
+        settingShell(g, x, y, w, 49);
 
-        setting(g, x, y + 58, w, "Scan Radius", ConfigManager.susScanRadius + " Chunks", "sus_radius");
-        setting(g, x, y + 110, w, "Mindest Score", Integer.toString(ConfigManager.susMinScore), "sus_score");
-        toggleSetting(g, x, y + 162, w, "HUD anzeigen", "Gefundene Chunks oben links anzeigen", ConfigManager.susHudEnabled);
+        SmoothTextRenderer.draw(g, spec.label(), x + 12, y + 8, 8.6f, 0xFFE7E0EA, true);
+        SmoothTextRenderer.draw(g, spec.description(), x + 12, y + 24, 7.2f, 0xFF786D7E, false);
 
-        Module sus = ModuleRegistry.find("Sus Chunk Finder");
-        if (sus != null) toggleSetting(g, x, y + 224, w, "Finder aktiv", "Modul direkt ein oder ausschalten", sus.enabled());
+        String raw = ConfigManager.rawOption(module.name(), spec);
+        String value = displayValue(spec, raw);
+
+        if (spec.type() == ModuleSettingsRegistry.Type.BOOLEAN) {
+            boolean on = Boolean.parseBoolean(raw);
+            drawToggle(g, x + w - 40, y + 17, on);
+        } else {
+            int valueWidth = SmoothTextRenderer.width(value, 7.8f, true);
+            int valueX = x + w - 83 - valueWidth;
+            SmoothTextRenderer.draw(g, value, valueX, y + 19, 7.8f, ThemeConfig.accent, true);
+            smallButton(g, x + w - 61, y + 12, 23, 26, "−");
+            smallButton(g, x + w - 31, y + 12, 23, 26, "+");
+        }
     }
 
     private void renderTheme(GuiGraphics g, int x, int y, int w) {
-        title(g, x, y, "Theme", "Farben und Animationsgeschwindigkeit des Clients.");
+        SmoothTextRenderer.draw(g, "Theme", x, y + 1, 12.4f, 0xFFF7F3F8, true);
+        SmoothTextRenderer.draw(g, "Farben und allgemeines Erscheinungsbild.", x, y + 22, 7.8f, 0xFF85798A, false);
 
-        setting(g, x, y + 58, w, "Animation", String.format("%.2fx", ThemeConfig.animationSpeed), "animation");
+        SmoothTextRenderer.draw(g, "Farb-Presets", x, y + 66, 8.6f, 0xFF9E93A3, true);
+        themeButton(g, x, y + 88, 80, "Pink", 0xFFFF4F9F);
+        themeButton(g, x + 90, y + 88, 80, "Purple", 0xFFB46CFF);
+        themeButton(g, x + 180, y + 88, 80, "Blue", 0xFF55B8FF);
+        themeButton(g, x + 270, y + 88, 80, "Green", 0xFF55E6B1);
 
-        SmoothTextRenderer.draw(g, "Farb-Presets", x, y + 132, 8.6f, 0xFF9E93A3, true);
-        themeButton(g, x, y + 151, 76, "Pink", 0xFFFF4F9F);
-        themeButton(g, x + 86, y + 151, 76, "Purple", 0xFFB46CFF);
-        themeButton(g, x + 172, y + 151, 76, "Blue", 0xFF55B8FF);
-        themeButton(g, x + 258, y + 151, 76, "Green", 0xFF55E6B1);
+        settingShell(g, x, y + 144, w, 49);
+        SmoothTextRenderer.draw(g, "Animationsgeschwindigkeit", x + 12, y + 153, 8.6f, 0xFFE7E0EA, true);
+        SmoothTextRenderer.draw(g, String.format(Locale.ROOT, "%.2fx", ThemeConfig.animationSpeed),
+                x + 12, y + 170, 7.7f, ThemeConfig.accent, true);
+        smallButton(g, x + w - 61, y + 156, 23, 26, "−");
+        smallButton(g, x + w - 31, y + 156, 23, 26, "+");
     }
 
-    private void title(GuiGraphics g, int x, int y, String title, String sub) {
-        SmoothTextRenderer.draw(g, title, x, y + 2, 12.0f, 0xFFF6F2F7, true);
-        SmoothTextRenderer.draw(g, sub, x, y + 23, 8.2f, 0xFF85798A, false);
-    }
-
-    private void setting(GuiGraphics g, int x, int y, int w, String label, String value, String id) {
-        SmoothShapeRenderer.roundedRect(g, x, y, w, 42, 9, 0xFF130C17);
-        SmoothTextRenderer.draw(g, label, x + 11, y + 8, 8.8f, 0xFFE7E0EA, true);
-        SmoothTextRenderer.draw(g, value, x + 11, y + 24, 7.8f, 0xFF8A7E8F, false);
-
-        button(g, x + w - 62, y + 8, 22, 26, "−");
-        button(g, x + w - 32, y + 8, 22, 26, "+");
-    }
-
-    private void toggleSetting(GuiGraphics g, int x, int y, int w, String label, String sub, boolean on) {
-        SmoothShapeRenderer.roundedRect(g, x, y, w, 52, 9, 0xFF130C17);
-        SmoothTextRenderer.draw(g, label, x + 11, y + 8, 8.8f, 0xFFE7E0EA, true);
-        SmoothTextRenderer.draw(g, sub, x + 11, y + 25, 7.7f, 0xFF817587, false);
-        drawToggle(g, x + w - 40, y + 18, on);
+    private void settingShell(GuiGraphics g, int x, int y, int w, int h) {
+        SmoothShapeRenderer.roundedRect(g, x, y, w, h, 9, 0xFF130C17);
     }
 
     private void themeButton(GuiGraphics g, int x, int y, int w, String label, int color) {
         SmoothShapeRenderer.roundedRect(g, x, y, w, 34, 9, 0xFF160E1B);
         SmoothShapeRenderer.roundedRect(g, x + 7, y + 8, 18, 18, 6, color);
-        SmoothTextRenderer.draw(g, label, x + 31, y + 11, 8.2f, 0xFFE4DCE7, true);
+        SmoothTextRenderer.draw(g, label, x + 31, y + 11, 8.0f, 0xFFE4DCE7, true);
     }
 
-    private void button(GuiGraphics g, int x, int y, int w, int h, String text) {
-        SmoothShapeRenderer.roundedRect(g, x, y, w, h, 7, 0xFF25152D);
+    private void smallButton(GuiGraphics g, int x, int y, int w, int h, String text) {
+        SmoothShapeRenderer.roundedRect(g, x, y, w, h, 7, 0xFF281631);
         int tw = SmoothTextRenderer.width(text, 10.0f, true);
         SmoothTextRenderer.draw(g, text, x + (w - tw) / 2, y + 7, 10.0f, 0xFFFFFFFF, true);
     }
@@ -170,6 +208,19 @@ public final class SleepConfigScreen extends Screen {
     private void drawToggle(GuiGraphics g, int x, int y, boolean on) {
         SmoothShapeRenderer.roundedRect(g, x, y, 28, 14, 8, on ? ThemeConfig.accent : 0xFF46515D);
         SmoothShapeRenderer.roundedRect(g, x + (on ? 16 : 3), y + 3, 9, 8, 5, on ? 0xFFFFFFFF : 0xFFB0B7BF);
+    }
+
+    private String displayValue(ModuleSettingsRegistry.SettingSpec spec, String raw) {
+        if (spec.type() == ModuleSettingsRegistry.Type.FLOAT) {
+            try {
+                double v = Double.parseDouble(raw);
+                if (Math.abs(v - Math.rint(v)) < 0.0001) return String.format(Locale.ROOT, "%.1f", v);
+                return String.format(Locale.ROOT, "%.2f", v);
+            } catch (Exception ignored) {
+                return raw;
+            }
+        }
+        return raw;
     }
 
     @Override
@@ -182,13 +233,26 @@ public final class SleepConfigScreen extends Screen {
         int x = (width - w) / 2;
         int y = (height - h) / 2;
 
-        if (inside(mx, my, x + 12, y + 76, 126, 34)) { page = Page.MODULES; scrollOffset = 0; return true; }
-        if (inside(mx, my, x + 12, y + 118, 126, 34)) { page = Page.PLAYER_ESP; return true; }
-        if (inside(mx, my, x + 12, y + 160, 126, 34)) { page = Page.SUS_CHUNK; return true; }
-        if (inside(mx, my, x + 12, y + 202, 126, 34)) { page = Page.THEME; return true; }
+        if (inside(mx, my, x + 12, y + 78, 128, 36)) {
+            page = Page.MODULES;
+            selectedModule = null;
+            moduleScroll = 0;
+            return true;
+        }
 
-        if (inside(mx, my, x + 12, y + h - 42, 126, 36)) {
-            Minecraft.getInstance().setScreen(new SleepClickGuiScreen());
+        if (inside(mx, my, x + 12, y + 120, 128, 36)) {
+            page = Page.THEME;
+            selectedModule = null;
+            return true;
+        }
+
+        if (inside(mx, my, x + 12, y + h - 43, 128, 38)) {
+            if (selectedModule != null) {
+                selectedModule = null;
+                settingsScroll = 0;
+            } else {
+                Minecraft.getInstance().setScreen(new SleepClickGuiScreen());
+            }
             return true;
         }
 
@@ -196,89 +260,68 @@ public final class SleepConfigScreen extends Screen {
         int cy = y + 18;
         int cw = w - SIDEBAR - 36;
 
-        if (page == Page.MODULES) {
-            List<Module> modules = ModuleRegistry.all();
-            int top = cy + 48 - scrollOffset;
-            for (int i = 0; i < modules.size(); i++) {
-                int ry = top + i * 36;
-                if (inside(mx, my, cx, ry, cw, 30)) {
-                    modules.get(i).toggle();
-                    ConfigManager.save();
-                    return true;
-                }
-            }
-        }
-
-        if (page == Page.PLAYER_ESP) {
-            if (inside(mx, my, cx + cw - 62, cy + 66, 22, 26)) {
-                ConfigManager.playerEspRange = Math.max(16, ConfigManager.playerEspRange - 16);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx + cw - 32, cy + 66, 22, 26)) {
-                ConfigManager.playerEspRange = Math.min(256, ConfigManager.playerEspRange + 16);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx + cw - 62, cy + 118, 22, 26)) {
-                ConfigManager.playerEspLineWidth = Math.max(1.0f, ConfigManager.playerEspLineWidth - 0.2f);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx + cw - 32, cy + 118, 22, 26)) {
-                ConfigManager.playerEspLineWidth = Math.min(5.0f, ConfigManager.playerEspLineWidth + 0.2f);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx, cy + 162, cw, 52)) {
-                ConfigManager.playerEspDistanceHud = !ConfigManager.playerEspDistanceHud;
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx, cy + 224, cw, 52)) {
-                Module m = ModuleRegistry.find("PlayerESP");
-                if (m != null) m.toggle();
-                ConfigManager.save(); return true;
-            }
-        }
-
-        if (page == Page.SUS_CHUNK) {
-            if (inside(mx, my, cx + cw - 62, cy + 66, 22, 26)) {
-                ConfigManager.susScanRadius = Math.max(2, ConfigManager.susScanRadius - 1);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx + cw - 32, cy + 66, 22, 26)) {
-                ConfigManager.susScanRadius = Math.min(12, ConfigManager.susScanRadius + 1);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx + cw - 62, cy + 118, 22, 26)) {
-                ConfigManager.susMinScore = Math.max(1, ConfigManager.susMinScore - 1);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx + cw - 32, cy + 118, 22, 26)) {
-                ConfigManager.susMinScore = Math.min(40, ConfigManager.susMinScore + 1);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx, cy + 162, cw, 52)) {
-                ConfigManager.susHudEnabled = !ConfigManager.susHudEnabled;
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx, cy + 224, cw, 52)) {
-                Module m = ModuleRegistry.find("Sus Chunk Finder");
-                if (m != null) m.toggle();
-                ConfigManager.save(); return true;
-            }
-        }
-
         if (page == Page.THEME) {
-            if (inside(mx, my, cx + cw - 62, cy + 66, 22, 26)) {
-                ThemeConfig.animationSpeed = Math.max(0.35f, ThemeConfig.animationSpeed - 0.1f);
-                ConfigManager.save(); return true;
-            }
-            if (inside(mx, my, cx + cw - 32, cy + 66, 22, 26)) {
-                ThemeConfig.animationSpeed = Math.min(2.0f, ThemeConfig.animationSpeed + 0.1f);
-                ConfigManager.save(); return true;
-            }
+            if (inside(mx, my, cx, cy + 88, 80, 34)) { ConfigManager.applyThemePreset("pink"); return true; }
+            if (inside(mx, my, cx + 90, cy + 88, 80, 34)) { ConfigManager.applyThemePreset("purple"); return true; }
+            if (inside(mx, my, cx + 180, cy + 88, 80, 34)) { ConfigManager.applyThemePreset("blue"); return true; }
+            if (inside(mx, my, cx + 270, cy + 88, 80, 34)) { ConfigManager.applyThemePreset("green"); return true; }
 
-            if (inside(mx, my, cx, cy + 151, 76, 34)) { ConfigManager.applyThemePreset("pink"); return true; }
-            if (inside(mx, my, cx + 86, cy + 151, 76, 34)) { ConfigManager.applyThemePreset("purple"); return true; }
-            if (inside(mx, my, cx + 172, cy + 151, 76, 34)) { ConfigManager.applyThemePreset("blue"); return true; }
-            if (inside(mx, my, cx + 258, cy + 151, 76, 34)) { ConfigManager.applyThemePreset("green"); return true; }
+            if (inside(mx, my, cx + cw - 61, cy + 156, 23, 26)) {
+                ThemeConfig.animationSpeed = Math.max(0.35f, ThemeConfig.animationSpeed - 0.1f);
+                ConfigManager.save();
+                return true;
+            }
+            if (inside(mx, my, cx + cw - 31, cy + 156, 23, 26)) {
+                ThemeConfig.animationSpeed = Math.min(2.0f, ThemeConfig.animationSpeed + 0.1f);
+                ConfigManager.save();
+                return true;
+            }
+            return super.mouseClicked(click, doubled);
+        }
+
+        if (selectedModule == null) {
+            List<Module> modules = ModuleRegistry.all();
+            int top = cy + 48 - moduleScroll;
+            for (int i = 0; i < modules.size(); i++) {
+                int ry = top + i * 42;
+                if (!inside(mx, my, cx, ry, cw, 36)) continue;
+
+                Module module = modules.get(i);
+                if (mx >= cx + cw - 52) {
+                    module.toggle();
+                    ConfigManager.save();
+                } else {
+                    selectedModule = module;
+                    settingsScroll = 0;
+                }
+                return true;
+            }
+            return super.mouseClicked(click, doubled);
+        }
+
+        int toggleY = cy + 58;
+        if (inside(mx, my, cx, toggleY, cw, 48)) {
+            selectedModule.toggle();
+            ConfigManager.save();
+            return true;
+        }
+
+        List<ModuleSettingsRegistry.SettingSpec> specs = ModuleSettingsRegistry.settingsFor(selectedModule);
+        int top = cy + 118 - settingsScroll;
+
+        for (int i = 0; i < specs.size(); i++) {
+            ModuleSettingsRegistry.SettingSpec spec = specs.get(i);
+            int ry = top + i * 56;
+            if (!inside(mx, my, cx, ry, cw, 49)) continue;
+
+            if (spec.type() == ModuleSettingsRegistry.Type.BOOLEAN) {
+                ConfigManager.adjust(selectedModule.name(), spec, 1);
+            } else if (mx >= cx + cw - 66 && mx <= cx + cw - 34) {
+                ConfigManager.adjust(selectedModule.name(), spec, -1);
+            } else if (mx >= cx + cw - 34) {
+                ConfigManager.adjust(selectedModule.name(), spec, 1);
+            }
+            return true;
         }
 
         return super.mouseClicked(click, doubled);
@@ -286,13 +329,19 @@ public final class SleepConfigScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        if (page == Page.MODULES) {
-            int content = ModuleRegistry.all().size() * 36;
-            int max = Math.max(0, content - 315);
-            scrollOffset = Math.max(0, Math.min(max, scrollOffset - (int)(verticalAmount * 28)));
+        if (page != Page.MODULES) return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+
+        if (selectedModule == null) {
+            int content = ModuleRegistry.all().size() * 42;
+            int max = Math.max(0, content - 335);
+            moduleScroll = Math.max(0, Math.min(max, moduleScroll - (int)(verticalAmount * 30)));
             return true;
         }
-        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+
+        int content = ModuleSettingsRegistry.settingsFor(selectedModule).size() * 56;
+        int max = Math.max(0, content - 250);
+        settingsScroll = Math.max(0, Math.min(max, settingsScroll - (int)(verticalAmount * 28)));
+        return true;
     }
 
     private static int alpha(int color, int alpha) {
