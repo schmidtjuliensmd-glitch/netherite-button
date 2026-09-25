@@ -6,6 +6,11 @@ public final class ModuleRuntime {
     private static Double originalGamma;
 
     public static void tick(Minecraft client) {
+        if (!LicenseManager.verified()) {
+            restoreGamma(client);
+            return;
+        }
+
         if (client.player == null) {
             restoreGamma(client);
             return;
