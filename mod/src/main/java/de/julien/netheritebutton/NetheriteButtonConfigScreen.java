@@ -128,7 +128,7 @@ public final class NetheriteButtonConfigScreen extends Screen {
         graphics.drawCenteredString(this.font, this.title, centerX, startY - 36, 0xFFFFFF);
         graphics.drawCenteredString(
                 this.font,
-                Component.literal("Drücke N, um dieses Menü jederzeit zu öffnen."),
+                Component.literal("Die Menü-Taste legst du selbst unter Optionen → Steuerung fest."),
                 centerX,
                 startY - 20,
                 0xA0A0A0
