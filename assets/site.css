@@ -540,3 +540,23 @@ button,input{font:inherit}
   .sleep-purchase-notice{display:block}
   .sleep-purchase-notice strong{display:block;margin-bottom:4px}
 }
+
+.sleep-download-panel{
+  margin-top:22px;
+  padding:22px;
+  border:1px solid rgba(126,231,183,.20);
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(126,231,183,.06),rgba(255,79,159,.045)),rgba(14,10,16,.88);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+.sleep-download-panel[hidden]{display:none}
+.sleep-download-panel h3{margin:4px 0 7px;font-size:1.25rem}
+.sleep-download-panel p{margin:0;color:var(--muted);line-height:1.6;max-width:700px}
+.sleep-download-btn{white-space:nowrap}
+@media(max-width:760px){
+  .sleep-download-panel{align-items:stretch;flex-direction:column}
+  .sleep-download-btn{text-align:center}
+}
