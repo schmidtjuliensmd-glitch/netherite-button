@@ -276,6 +276,11 @@ public final class SleepClickGuiScreen extends Screen {
             return true;
         }
 
+        if (inside(mouseX, mouseY, x + 12, y + 405, 165, 38)) {
+            this.minecraft.setScreen(new SleepConfigScreen());
+            return true;
+        }
+
         List<Module> modules = ModuleRegistry.byCategory(selected);
         int mainX = x + SIDEBAR_W;
         int left = mainX + 17;
@@ -291,6 +296,7 @@ public final class SleepClickGuiScreen extends Screen {
             int cy = top + row * (cardH + gap);
             if (inside(mouseX, mouseY, cx, cy, cardW, cardH)) {
                 modules.get(i).toggle();
+                ConfigManager.save();
                 return true;
             }
         }
