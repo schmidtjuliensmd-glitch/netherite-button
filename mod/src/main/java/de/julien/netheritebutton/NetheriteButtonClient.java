@@ -18,7 +18,7 @@ public final class NetheriteButtonClient implements ClientModInitializer {
     public static final String MOD_ID = "netheritebutton";
     public static NetheriteButtonConfig CONFIG;
 
-    private static final Pattern PRICE_LINE = Pattern.compile("^\\s*\\$\\s*[0-9][0-9.,]*.*$");
+    private static final Pattern PRICE_PATTERN = Pattern.compile("\\$\\s*[0-9][0-9.,]*");
     private static KeyMapping openMenuKey;
 
     @Override
@@ -43,16 +43,16 @@ public final class NetheriteButtonClient implements ClientModInitializer {
         });
 
         ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipFlag, lines) -> {
-            if (!CONFIG.enabled || !stack.is(Items.SPRUCE_BUTTON)) {
+            if (!CONFIG.enabled || !(stack.is(Items.SPRUCE_BUTTON) || stack.is(Items.NETHERITE_INGOT))) {
                 return;
             }
 
             for (int i = 0; i < lines.size(); i++) {
                 String plain = lines.get(i).getString();
-                Matcher matcher = PRICE_LINE.matcher(plain);
-                if (matcher.matches()) {
-                    String prefix = matcher.group(1);
-                    String suffix = matcher.group(3);
+                Matcher matcher = PRICE_PATTERN.matcher(plain);
+                if (matcher.find()) {
+                    String prefix = plain.substring(0, matcher.start());
+                    String suffix = plain.substring(matcher.end());
                     lines.set(i,
                             Component.literal(prefix)
                                     .append(Component.literal(CONFIG.replacementText).withStyle(CONFIG.formatting()))
