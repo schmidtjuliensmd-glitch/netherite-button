@@ -1,122 +1,46 @@
-<!doctype html>
-<html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Netherite Button – Fabric Client-Mod für Minecraft Java 1.21.11 mit einstellbarem Preistext und Ingame-Menü.">
-  <title>Netherite Button Mod | Minecraft 1.21.11</title>
-  <style>
-    :root{--bg:#090b0e;--panel:#12161b;--panel2:#171c22;--text:#f4f6f8;--muted:#a7b0b8;--line:#2b323a;--accent:#a79aa1;--accent2:#655a60}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:radial-gradient(circle at 50% -8%,#25292f 0,#0b0e12 36rem,#090b0e 62rem);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden}
-    a{color:inherit}
-    .wrap{position:relative;z-index:1;width:min(1100px,calc(100% - 32px));margin:auto}
-    #cursor-glow{position:fixed;left:0;top:0;width:430px;height:430px;border-radius:50%;pointer-events:none;z-index:0;opacity:0;background:radial-gradient(circle,rgba(215,220,224,.23) 0%,rgba(164,170,176,.12) 30%,rgba(110,116,122,.05) 55%,transparent 72%);filter:blur(25px);transform:translate(-50%,-50%);transition:opacity .16s ease;will-change:left,top}
-    nav{height:72px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07)}
-    .brand{font-weight:900;letter-spacing:.12em;font-size:.86rem}
-    .navlink{color:var(--muted);text-decoration:none}
-    .hero{padding:92px 0 70px;display:grid;grid-template-columns:1.15fr .85fr;gap:54px;align-items:center}
-    .eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:#c7bbc1;font-weight:850}
-    h1{font-size:clamp(3.2rem,8vw,6.9rem);line-height:.9;letter-spacing:-.06em;margin:14px 0 24px;max-width:850px}
-    .lead{font-size:1.18rem;color:var(--muted);max-width:680px}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:34px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:54px;padding:0 23px;border-radius:11px;text-decoration:none;font-weight:850;border:1px solid var(--line)}
-    .primary{background:linear-gradient(135deg,#aaa0a5,#6c6167);border-color:#bcb1b7;color:#fff;box-shadow:0 16px 50px rgba(145,132,139,.18)}
-    .secondary{background:#11151a}
-    .meta{margin-top:14px;color:#7e8992;font-size:.88rem}
-    .preview{aspect-ratio:1;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,#191d22,#0d1013);padding:30px;display:flex;align-items:center;justify-content:center;box-shadow:0 30px 90px rgba(0,0,0,.45)}
-    .tooltip{width:100%;max-width:360px;background:#140c27;border:3px solid #5422cb;box-shadow:inset 0 0 0 2px #2c126b,0 18px 50px rgba(0,0,0,.4);padding:15px 18px;font-family:monospace;font-size:clamp(1rem,2vw,1.4rem);line-height:1.4}
-    .tooltip .name{font-size:1.18em;color:#fff}
-    .tooltip .price{margin-top:7px;color:#aaa}
-    .tooltip .custom{color:#bfc4c8;font-weight:800}
-    section{padding:64px 0}
-    .section-title{font-size:clamp(2rem,5vw,3.45rem);letter-spacing:-.04em;margin:0 0 12px}
-    .section-copy{color:var(--muted);max-width:760px;margin-bottom:28px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .card,.feature{background:linear-gradient(180deg,var(--panel),#0f1317);border:1px solid var(--line);border-radius:17px;padding:25px}
-    .num{font-size:.75rem;color:#c3b6bc;font-weight:900;letter-spacing:.12em}
-    .card h3,.feature h3{margin:10px 0 8px;font-size:1.1rem}
-    .card p,.feature p{margin:0;color:var(--muted)}
-    .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-    .notice{margin-top:18px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#0e1216;color:var(--muted)}
-    .cta{margin:50px 0 76px;padding:48px;border-radius:24px;border:1px solid #474046;background:linear-gradient(135deg,#201c20,#111419);text-align:center}
-    .cta h2{font-size:clamp(2rem,5vw,3.5rem);margin:0 0 10px}
-    .cta p{color:var(--muted);margin:0 0 24px}
-    footer{border-top:1px solid var(--line);padding:28px 0 50px;color:#77828b;font-size:.86rem}
-    @media(max-width:780px){.hero{grid-template-columns:1fr;padding-top:58px}.preview{max-width:500px;width:100%;margin:auto}.grid,.feature-grid{grid-template-columns:1fr}h1{font-size:clamp(3.2rem,16vw,5.3rem)}.cta{padding:32px 20px}}
-    @media(hover:none){#cursor-glow{display:none}}
-  </style>
-</head>
-<body>
-  <div id="cursor-glow" aria-hidden="true"></div>
-  <div class="wrap">
-    <nav><div class="brand">NETHERITE BUTTON</div><a class="navlink" href="#installation">Installation</a></nav>
+<!doctype html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Mods, Ressourcenpakete und weitere Minecraft-Downloads.">
+<title>Netherite Hub | Minecraft Downloads</title><link rel="stylesheet" href="./assets/site.css"></head>
+<body data-page="home"><div class="bg-orb one"></div><div class="bg-orb two"></div><div id="cursor-glow"></div><header class="site-header"><div class="site-shell"><nav class="nav">
+<a class="brand" href="./index.html"><span class="brand-mark">NB</span><span>NETHERITE HUB</span></a>
+<button class="mobile-toggle" aria-label="Menü öffnen">☰</button>
+<div class="nav-links">
+<a href="./index.html" data-nav="home">Startseite</a>
+<a href="./mods.html" data-nav="mods">Mods</a>
+<a href="./resourcepacks.html" data-nav="resourcepacks">Ressourcenpakete</a>
+<a href="./clients.html" data-nav="clients">Clients</a>
+<a class="nav-cta" href="./netherite-button.html" data-nav="netherite">Netherite Button</a>
+</div></nav></div></header><main class="site-shell">
+<section class="hero">
+<div class="reveal">
+<div class="eyebrow">Minecraft Downloads</div>
+<h1><span class="gradient-text">Mods, Packs</span><br>und mehr.</h1>
+<p class="lead">Eine moderne Download-Seite für Minecraft Java. Der Netherite Button Mod ist bereits verfügbar. Weitere Mods, Ressourcenpakete und Clients folgen später.</p>
+<div class="actions"><a class="btn btn-primary" href="./netherite-button.html">Netherite Button ansehen →</a><a class="btn btn-secondary" href="./mods.html">Alle Mods</a></div>
+<div class="hero-meta"><span class="pill">Java Edition</span><span class="pill">Minecraft 1.21.11</span><span class="pill">Kostenlos</span></div>
+</div>
+<div class="hero-demo reveal" data-tilt><div class="demo-inner"><div class="demo-top"><span>Live Vorschau</span><span class="live-dot">Mod verfügbar</span></div>
+<div class="minecraft-tooltip"><div class="tooltip-name">Netherite Ingot</div><div class="tooltip-line">✣ <span class="tooltip-custom">Custom</span></div></div>
+<div class="demo-top"><span>Preistext frei einstellbar</span><span>Fabric Client-Mod</span></div></div></div>
+</section>
 
-    <main>
-      <div class="hero">
-        <div>
-          <div class="eyebrow">Minecraft Fabric Client-Mod</div>
-          <h1>Dein Button.<br>Dein Preistext.</h1>
-          <p class="lead">Der Fichtenknopf sieht bei dir wie ein <strong>Netherite Ingot</strong> aus. Zusätzlich kannst du eine Preiszeile wie <strong>$ 18</strong> lokal durch deinen eigenen Text ersetzen – direkt über ein Menü im Spiel.</p>
-          <div class="actions">
-            <a class="btn primary" href="./Netherite-Button-Mod-1.21.11.jar" download>Mod herunterladen</a>
-            <a class="btn secondary" href="#installation">Installation ansehen</a>
-          </div>
-          <div class="meta">Minecraft Java 1.21.11 · Fabric · Client-seitig · Kostenlos</div>
-        </div>
+<section class="section reveal"><div class="section-head"><div><div class="eyebrow">Bibliothek</div><h2 class="section-title">Deine Bereiche.</h2></div><p class="section-copy">Die Navigation ist bereits für weitere Downloads vorbereitet. Noch nicht veröffentlichte Kategorien zeigen vorerst „Coming Soon“.</p></div>
+<div class="card-grid">
+<div class="card" data-tilt><div class="card-icon">M</div><span class="status live">Verfügbar</span><h3>Mods</h3><p>Client-Mods mit eigener Einstellungsoberfläche und direktem Download.</p><a class="card-link" href="./mods.html">Mods öffnen →</a></div>
+<div class="card" data-tilt><div class="card-icon">R</div><span class="status soon">Coming Soon</span><h3>Ressourcenpakete</h3><p>Optische Minecraft-Anpassungen und kleine visuelle Verbesserungen.</p><a class="card-link" href="./resourcepacks.html">Bereich ansehen →</a></div>
+<div class="card" data-tilt><div class="card-icon">C</div><span class="status soon">Coming Soon</span><h3>Clients</h3><p>Ein eigener Bereich für weitere Minecraft-Clients ist vorbereitet.</p><a class="card-link" href="./clients.html">Bereich ansehen →</a></div>
+</div></section>
 
-        <div class="preview" aria-label="Tooltip-Vorschau">
-          <div class="tooltip">
-            <div class="name">Netherite Ingot</div>
-            <div class="price">✣ <span class="custom">Custom</span></div>
-          </div>
-        </div>
-      </div>
-
-      <section>
-        <div class="eyebrow">Funktionen</div>
-        <h2 class="section-title">Alles direkt im Spiel einstellbar.</h2>
-        <p class="section-copy">Keine Befehle nötig. Die Taste zum Öffnen des Menüs legst du selbst in den normalen Minecraft-Steuerungseinstellungen fest.</p>
-
-        <div class="feature-grid">
-          <div class="feature"><h3>Eigener Preistext</h3><p>Ersetze eine erkannte Preiszeile wie „$ 18“ durch frei wählbaren Text, zum Beispiel „Custom“, „Mein Preis“ oder etwas Eigenes.</p></div>
-          <div class="feature"><h3>Ingame-Menü</h3><p>Preisersatz an oder aus, Text ändern, Farbe auswählen, Vorschau ansehen und speichern.</p></div>
-          <div class="feature"><h3>Taste frei wählbar</h3><p>Unter Optionen → Steuerung → Tastenbelegung bestimmst du selbst, welche Taste das Netherite-Button-Menü öffnet.</p></div>
-          <div class="feature"><h3>Nur deine Ansicht</h3><p>Der echte Serverpreis wird nicht verändert. Der Mod ersetzt ausschließlich die Darstellung auf deinem Client.</p></div>
-        </div>
-      </section>
-
-      <section id="installation">
-        <div class="eyebrow">Installation</div>
-        <h2 class="section-title">In drei Schritten fertig.</h2>
-        <div class="grid">
-          <div class="card"><div class="num">01</div><h3>Fabric vorbereiten</h3><p>Installiere Fabric Loader für Minecraft 1.21.11 und lege die passende Fabric API in deinen Mods-Ordner.</p></div>
-          <div class="card"><div class="num">02</div><h3>Mod herunterladen</h3><p>Lade die JAR über den Downloadknopf herunter und lege sie ungeöffnet in <strong>.minecraft/mods</strong>.</p></div>
-          <div class="card"><div class="num">03</div><h3>Taste festlegen</h3><p>Starte Minecraft, öffne Optionen → Steuerung → Tastenbelegung und weise „Netherite Button Menü öffnen“ deine gewünschte Taste zu.</p></div>
-        </div>
-        <div class="notice">Der Mod ist client-seitig. Er verändert keine Preise, Daten oder Funktionen auf dem Server.</div>
-      </section>
-
-      <div class="cta">
-        <h2>Netherite Button Mod</h2>
-        <p>Für Minecraft Java Edition 1.21.11 mit Fabric.</p>
-        <a class="btn primary" href="./Netherite-Button-Mod-1.21.11.jar" download>JAR kostenlos herunterladen</a>
-      </div>
-    </main>
-
-    <footer>Inoffizielles Fanprojekt. Nicht mit Mojang Studios oder Microsoft verbunden.</footer>
-  </div>
-
-  <script>
-    const glow=document.getElementById('cursor-glow');
-    let raf=0,x=0,y=0;
-    window.addEventListener('pointermove',e=>{
-      if(e.pointerType==='touch')return;
-      x=e.clientX;y=e.clientY;glow.style.opacity='1';
-      if(!raf)raf=requestAnimationFrame(()=>{glow.style.left=x+'px';glow.style.top=y+'px';raf=0;});
-    });
-    document.documentElement.addEventListener('mouseleave',()=>glow.style.opacity='0');
-  </script>
-</body>
-</html>
+<section class="section reveal"><div class="featured">
+<div><div class="eyebrow">Aktueller Download</div><h2 class="section-title">Netherite Button Mod</h2><p class="section-copy">Fichtenknopf als Netherite Ingot und ein frei einstellbarer lokaler Preistext im Tooltip.</p>
+<div class="feature-list">
+<div class="feature-item"><span class="check">✓</span><span>Ingame-Menü mit frei wählbarer Taste</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Eigener Text statt einer Preiszeile wie „$ 18“</span></div>
+<div class="feature-item"><span class="check">✓</span><span>Farbe, Aktivierung und Vorschau direkt im Menü</span></div>
+</div><div class="actions"><a class="btn btn-primary" href="./netherite-button.html">Details & Download</a></div></div>
+<div class="visual-panel"><div class="minecraft-tooltip"><div class="tooltip-name">Netherite Ingot</div><div class="tooltip-line">✣ <span class="tooltip-custom">Custom</span></div></div></div>
+</div></section>
+</main><footer class="footer"><div class="site-shell footer-row"><span>Netherite Hub · Minecraft Java</span><span>Inoffizielles Fanprojekt. Nicht mit Mojang Studios oder Microsoft verbunden.</span></div></footer>
+<div class="lightbox"><button class="lightbox-close">×</button><img alt=""></div>
+<script src="./assets/site.js"></script></body></html>
