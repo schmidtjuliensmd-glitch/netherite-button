@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "netheritebutton",
+  "version": "${version}",
+  "name": "Netherite Button",
+  "description": "Client-Mod: Fichtenknopf im Netherite-Look und frei einstellbarer Preistext per Menü.",
+  "authors": ["Julien"],
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "de.julien.netheritebutton.NetheriteButtonClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
