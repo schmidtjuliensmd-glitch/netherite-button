@@ -1,4 +1,7 @@
 const enToDe={
+"Payment verification and product key delivery may take up to 24 hours and, in exceptional cases, longer.":"Die Zahlungsprüfung und die Zusendung des Product Keys können bis zu 24 Stunden und in Ausnahmefällen länger dauern.",
+"Please note:":"Bitte beachten:",
+"After the payment is confirmed, a product key is created for your Minecraft username. Payment verification may take up to 24 hours and, in exceptional cases, longer.":"Nach bestätigter Zahlung wird ein Product Key für deinen Minecraft-Namen erstellt. Die Zahlungsprüfung kann bis zu 24 Stunden und in Ausnahmefällen länger dauern.",
 "One key is tied to one Minecraft account. A copied download file does not give another player a valid license.":"Ein Key ist an ein Minecraft-Konto gebunden. Eine kopierte Download-Datei gibt einem anderen Spieler keine gültige Lizenz.",
 "Protected access":"Geschützter Zugang",
 "After successful activation, the client is unlocked for your account. Monthly access expires after 30 days, Lifetime does not expire.":"Nach erfolgreicher Aktivierung wird der Client für dein Konto freigeschaltet. Monthly läuft nach 30 Tagen ab, Lifetime nicht.",
