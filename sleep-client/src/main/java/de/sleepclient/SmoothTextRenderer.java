@@ -94,7 +94,6 @@ public final class SmoothTextRenderer {
         String hash = Integer.toUnsignedString(key.hashCode(), 16);
         Identifier id = Identifier.fromNamespaceAndPath("sleepclient", "smooth_text/" + hash);
         DynamicTexture texture = new DynamicTexture(() -> "Sleep Client smooth text", image);
-        texture.setFilter(true, false);
         Minecraft.getInstance().getTextureManager().register(id, texture);
         texture.upload();
 
