@@ -83,25 +83,22 @@ public final class SleepClickGuiScreen extends Screen {
 
     private void renderGlow(GuiGraphics g, int x, int y, int w, int h, float amount) {
         int accent = accent();
-        for (int i = 5; i >= 1; i--) {
-            int spread = i * 3;
-            int alpha = Math.max(3, Math.round((10 - i) * 1.7f * amount));
-            int c = (alpha << 24) | (accent & 0x00FFFFFF);
-            roundedRect(g, x - spread, y - spread, w + spread * 2, h + spread * 2, 16 + spread, c);
-        }
+        int glowAlpha = Math.max(1, Math.round(85 * amount));
+        SmoothShapeRenderer.glow(g, x, y, w, h, 14, withAlpha(accent, glowAlpha), 12);
 
         int purple = ThemeConfig.accentSecondary;
-        int a = Math.round(11 * amount);
-        roundedRect(g, x + w - 165, y + h - 85, 145, 65, 28, (a << 24) | (purple & 0x00FFFFFF));
+        int a = Math.max(1, Math.round(24 * amount));
+        SmoothShapeRenderer.glow(g, x + w - 160, y + h - 78, 125, 45, 20, withAlpha(purple, a), 10);
     }
 
     private void renderBrand(GuiGraphics g, int x, int y) {
         int accent = accent();
 
+        SmoothShapeRenderer.glow(g, x + 19, y + 20, 33, 33, 9, withAlpha(accent, 115), 6);
         roundedRect(g, x + 19, y + 20, 33, 33, 9, accent);
-        roundedRect(g, x + 22, y + 23, 27, 27, 8, withAlpha(ThemeConfig.accentSecondary, 58));
+        roundedRect(g, x + 22, y + 23, 27, 27, 8, withAlpha(ThemeConfig.accentSecondary, 62));
 
-        SmoothTextRenderer.draw(g, "C", x + 30, y + 27, 11.5f, 0xFFFFFFFF, true);
+        SmoothTextRenderer.draw(g, "☾", x + 28, y + 25, 14.0f, 0xFFFFFFFF, true);
         SmoothTextRenderer.draw(g, "Sleep Client", x + 59, y + 23, 11.7f, TEXT, true);
         SmoothTextRenderer.draw(g, UpdateManager.currentVersion(), x + 59, y + 39, 8.2f, MUTED_DARK, false);
     }
@@ -222,15 +219,15 @@ public final class SleepClickGuiScreen extends Screen {
         toggleNow += ((module.enabled() ? 1.0f : 0.0f) - toggleNow) * 0.22f * Math.max(0.3f, ThemeConfig.animationSpeed);
         toggleAnim.put(module, toggleNow);
 
-        int bg = mix(CARD_BG, CARD_HOVER, hoverNow * 0.75f);
-        int border = mix(LINE, accent(), module.enabled() ? 0.72f : hoverNow * 0.28f);
+        int bg = mix(CARD_BG, CARD_HOVER, hoverNow * 0.72f);
+        int border = mix(LINE, accent(), module.enabled() ? 0.76f : hoverNow * 0.30f);
 
         if (module.enabled()) {
-            roundedRect(g, x - 2, y - 2, w + 4, h + 4, 11, withAlpha(accent(), 15));
+            SmoothShapeRenderer.glow(g, x, y, w, h, 10, withAlpha(accent(), 78), 5);
         }
 
-        roundedRect(g, x, y, w, h, 9, bg);
-        roundedOutline(g, x, y, w, h, 9, border, bg);
+        roundedRect(g, x, y, w, h, 10, bg);
+        roundedOutline(g, x, y, w, h, 10, border, bg);
 
         SmoothTextRenderer.draw(g, module.name(), x + 12, y + 17, 10.2f, TEXT, true);
 
@@ -344,27 +341,11 @@ public final class SleepClickGuiScreen extends Screen {
     }
 
     private static void roundedOutline(GuiGraphics g, int x, int y, int w, int h, int r, int border, int fill) {
-        roundedRect(g, x, y, w, h, r, border);
-        roundedRect(g, x + 1, y + 1, w - 2, h - 2, Math.max(1, r - 1), fill);
+        SmoothShapeRenderer.roundedRect(g, x, y, w, h, r, border);
+        SmoothShapeRenderer.roundedRect(g, x + 1, y + 1, w - 2, h - 2, Math.max(1, r - 1), fill);
     }
 
     private static void roundedRect(GuiGraphics g, int x, int y, int w, int h, int r, int color) {
-        if (w <= 0 || h <= 0) return;
-        r = Math.max(1, Math.min(r, Math.min(w, h) / 2));
-
-        g.fill(x + r, y, x + w - r, y + h, color);
-        g.fill(x, y + r, x + w, y + h - r, color);
-
-        for (int i = 0; i < r; i++) {
-            int inset = cornerInset(r, i);
-            g.fill(x + inset, y + i, x + w - inset, y + i + 1, color);
-            g.fill(x + inset, y + h - i - 1, x + w - inset, y + h - i, color);
-        }
-    }
-
-    private static int cornerInset(int radius, int row) {
-        double dy = radius - row - 0.5;
-        double dx = Math.sqrt(Math.max(0.0, radius * radius - dy * dy));
-        return radius - (int)Math.floor(dx);
+        SmoothShapeRenderer.roundedRect(g, x, y, w, h, r, color);
     }
 }
