@@ -20,6 +20,7 @@ public final class SleepClient implements ClientModInitializer {
     );
     private static KeyMapping openGui;
     private static boolean licenseWarningShown;
+    private static boolean activationPromptShown;
 
     @Override
     public void onInitializeClient() {
@@ -95,13 +96,21 @@ public final class SleepClient implements ClientModInitializer {
                 licenseWarningShown = false;
             }
 
+            if (!LicenseManager.verified()
+                    && client.player != null
+                    && client.screen == null
+                    && !activationPromptShown
+                    && !"Checking license...".equals(LicenseManager.message())) {
+                activationPromptShown = true;
+                client.setScreen(new SleepActivationScreen());
+            }
+
             while (openGui.consumeClick()) {
                 if (LicenseManager.verified()) {
                     client.setScreen(new SleepClickGuiScreen());
-                } else if (client.player != null) {
-                    client.player.displayClientMessage(Component.literal(
-                            "Sleep Client: valid license required. Use /sleepkey <key>."
-                    ), false);
+                } else {
+                    activationPromptShown = true;
+                    client.setScreen(new SleepActivationScreen());
                 }
             }
             ModuleRuntime.tick(client);
