@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class SmoothTextRenderer {
-    private static final int OVERSAMPLE = 3;
+    private static final int OVERSAMPLE = 1;
     private static final int MAX_CACHE = 320;
 
     private static final String FAMILY = chooseFamily();
