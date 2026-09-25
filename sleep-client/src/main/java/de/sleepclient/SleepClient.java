@@ -27,13 +27,19 @@ public final class SleepClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModuleRegistry.init();
+        ConfigManager.load();
 
         HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath("sleepclient", "sus_chunk_hud"),
                 (graphics, deltaTracker) -> SusChunkFinder.renderHud(graphics)
         );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "player_esp_hud"),
+                (graphics, deltaTracker) -> PlayerEsp.renderHud(graphics)
+        );
 
         WorldRenderEvents.AFTER_ENTITIES.register(SusChunkFinder::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(PlayerEsp::renderWorld);
         LicenseManager.verifySaved().thenAccept(ok -> {
             if (ok) UpdateManager.checkForUpdates();
         });
