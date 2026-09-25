@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -170,7 +169,7 @@ public final class SusChunkFinder {
             float green = 0.20f + 0.18f * (1.0f - intensity);
             float blue = 0.62f + 0.20f * intensity;
 
-            ShapeRenderer.renderLineBox(
+            renderLineBox(
                     matrices.last(),
                     lines,
                     x1, y1, z1,
@@ -178,6 +177,57 @@ public final class SusChunkFinder {
                     red, green, blue, 0.95f
             );
         }
+    }
+
+    private static void renderLineBox(
+            PoseStack.Pose pose,
+            VertexConsumer consumer,
+            double x1, double y1, double z1,
+            double x2, double y2, double z2,
+            float red, float green, float blue, float alpha
+    ) {
+        line(pose, consumer, x1, y1, z1, x2, y1, z1, red, green, blue, alpha);
+        line(pose, consumer, x2, y1, z1, x2, y1, z2, red, green, blue, alpha);
+        line(pose, consumer, x2, y1, z2, x1, y1, z2, red, green, blue, alpha);
+        line(pose, consumer, x1, y1, z2, x1, y1, z1, red, green, blue, alpha);
+
+        line(pose, consumer, x1, y2, z1, x2, y2, z1, red, green, blue, alpha);
+        line(pose, consumer, x2, y2, z1, x2, y2, z2, red, green, blue, alpha);
+        line(pose, consumer, x2, y2, z2, x1, y2, z2, red, green, blue, alpha);
+        line(pose, consumer, x1, y2, z2, x1, y2, z1, red, green, blue, alpha);
+
+        line(pose, consumer, x1, y1, z1, x1, y2, z1, red, green, blue, alpha);
+        line(pose, consumer, x2, y1, z1, x2, y2, z1, red, green, blue, alpha);
+        line(pose, consumer, x2, y1, z2, x2, y2, z2, red, green, blue, alpha);
+        line(pose, consumer, x1, y1, z2, x1, y2, z2, red, green, blue, alpha);
+    }
+
+    private static void line(
+            PoseStack.Pose pose,
+            VertexConsumer consumer,
+            double x1, double y1, double z1,
+            double x2, double y2, double z2,
+            float red, float green, float blue, float alpha
+    ) {
+        float dx = (float)(x2 - x1);
+        float dy = (float)(y2 - y1);
+        float dz = (float)(z2 - z1);
+        float length = (float)Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (length <= 0.0001f) return;
+
+        float nx = dx / length;
+        float ny = dy / length;
+        float nz = dz / length;
+
+        consumer.addVertex(pose, (float)x1, (float)y1, (float)z1)
+                .setColor(red, green, blue, alpha)
+                .setNormal(pose, nx, ny, nz)
+                .setLineWidth(2.2f);
+
+        consumer.addVertex(pose, (float)x2, (float)y2, (float)z2)
+                .setColor(red, green, blue, alpha)
+                .setNormal(pose, nx, ny, nz)
+                .setLineWidth(2.2f);
     }
 
     public static List<Result> results() {
