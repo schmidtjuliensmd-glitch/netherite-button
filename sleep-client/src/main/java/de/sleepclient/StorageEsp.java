@@ -55,7 +55,7 @@ public final class StorageEsp {
                     } else if (type == BlockEntityType.ENDER_CHEST) {
                         label = "Ender Chest";
                         color = 0xFFA16CFF;
-                    } else if (type == BlockEntityType.SPAWNER) {
+                    } else if (type == BlockEntityType.MOB_SPAWNER) {
                         label = "Spawner";
                         color = 0xFFFFC857;
                     } else if (hoppers && type == BlockEntityType.HOPPER) {
