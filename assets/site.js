@@ -1,4 +1,145 @@
 const enToDe={
+"Lifetime · 25M selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.":"Lifetime · 25M ausgewählt. Die DonutSMP-Zahlung muss serverseitig geprüft werden, bevor ein Key ausgegeben werden kann.",
+"Monthly · 10M selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.":"Monatlich · 10M ausgewählt. Die DonutSMP-Zahlung muss serverseitig geprüft werden, bevor ein Key ausgegeben werden kann.",
+"Could not reach the Sleep Client license server.":"Der Sleep-Client-Lizenzserver konnte nicht erreicht werden.",
+"Sign in failed.":"Anmeldung fehlgeschlagen.",
+"License server is not configured yet.":"Der Lizenzserver ist noch nicht eingerichtet.",
+"Enter a valid Minecraft username.":"Gib einen gültigen Minecraft-Namen ein.",
+"This monthly license has expired.":"Diese monatliche Lizenz ist abgelaufen.",
+"This key belongs to another Minecraft username.":"Dieser Key gehört zu einem anderen Minecraft-Namen.",
+"Invalid product key.":"Ungültiger Product Key.",
+"Checking your Sleep Client license…":"Deine Sleep-Client-Lizenz wird geprüft…",
+"Enter your Minecraft username and product key.":"Gib deinen Minecraft-Namen und Product Key ein.",
+"Signed in as ":"Angemeldet als ",
+"JulienMChub · Minecraft Java":"Sleep Client · Minecraft Java",
+"Key backend is being prepared. No key is activated until server-side verification is connected.":"Das Key-System wird vorbereitet. Ein Key wird erst aktiviert, wenn die serverseitige Prüfung verbunden ist.",
+"Verify & Activate":"Prüfen & aktivieren",
+"Your Minecraft name":"Dein Minecraft-Name",
+"Minecraft Username":"Minecraft-Name",
+"Enter your product key and Minecraft username. The final account verification backend will bind the license to your Minecraft account.":"Gib deinen Product Key und Minecraft-Namen ein. Das Verifizierungssystem verbindet die Lizenz mit deinem Minecraft-Konto.",
+"Activate Sleep Client.":"Sleep Client aktivieren.",
+"Product Key":"Product Key",
+"No recurring payment":"Keine wiederkehrende Zahlung",
+"Priority access to new features":"Früher Zugriff auf neue Funktionen",
+"Get Lifetime Access":"Lifetime-Zugang holen",
+"one time":"einmalig",
+"One payment. Keep access to future Sleep Client versions.":"Einmal zahlen und Zugriff auf zukünftige Sleep-Client-Versionen behalten.",
+"Lifetime":"Lifetime",
+"VERY POPULAR":"SEHR BELIEBT",
+"30-day access":"30 Tage Zugang",
+"Key activation":"Key-Aktivierung",
+"DonutSMP configs":"DonutSMP-Konfigurationen",
+"Regular client updates":"Regelmäßige Client-Updates",
+"Full access to all modules":"Voller Zugriff auf alle Module",
+"Get Monthly Access":"Monatlichen Zugang holen",
+"/ month":"/ Monat",
+"Full Sleep Client access, billed monthly.":"Voller Zugriff auf Sleep Client, monatlich.",
+"Monthly":"Monatlich",
+"Payment is planned through DonutSMP money. After payment verification you receive a product key for Sleep Client.":"Die Bezahlung erfolgt mit DonutSMP-Geld. Nach der Zahlungsprüfung erhältst du einen Product Key für Sleep Client.",
+"Choose your access.":"Wähle deinen Zugang.",
+"Simple Pricing":"Einfache Preise",
+"Compact ▾":"Kompakt ▾",
+"Layout":"Layout",
+"Animation Speed":"Animationsgeschwindigkeit",
+"Accent Color":"Akzentfarbe",
+"Every important part of the interface is configurable and saved with your profile.":"Alle wichtigen Bereiche der Oberfläche sind anpassbar und werden in deinem Profil gespeichert.",
+"Make the GUI yours.":"Passe die GUI an dich an.",
+"Your Client":"Dein Client",
+"Resize the entire ClickGUI.":"Die gesamte ClickGUI skalieren.",
+"Adjust menu and toggle animation speed.":"Geschwindigkeit von Menü- und Schalteranimationen anpassen.",
+"Drag, scale and align HUD widgets.":"HUD-Elemente verschieben, skalieren und ausrichten.",
+"Change accent, panel, text and glow colors.":"Akzent-, Panel-, Text- und Leuchtfarben ändern.",
+"Shows new Sleep Client versions.":"Zeigt neue Sleep-Client-Versionen an.",
+"Save and switch module configurations.":"Modul-Konfigurationen speichern und wechseln.",
+"Edit module keybinds in one place.":"Tastenbelegungen aller Module an einer Stelle bearbeiten.",
+"Knockback settings.":"Einstellungen für Rückstoß.",
+"Configurable step height.":"Einstellbare Stufenhöhe.",
+"Configurable slowdown handling.":"Einstellbare Verlangsamungs-Steuerung.",
+"Automatic sprint controls.":"Automatische Sprint-Steuerung.",
+"Maximum client-side brightness.":"Maximale clientseitige Helligkeit.",
+"Animated ground ring when jumping.":"Animierter Ring am Boden beim Springen.",
+"Custom hit and totem particles.":"Anpassbare Treffer- und Totem-Partikel.",
+"HUD counter for carried totems.":"HUD-Zähler für mitgeführte Totems.",
+"Look around without rotating your player.":"Umschauen, ohne den Spieler zu drehen.",
+"Weapon inspect animation.":"Animation zum Betrachten der Waffe.",
+"Custom first-person swing styles.":"Anpassbare Schlaganimationen in der Ego-Perspektive.",
+"Held-item outline and glow effects.":"Kontur- und Leuchteffekte für gehaltene Gegenstände.",
+"Custom fog and shader-like effects.":"Anpassbarer Nebel und shaderähnliche Effekte.",
+"Animated selected-block highlight.":"Animierte Hervorhebung ausgewählter Blöcke.",
+"Save and display world positions.":"Weltpositionen speichern und anzeigen.",
+"Marker for your current target.":"Markierung für dein aktuelles Ziel.",
+"Ambient cosmetic fireflies.":"Kosmetische Glühwürmchen als Umgebungseffekt.",
+"Sky, light, time, weather and fog controls.":"Steuerung für Himmel, Licht, Zeit, Wetter und Nebel.",
+"Custom first-person fire overlay.":"Anpassbare Feuerdarstellung in der Ego-Perspektive.",
+"Health-based entity coloring.":"Färbt Entitäten abhängig von ihrem Leben.",
+"Alerts for nearby incoming pearls.":"Warnt vor nahen ankommenden Perlen.",
+"Shows pearl path and landing position.":"Zeigt Flugbahn und Landepunkt von Perlen.",
+"Highlights dropped items.":"Hebt fallengelassene Gegenstände hervor.",
+"Hides first-person fire overlay.":"Blendet das Feuer im Sichtfeld aus.",
+"Reduces explosion visual effects.":"Reduziert visuelle Explosionseffekte.",
+"Enhanced nametags with armor and health.":"Erweiterte Namensanzeigen mit Rüstung und Leben.",
+"Animated block focus overlay.":"Animierte Hervorhebung des anvisierten Blocks.",
+"Highlights holes and mined spaces.":"Hebt Löcher und abgebaute Bereiche hervor.",
+"Highlights selected block types.":"Hebt ausgewählte Blockarten hervor.",
+"Highlights chests, shulkers and storage blocks.":"Hebt Kisten, Shulker und Lagerblöcke hervor.",
+"Highlights players through terrain.":"Hebt Spieler auch durch Gelände hervor.",
+"Now-playing widget for your desktop music.":"Anzeige für aktuell laufende Musik auf deinem PC.",
+"Draggable HUD widgets.":"Verschiebbare HUD-Elemente.",
+"Schematic-guided automated building workflow.":"Automatisierter Bauablauf anhand eines Schematics.",
+"Chunk analysis tools for DonutSMP.":"Werkzeuge zur Chunk-Analyse für DonutSMP.",
+"Highlights chunks with suspicious activity patterns.":"Markiert Chunks mit verdächtigen Aktivitätsmustern.",
+"Pearl reaction helper.":"Hilfsfunktion für Perlen-Reaktionen.",
+"One-key pearl swap, throw and swap back.":"Perle mit einer Taste wechseln, werfen und zurückwechseln.",
+"Rapid XP bottle use from hotbar.":"Schnelle Nutzung von XP-Flaschen aus der Hotbar.",
+"Refills selected hotbar items.":"Füllt ausgewählte Hotbar-Gegenstände nach.",
+"Keeps a totem ready from inventory.":"Hält ein Totem aus dem Inventar bereit.",
+"Moves a totem to off-hand when needed.":"Verschiebt bei Bedarf ein Totem in die Nebenhand.",
+"One-key vertical wind-charge launch.":"Vertikaler Windstoß-Start mit einer Taste.",
+"Swap to mace for the hit and back.":"Für den Treffer zum Streitkolben wechseln und danach zurück.",
+"Mace timing for downward attacks.":"Timing für Abwärtsangriffe mit dem Streitkolben.",
+"Axe-based shield disable workflow.":"Ablauf zum Deaktivieren von Schilden mit einer Axt.",
+"Adjustable target hitbox display and size.":"Einstellbare Anzeige und Größe von Ziel-Hitboxen.",
+"Configurable attack-range module.":"Einstellbares Modul für die Angriffsreichweite.",
+"Critical-hit timing module.":"Modul für das Timing kritischer Treffer.",
+"Configurable clicks per second.":"Einstellbare Klicks pro Sekunde.",
+"Attack when your crosshair is on a target.":"Angreifen, wenn das Fadenkreuz auf einem Ziel liegt.",
+"Targeting logic without camera snap.":"Ziellogik ohne sichtbares Kameraspringen.",
+"Configurable target assist and smoothing.":"Anpassbare Zielhilfe mit weicher Bewegung.",
+"Trap nearby targets with obsidian.":"Nahe Ziele mit Obsidian einschließen.",
+"Fast obsidian placement workflow.":"Schneller Ablauf zum Platzieren von Obsidian.",
+"Client-side crystal cleanup and timing.":"Clientseitige Kristalloptimierung und Zeitsteuerung.",
+"Detonate nearby end crystals on interval.":"Nahe Endkristalle in festgelegten Abständen zünden.",
+"Anchor logic with safety checks.":"Ankerlogik mit Sicherheitsprüfungen.",
+"Charge and detonate respawn anchors.":"Respawn-Anker laden und zünden.",
+"Fast crystal placement and detonation.":"Schnelles Platzieren und Zünden von Kristallen.",
+"NEW":"NEU",
+"ADVANCED":"ERWEITERT",
+"POPULAR":"BELIEBT",
+"All":"Alle",
+"Organized into clear categories with searchable modules, per-module settings and individual keybinds.":"Übersichtlich in Kategorien sortiert, mit durchsuchbaren Modulen, eigenen Einstellungen und individuellen Tastenbelegungen.",
+"Everything in one client.":"Alles in einem Client.",
+"Module Library":"Modul-Bibliothek",
+"ESP, HUD, highlights, waypoints and custom world visuals.":"ESP, HUD, Hervorhebungen, Wegpunkte und anpassbare Welt-Darstellung.",
+"Visual Suite":"Visuelle Funktionen",
+"Sus Chunk Finder, Chunk Finder and schematic workflow.":"Sus Chunk Finder, Chunk Finder und Schematic-Abläufe.",
+"DonutSMP Tools":"DonutSMP-Werkzeuge",
+"Theme, scale, animation speed and layout.":"Design, Skalierung, Animationsgeschwindigkeit und Layout.",
+"Search modules…":"Module suchen…",
+"Settings":"Einstellungen",
+"GENERAL":"ALLGEMEIN",
+"Misc":"Sonstiges",
+"Visuals":"Visuell",
+"Movement":"Bewegung",
+"Combat":"Kampf",
+"MODULES":"MODULE",
+"Regular Updates":"Regelmäßige Updates",
+"Custom GUI":"Anpassbare GUI",
+"View Modules":"Module ansehen",
+"Get Sleep Client":"Sleep Client holen",
+"A configurable Minecraft client with a modern module GUI, smooth animations, DonutSMP tools, combat modules and a complete visual suite.":"Ein anpassbarer Minecraft-Client mit moderner Modul-GUI, flüssigen Animationen, DonutSMP-Werkzeugen, Kampfmodulen und umfangreichen visuellen Funktionen.",
+"Made to feel clean.":"Sauber und übersichtlich.",
+"Built for DonutSMP.":"Für DonutSMP entwickelt.",
+"Sleep Client · Minecraft 1.21.11":"Sleep Client · Minecraft 1.21.11",
 "Payment verification and product key delivery may take up to 24 hours and, in exceptional cases, longer.":"Die Zahlungsprüfung und die Zusendung des Product Keys können bis zu 24 Stunden und in Ausnahmefällen länger dauern.",
 "Please note:":"Bitte beachten:",
 "After the payment is confirmed, a product key is created for your Minecraft username. Payment verification may take up to 24 hours and, in exceptional cases, longer.":"Nach bestätigter Zahlung wird ein Product Key für deinen Minecraft-Namen erstellt. Die Zahlungsprüfung kann bis zu 24 Stunden und in Ausnahmefällen länger dauern.",
@@ -203,7 +344,10 @@ document.querySelectorAll('.sleep-demo-tab').forEach(tab=>{
     const list=sleepDemoData[key]||[];
     const title=document.getElementById('sleep-demo-title');
     const box=document.getElementById('sleep-demo-modules');
-    if(title)title.textContent=key==='donut'?'DonutSMP':key.charAt(0).toUpperCase()+key.slice(1);
+    if(title){
+      const rawTitle=key==='donut'?'DonutSMP':key.charAt(0).toUpperCase()+key.slice(1);
+      title.textContent=siteLanguage==='de'?(enToDe[rawTitle]||rawTitle):rawTitle;
+    }
     if(box){
       box.innerHTML=list.map((name,i)=>'<div class="sleep-module-row '+(i%3===0?'active':'')+'"><span>'+name+'</span><i></i></div>').join('');
     }
@@ -229,7 +373,8 @@ document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
     const form=document.getElementById('activation');
     if(status){
       const plan=btn.dataset.plan==='lifetime'?'Lifetime · 25M':'Monthly · 10M';
-      status.textContent=plan+' selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.';
+      const msg=plan+' selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.';
+      status.textContent=siteLanguage==='de'?(enToDe[msg]||msg):msg;
     }
     if(form)form.scrollIntoView({behavior:'smooth',block:'center'});
   });
@@ -248,11 +393,11 @@ if(sleepKeyForm){
     const name=(document.getElementById('sleep-mc-name')?.value||'').trim();
     const key=(document.getElementById('sleep-product-key')?.value||'').trim();
     if(!name||!key){
-      if(status)status.textContent='Enter your Minecraft username and product key.';
+      if(status)status.textContent=siteLanguage==='de'?enToDe['Enter your Minecraft username and product key.']:'Enter your Minecraft username and product key.';
       return;
     }
 
-    if(status)status.textContent='Checking your Sleep Client license…';
+    if(status)status.textContent=siteLanguage==='de'?enToDe['Checking your Sleep Client license…']:'Checking your Sleep Client license…';
 
     try{
       const response=await fetch('/api/license/verify',{
