@@ -424,3 +424,20 @@ button,input{font:inherit}
 .sleep-key-form{display:grid;gap:14px}.sleep-key-form label{display:grid;gap:7px;color:#b9aab4;font-size:.82rem;font-weight:750}.sleep-key-form input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:#0d0a0f;color:#fff;outline:none}.sleep-key-form input:focus{border-color:rgba(255,79,159,.35);box-shadow:0 0 0 4px rgba(255,79,159,.06)}.sleep-form-status{margin:0;color:#8e818b;font-size:.78rem;line-height:1.5}
 @media(max-width:1080px){.sleep-product-hero{grid-template-columns:1fr}.sleep-gui-demo{max-width:860px}.sleep-module-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sleep-settings-preview{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.sleep-gui-demo{grid-template-columns:1fr;min-height:auto}.sleep-gui-sidebar{display:none}.sleep-gui-modules{grid-template-columns:1fr}.sleep-gui-topbar{grid-template-columns:1fr auto}.sleep-demo-search{display:none}.sleep-highlight-strip{grid-template-columns:1fr}.sleep-module-grid{grid-template-columns:1fr}.sleep-pricing-grid{grid-template-columns:1fr}.sleep-settings-preview{grid-template-columns:1fr}.sleep-activation-panel{grid-template-columns:1fr}.sleep-product-hero{padding-top:55px}}
+
+.sleep-admin-select,.sleep-admin-result textarea{
+  width:100%;
+  padding:13px 14px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#0d0a0f;
+  color:#fff;
+  outline:none;
+}
+.sleep-admin-select:focus,.sleep-admin-result textarea:focus{
+  border-color:rgba(255,79,159,.35);
+  box-shadow:0 0 0 4px rgba(255,79,159,.06);
+}
+.sleep-admin-result{display:grid;gap:10px;margin-top:4px}
+.sleep-admin-result p{margin:0;color:#9f9099;font-size:.82rem}
+.sleep-admin-result textarea{min-height:110px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;word-break:break-all}
