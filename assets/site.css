@@ -175,3 +175,8 @@ button,input{font:inherit}
 }
 @media(max-width:900px){.mods-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.mods-grid{grid-template-columns:1fr}}
+
+.lang-switch{display:flex;align-items:center;gap:5px;margin-left:6px;padding:4px 6px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.035);color:#746671}
+.lang-btn{border:0;background:transparent;color:#9f8f99;font-weight:900;font-size:.76rem;cursor:pointer;padding:5px 6px;border-radius:7px;transition:.2s ease}
+.lang-btn:hover,.lang-btn.active{color:#fff;background:rgba(255,79,159,.16)}
+@media(max-width:720px){.lang-switch{margin:4px 0 0;justify-content:center;padding:8px}}
