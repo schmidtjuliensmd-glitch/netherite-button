@@ -18,6 +18,6 @@ Client-Mod für **Minecraft Java Edition 1.21.11 mit Fabric**.
 3. `Netherite-Button-Mod-1.21.11.jar` ebenfalls in den Mods-Ordner legen.
 4. Minecraft starten und die gewünschte Menü-Taste in den Tastenbelegungen festlegen.
 
-Die öffentliche Download-Seite läuft über GitHub Pages.
+https://schmidtjuliensmd-glitch.github.io/netherite-button/index.html
 
 Inoffizielles Fanprojekt. Nicht mit Mojang Studios oder Microsoft verbunden.
