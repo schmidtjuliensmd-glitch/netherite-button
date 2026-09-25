@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 public final class SleepClient implements ClientModInitializer {
     public static final String NAME = "Sleep Client";
@@ -21,7 +22,7 @@ public final class SleepClient implements ClientModInitializer {
         openGui = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.sleepclient.open_gui",
                 InputConstants.Type.KEYSYM,
-                InputConstants.KEY_RIGHT_SHIFT,
+                GLFW.GLFW_KEY_RIGHT_SHIFT,
                 CATEGORY
         ));
 
