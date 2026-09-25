@@ -39,6 +39,27 @@ public final class ModuleRegistry {
         add(ModuleCategory.COMBAT,"Key Pearl","One-key pearl workflow.");
         add(ModuleCategory.COMBAT,"Auto Aggro Pearl","Pearl reaction helper.");
 
+        add(ModuleCategory.COMBAT,"KillAura","Configurable automatic target attacking.");
+        add(ModuleCategory.COMBAT,"Crystal Aura","Automatic crystal combat workflow.");
+        add(ModuleCategory.COMBAT,"Anchor Aura","Automatic respawn-anchor combat workflow.");
+        add(ModuleCategory.COMBAT,"Bow Aim","Aim assistance for bows and crossbows.");
+        add(ModuleCategory.COMBAT,"Bow Spam","Configurable rapid bow release workflow.");
+        add(ModuleCategory.COMBAT,"Auto Armor","Automatically equips preferred armor.");
+        add(ModuleCategory.COMBAT,"Auto Pot","Potion selection and throw helper.");
+        add(ModuleCategory.COMBAT,"Auto Gap","Golden apple use helper.");
+        add(ModuleCategory.COMBAT,"Auto Weapon","Automatically selects a preferred weapon.");
+        add(ModuleCategory.COMBAT,"Target Selector","Central target priority settings.");
+        add(ModuleCategory.COMBAT,"Anti Bot","Filters likely fake player entities.");
+        add(ModuleCategory.COMBAT,"Teams","Avoids targeting configured teammates.");
+        add(ModuleCategory.COMBAT,"Friends","Friend protection for combat modules.");
+        add(ModuleCategory.COMBAT,"Backtrack","Target position history controls.");
+        add(ModuleCategory.COMBAT,"Shield Breaker","Axe-based shield breaker controls.");
+        add(ModuleCategory.COMBAT,"Hit Select","Configurable hit-selection timing.");
+        add(ModuleCategory.COMBAT,"WTap","Sprint reset timing helper.");
+        add(ModuleCategory.COMBAT,"STap","Backward sprint-reset timing helper.");
+        add(ModuleCategory.COMBAT,"Auto Rod","Fishing-rod combat helper.");
+        add(ModuleCategory.COMBAT,"Auto Bow Release","Automatically releases fully charged bows.");
+
         add(ModuleCategory.DONUT_SMP,"Auto Builder","Litematica-style schematic building workflow.");
         add(ModuleCategory.DONUT_SMP,"Auto Area Miner","Mine a selected area with configurable automation.");
         add(ModuleCategory.DONUT_SMP,"AutoMine","Straight-line mining workflow with lava avoidance.");
@@ -54,6 +75,27 @@ public final class ModuleRegistry {
         add(ModuleCategory.DONUT_SMP,"TraderFinder","Highlights loaded wandering traders and trader llamas.");
         add(ModuleCategory.DONUT_SMP,"RegionMap","Region and chunk-grid HUD.");
         add(ModuleCategory.DONUT_SMP,"SeedAnalyzer","World-seed analysis tools.");
+
+        add(ModuleCategory.DONUT_SMP,"Auto Schematic Builder","Alternative schematic building workflow.");
+        add(ModuleCategory.DONUT_SMP,"BaseFinder","Loaded-chunk base clue scanner.");
+        add(ModuleCategory.DONUT_SMP,"StashFinder","Storage concentration scanner for loaded chunks.");
+        add(ModuleCategory.DONUT_SMP,"SpawnerFinder","Highlights mob spawners in loaded chunks.");
+        add(ModuleCategory.DONUT_SMP,"PortalFinder","Highlights nether portals in loaded chunks.");
+        add(ModuleCategory.DONUT_SMP,"EndCityFinder","End exploration helper for loaded End terrain.");
+        add(ModuleCategory.DONUT_SMP,"BastionFinder","Nether structure exploration helper.");
+        add(ModuleCategory.DONUT_SMP,"FortressFinder","Nether fortress exploration helper.");
+        add(ModuleCategory.DONUT_SMP,"TrialChamberFinder","Trial chamber exploration helper.");
+        add(ModuleCategory.DONUT_SMP,"AncientCityFinder","Ancient city exploration helper.");
+        add(ModuleCategory.DONUT_SMP,"OreScanner","Configurable loaded-block ore scanner.");
+        add(ModuleCategory.DONUT_SMP,"ChestCounter","Counts storage in loaded chunks.");
+        add(ModuleCategory.DONUT_SMP,"ChunkActivity","Loaded-chunk activity indicator.");
+        add(ModuleCategory.DONUT_SMP,"PortalTrace","Tracks recently observed portal positions.");
+        add(ModuleCategory.DONUT_SMP,"Coordinate Logger","Saves useful discovered coordinates.");
+        add(ModuleCategory.DONUT_SMP,"Death Logger","Stores recent death positions.");
+        add(ModuleCategory.DONUT_SMP,"Bed Finder","Highlights beds in loaded chunks.");
+        add(ModuleCategory.DONUT_SMP,"Beacon Finder","Highlights beacons in loaded chunks.");
+        add(ModuleCategory.DONUT_SMP,"Shulker Finder","Highlights shulkers and shulker boxes.");
+        add(ModuleCategory.DONUT_SMP,"Minecart Finder","Highlights storage minecarts in loaded chunks.");
 
         add(ModuleCategory.VISUALS,"Show HUD","Draggable HUD widgets.");
         add(ModuleCategory.VISUALS,"Spotify HUD","Now-playing HUD widget.");
@@ -85,21 +127,116 @@ public final class ModuleRegistry {
         add(ModuleCategory.VISUALS,"Jump Circles","Jump ring effect.");
         add(ModuleCategory.VISUALS,"Fullbright","Maximum client-side brightness.");
 
+        add(ModuleCategory.VISUALS,"EntityESP","General entity highlighting.");
+        add(ModuleCategory.VISUALS,"MobESP","Hostile and passive mob highlighting.");
+        add(ModuleCategory.VISUALS,"Tracers","Lines from your view to selected entities.");
+        add(ModuleCategory.VISUALS,"Chams","Colored entity rendering controls.");
+        add(ModuleCategory.VISUALS,"SkeletonESP","Skeleton-style player overlay.");
+        add(ModuleCategory.VISUALS,"Health Bars","Entity health bar overlay.");
+        add(ModuleCategory.VISUALS,"Armor HUD","Armor durability HUD.");
+        add(ModuleCategory.VISUALS,"Potion HUD","Active potion effect HUD.");
+        add(ModuleCategory.VISUALS,"Keystrokes","Movement key HUD.");
+        add(ModuleCategory.VISUALS,"CPS Counter","Clicks-per-second HUD.");
+        add(ModuleCategory.VISUALS,"FPS Counter","FPS HUD.");
+        add(ModuleCategory.VISUALS,"Coordinates HUD","Coordinates HUD.");
+        add(ModuleCategory.VISUALS,"Direction HUD","Facing direction HUD.");
+        add(ModuleCategory.VISUALS,"Radar","Nearby entity radar.");
+        add(ModuleCategory.VISUALS,"MiniMap","Compact local map HUD.");
+        add(ModuleCategory.VISUALS,"Crosshair","Custom crosshair editor.");
+        add(ModuleCategory.VISUALS,"Zoom","Configurable client-side zoom.");
+        add(ModuleCategory.VISUALS,"Freecam","Detached local camera controls.");
+        add(ModuleCategory.VISUALS,"Breadcrumbs","Movement trail rendering.");
+        add(ModuleCategory.VISUALS,"Damage Numbers","Floating damage number display.");
+        add(ModuleCategory.VISUALS,"Hit Color","Entity hit color overlay.");
+        add(ModuleCategory.VISUALS,"Motion Blur","Client-side motion blur controls.");
+        add(ModuleCategory.VISUALS,"Camera Clip","Third-person camera collision controls.");
+        add(ModuleCategory.VISUALS,"No Hurt Cam","Disables hurt camera shake.");
+        add(ModuleCategory.VISUALS,"No Weather","Hides weather visuals.");
+        add(ModuleCategory.VISUALS,"No Fog","Reduces or disables fog.");
+        add(ModuleCategory.VISUALS,"Time Changer","Client-side time override.");
+        add(ModuleCategory.VISUALS,"FOV Changer","Client-side FOV controls.");
+        add(ModuleCategory.VISUALS,"Item Physics","Dropped-item visual rotation controls.");
+        add(ModuleCategory.VISUALS,"China Hat","Cosmetic player hat renderer.");
+        add(ModuleCategory.VISUALS,"Cape","Custom local cape renderer.");
+        add(ModuleCategory.VISUALS,"Trail","Player trail cosmetic.");
+        add(ModuleCategory.VISUALS,"ESP Glow","Glow-style selected entity overlay.");
+        add(ModuleCategory.VISUALS,"ProjectileESP","Highlights arrows, pearls and projectiles.");
+        add(ModuleCategory.VISUALS,"SpawnerESP","Dedicated mob-spawner highlighting.");
+        add(ModuleCategory.VISUALS,"PortalESP","Dedicated portal highlighting.");
+        add(ModuleCategory.VISUALS,"BedESP","Dedicated bed highlighting.");
+        add(ModuleCategory.VISUALS,"BeaconESP","Dedicated beacon highlighting.");
+
         add(ModuleCategory.MOVEMENT,"Sprint","Automatic sprint controls.");
         add(ModuleCategory.MOVEMENT,"No Slow","Movement slowdown controls.");
         add(ModuleCategory.MOVEMENT,"Step","Step-height controls.");
         add(ModuleCategory.MOVEMENT,"Velocity","Knockback controls.");
+
+        add(ModuleCategory.MOVEMENT,"Speed","Configurable movement speed helper.");
+        add(ModuleCategory.MOVEMENT,"Flight","Client movement flight controls.");
+        add(ModuleCategory.MOVEMENT,"Elytra Fly","Elytra flight controls.");
+        add(ModuleCategory.MOVEMENT,"Elytra Boost","Elytra boost helper.");
+        add(ModuleCategory.MOVEMENT,"Long Jump","Long-jump movement controls.");
+        add(ModuleCategory.MOVEMENT,"High Jump","Higher jump controls.");
+        add(ModuleCategory.MOVEMENT,"Fast Fall","Faster downward movement.");
+        add(ModuleCategory.MOVEMENT,"No Fall","Fall handling controls.");
+        add(ModuleCategory.MOVEMENT,"Safe Walk","Prevents walking off block edges.");
+        add(ModuleCategory.MOVEMENT,"Parkour","Automatic edge jump helper.");
+        add(ModuleCategory.MOVEMENT,"Spider","Wall-climb movement helper.");
+        add(ModuleCategory.MOVEMENT,"Jesus","Water-surface movement controls.");
+        add(ModuleCategory.MOVEMENT,"Inventory Move","Movement while inventory screens are open.");
+        add(ModuleCategory.MOVEMENT,"Sneak","Configurable automatic sneaking.");
+        add(ModuleCategory.MOVEMENT,"Anti Void","Void fall protection helper.");
+        add(ModuleCategory.MOVEMENT,"Auto Walk","Automatic forward walking.");
+        add(ModuleCategory.MOVEMENT,"Bunny Hop","Repeated jump movement helper.");
+        add(ModuleCategory.MOVEMENT,"Strafe","Air and ground strafing controls.");
+        add(ModuleCategory.MOVEMENT,"Timer","Client movement timing controls.");
 
         add(ModuleCategory.MISC,"Keybind Manager","Central module keybind editor.");
         add(ModuleCategory.MISC,"Profiles","Save and switch configurations.");
         add(ModuleCategory.MISC,"Update Center","Sleep Client update information.");
         add(ModuleCategory.MISC,"Notifications","Client notification controls.");
 
+        add(ModuleCategory.MISC,"Auto Fish","Automatic fishing helper.");
+        add(ModuleCategory.MISC,"Auto Eat","Automatic food use helper.");
+        add(ModuleCategory.MISC,"Auto Tool","Selects the preferred tool for a block.");
+        add(ModuleCategory.MISC,"Auto Respawn","Automatically respawns after death.");
+        add(ModuleCategory.MISC,"Auto Reconnect","Reconnect workflow after disconnect.");
+        add(ModuleCategory.MISC,"Anti AFK","Configurable anti-idle movement.");
+        add(ModuleCategory.MISC,"Inventory Cleaner","Inventory cleanup rules.");
+        add(ModuleCategory.MISC,"Chest Stealer","Configurable container transfer helper.");
+        add(ModuleCategory.MISC,"Fast Place","Placement delay controls.");
+        add(ModuleCategory.MISC,"Fast Use","Item use timing controls.");
+        add(ModuleCategory.MISC,"Auto Drop","Automatic item drop rules.");
+        add(ModuleCategory.MISC,"Auto Craft","Recipe crafting helper.");
+        add(ModuleCategory.MISC,"Middle Click Friend","Middle-click friend toggling.");
+        add(ModuleCategory.MISC,"Chat Timestamp","Adds timestamps to chat.");
+        add(ModuleCategory.MISC,"Chat Filter","Filters configured chat phrases.");
+        add(ModuleCategory.MISC,"Auto Reply","Configurable chat auto replies.");
+        add(ModuleCategory.MISC,"Announcer","Local event announcement settings.");
+        add(ModuleCategory.MISC,"Screenshot Helper","Screenshot naming and notification tools.");
+        add(ModuleCategory.MISC,"Session Info","Session time and stats HUD data.");
+        add(ModuleCategory.MISC,"Auto GG","Configurable post-event chat message.");
+        add(ModuleCategory.MISC,"Durability Alert","Warns about low durability.");
+        add(ModuleCategory.MISC,"Low Health Alert","Warns when your health is low.");
+        add(ModuleCategory.MISC,"Pearl Cooldown","Tracks pearl cooldown visually.");
+        add(ModuleCategory.MISC,"Totem Pop Counter","Counts observed totem pops.");
+        add(ModuleCategory.MISC,"Auto Leave","Disconnect rules based on configured conditions.");
+
         add(ModuleCategory.GUI,"Theme Editor","Accent and panel color controls.");
         add(ModuleCategory.GUI,"HUD Editor","Move and scale HUD widgets.");
         add(ModuleCategory.GUI,"Animation Settings","GUI animation speed.");
         add(ModuleCategory.GUI,"GUI Scale","ClickGUI scaling.");
     }
+
+        add(ModuleCategory.GUI,"Watermark","Sleep Client watermark controls.");
+        add(ModuleCategory.GUI,"Module List","Active module list styling.");
+        add(ModuleCategory.GUI,"Font Settings","GUI font size and weight controls.");
+        add(ModuleCategory.GUI,"Blur Settings","Background blur strength controls.");
+        add(ModuleCategory.GUI,"Background Effects","Background glow and particle controls.");
+        add(ModuleCategory.GUI,"Color Manager","Shared module color presets.");
+        add(ModuleCategory.GUI,"Notification Style","Notification position and animation.");
+        add(ModuleCategory.GUI,"Search Settings","ClickGUI module search behavior.");
+        add(ModuleCategory.GUI,"Compact Mode","Compact ClickGUI layout option.");
 
     public static List<Module> all() {
         return Collections.unmodifiableList(MODULES);
