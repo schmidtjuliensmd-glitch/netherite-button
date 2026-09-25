@@ -21,8 +21,6 @@ public final class SusChunkFinder {
 
     private static int tickCounter;
     private static final int SCAN_INTERVAL_TICKS = 20;
-    private static final int SCAN_RADIUS_CHUNKS = 7;
-    private static final int MIN_SCORE = 8;
 
     public static void tick(Minecraft client) {
         Module module = ModuleRegistry.find("Sus Chunk Finder");
@@ -44,8 +42,8 @@ public final class SusChunkFinder {
 
         List<Result> found = new ArrayList<>();
 
-        for (int cx = playerChunkX - SCAN_RADIUS_CHUNKS; cx <= playerChunkX + SCAN_RADIUS_CHUNKS; cx++) {
-            for (int cz = playerChunkZ - SCAN_RADIUS_CHUNKS; cz <= playerChunkZ + SCAN_RADIUS_CHUNKS; cz++) {
+        for (int cx = playerChunkX - ConfigManager.susScanRadius; cx <= playerChunkX + ConfigManager.susScanRadius; cx++) {
+            for (int cz = playerChunkZ - ConfigManager.susScanRadius; cz <= playerChunkZ + ConfigManager.susScanRadius; cz++) {
                 if (!client.level.hasChunk(cx, cz)) continue;
 
                 LevelChunk chunk = client.level.getChunk(cx, cz);
@@ -87,7 +85,7 @@ public final class SusChunkFinder {
                     }
                 }
 
-                if (score >= MIN_SCORE || storage >= 3 || machines >= 4) {
+                if (score >= ConfigManager.susMinScore || storage >= 3 || machines >= 4) {
                     int dx = cx - playerChunkX;
                     int dz = cz - playerChunkZ;
                     double distance = Math.sqrt(dx * dx + dz * dz);
@@ -106,7 +104,7 @@ public final class SusChunkFinder {
 
     public static void renderHud(GuiGraphics g) {
         Module module = ModuleRegistry.find("Sus Chunk Finder");
-        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified() || !ConfigManager.susHudEnabled) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.player == null || client.level == null) return;
