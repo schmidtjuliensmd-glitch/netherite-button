@@ -16,6 +16,8 @@ public final class ModuleRuntime {
             return;
         }
 
+        SusChunkFinder.tick(client);
+
         Module fullbright = ModuleRegistry.find("Fullbright");
         if (fullbright != null && fullbright.enabled()) {
             if (originalGamma == null) originalGamma = client.options.gamma().get();
