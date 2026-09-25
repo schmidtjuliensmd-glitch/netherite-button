@@ -7,6 +7,11 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.minecraft.network.chat.Component;
+import net.minecraft.client.Minecraft;
 
 public final class SleepClient implements ClientModInitializer {
     public static final String NAME = "Sleep Client";
@@ -18,6 +23,7 @@ public final class SleepClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModuleRegistry.init();
+        LicenseManager.verifySaved();
 
         openGui = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.sleepclient.open_gui",
@@ -25,6 +31,33 @@ public final class SleepClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_RIGHT_SHIFT,
                 CATEGORY
         ));
+
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommandManager.literal("sleepkey")
+                    .then(ClientCommandManager.argument("key", StringArgumentType.greedyString())
+                            .executes(context -> {
+                                Minecraft client = Minecraft.getInstance();
+                                String mcName = client.getUser().getName();
+                                String key = StringArgumentType.getString(context, "key");
+                                context.getSource().sendFeedback(Component.literal("Sleep Client: checking license..."));
+                                LicenseManager.saveAndVerify(mcName, key).thenAccept(ok ->
+                                        client.execute(() -> context.getSource().sendFeedback(Component.literal(
+                                                ok ? "Sleep Client: signed in as " + mcName + " (" + LicenseManager.plan() + ")"
+                                                   : "Sleep Client: sign in failed (" + LicenseManager.message() + ")"
+                                        )))
+                                );
+                                return 1;
+                            })));
+
+            dispatcher.register(ClientCommandManager.literal("sleepaccount")
+                    .executes(context -> {
+                        String text = LicenseManager.verified()
+                                ? "Sleep Client: " + LicenseManager.username() + " · " + LicenseManager.plan()
+                                : "Sleep Client: not signed in (" + LicenseManager.message() + ")";
+                        context.getSource().sendFeedback(Component.literal(text));
+                        return 1;
+                    }));
+        });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openGui.consumeClick()) {
