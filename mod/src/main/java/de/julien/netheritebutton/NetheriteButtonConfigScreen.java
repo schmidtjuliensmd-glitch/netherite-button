@@ -119,7 +119,7 @@ public final class NetheriteButtonConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(graphics, mouseX, mouseY, partialTick);
+        graphics.fill(0, 0, this.width, this.height, 0xD0101216);
         super.render(graphics, mouseX, mouseY, partialTick);
 
         int centerX = this.width / 2;
