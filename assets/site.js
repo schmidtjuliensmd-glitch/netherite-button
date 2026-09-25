@@ -4,7 +4,7 @@ const enToDe={
 "Resource Packs":"Ressourcenpakete",
 "and more.":"und mehr.",
 "A modern download site for Minecraft Java. The Netherite Button mod is already available. More mods, resource packs and clients will follow.":"Eine moderne Download-Seite für Minecraft Java. Der Netherite Button Mod ist bereits verfügbar. Weitere Mods, Ressourcenpakete und Clients folgen später.",
-"View Netherite Button →":"Netherite Button ansehen →",
+"View Sleep Client →":"Sleep Client ansehen →",
 "All Mods":"Alle Mods",
 "Live Preview":"Live Vorschau",
 "Mod available":"Mod verfügbar",
