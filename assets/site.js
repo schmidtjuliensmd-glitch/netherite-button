@@ -1,4 +1,8 @@
 const enToDe={
+"Download Sleep Client 1.21.11":"Sleep Client 1.21.11 herunterladen",
+"Your license is valid. Download the Fabric mod for Minecraft Java 1.21.11 and place the JAR file in your mods folder.":"Deine Lizenz ist gültig. Lade den Fabric-Mod für Minecraft Java 1.21.11 herunter und lege die JAR-Datei in deinen Mods-Ordner.",
+"Your Sleep Client is ready.":"Dein Sleep Client ist bereit.",
+"DOWNLOAD":"DOWNLOAD",
 "Lifetime · 25M selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.":"Lifetime · 25M ausgewählt. Die DonutSMP-Zahlung muss serverseitig geprüft werden, bevor ein Key ausgegeben werden kann.",
 "Monthly · 10M selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.":"Monatlich · 10M ausgewählt. Die DonutSMP-Zahlung muss serverseitig geprüft werden, bevor ein Key ausgegeben werden kann.",
 "Could not reach the Sleep Client license server.":"Der Sleep-Client-Lizenzserver konnte nicht erreicht werden.",
@@ -379,6 +383,12 @@ document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
     if(form)form.scrollIntoView({behavior:'smooth',block:'center'});
   });
 });
+function refreshSleepDownload(account){
+  const panel=document.getElementById('sleep-download-panel');
+  if(!panel)return;
+  const valid=account&&account.username&&account.plan&&(!account.expiresAt||new Date(account.expiresAt).getTime()>Date.now());
+  panel.hidden=!valid;
+}
 const sleepKeyForm=document.getElementById('sleep-key-form');
 if(sleepKeyForm){
   const status=document.getElementById('sleep-form-status');
@@ -387,6 +397,7 @@ if(sleepKeyForm){
     const expiry=savedAccount.expiresAt?new Date(savedAccount.expiresAt).toLocaleDateString():'Lifetime';
     status.textContent='Signed in as '+savedAccount.username+' · '+savedAccount.plan+' · '+expiry;
   }
+  refreshSleepDownload(savedAccount);
 
   sleepKeyForm.addEventListener('submit',async e=>{
     e.preventDefault();
@@ -418,11 +429,13 @@ if(sleepKeyForm){
         return;
       }
 
-      localStorage.setItem('sleep-client-account',JSON.stringify({
+      const accountData={
         username:data.username,
         plan:data.plan,
         expiresAt:data.expiresAt
-      }));
+      };
+      localStorage.setItem('sleep-client-account',JSON.stringify(accountData));
+      refreshSleepDownload(accountData);
       const expiry=data.expiresAt?new Date(data.expiresAt).toLocaleDateString():'Lifetime';
       if(status)status.textContent='Signed in as '+data.username+' · '+data.plan+' · '+expiry;
     }catch{
