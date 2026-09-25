@@ -7,29 +7,33 @@ import net.minecraft.network.chat.Component;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class SleepClickGuiScreen extends Screen {
     private static final int TARGET_W = 604;
     private static final int TARGET_H = 498;
     private static final int SIDEBAR_W = 188;
 
-    private static final int BG = 0xFF0B0710;
-    private static final int SIDEBAR_BG = 0xFF0C0810;
-    private static final int MAIN_BG = 0xFF120A17;
-    private static final int CARD_BG = 0xFF1A111D;
-    private static final int CARD_BG_ACTIVE = 0xFF1B1020;
-    private static final int LINE = 0xFF332238;
-    private static final int LINE_SOFT = 0xFF251828;
-    private static final int TEXT = 0xFFF4EDF6;
-    private static final int MUTED = 0xFF9A8E9E;
-    private static final int MUTED_DARK = 0xFF716676;
-    private static final int PINK = 0xFFFF4FA3;
-    private static final int PINK_DARK = 0xFFCF2F78;
-    private static final int OFF_TRACK = 0xFF48515D;
-    private static final int OFF_KNOB = 0xFF8993A0;
+    private static final int BG = 0xFF09070D;
+    private static final int SIDEBAR_BG = 0xFF0B0810;
+    private static final int MAIN_BG = 0xFF110A17;
+    private static final int CARD_BG = 0xFF18101D;
+    private static final int CARD_HOVER = 0xFF1C1222;
+    private static final int LINE = 0xFF34223B;
+    private static final int LINE_SOFT = 0xFF241729;
+    private static final int TEXT = 0xFFF5F1F7;
+    private static final int MUTED = 0xFFAAA1AF;
+    private static final int MUTED_DARK = 0xFF706777;
+    private static final int OFF_TRACK = 0xFF46515D;
+    private static final int OFF_KNOB = 0xFFA8B0B9;
 
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
+
+    private final long openedAt = System.nanoTime();
+    private final Map<Module, Float> toggleAnim = new HashMap<>();
+    private final Map<Module, Float> hoverAnim = new HashMap<>();
 
     private ModuleCategory selected = ModuleCategory.COMBAT;
     private int scrollOffset = 0;
@@ -52,33 +56,60 @@ public final class SleepClickGuiScreen extends Screen {
         int x = (this.width - w) / 2;
         int y = (this.height - h) / 2;
 
-        // Outer shell
-        roundedRect(g, x, y, w, h, 11, BG);
-        roundedOutline(g, x, y, w, h, 11, LINE, BG);
+        float progress = Math.min(1.0f, (System.nanoTime() - openedAt) / 240_000_000.0f);
+        float eased = 1.0f - (float)Math.pow(1.0f - progress, 3.0);
+        float scale = 0.965f + 0.035f * eased;
 
-        // Sidebar and main body
-        roundedRect(g, x + 1, y + 1, SIDEBAR_W - 1, h - 2, 10, SIDEBAR_BG);
+        g.pose().pushMatrix();
+        g.pose().translate(this.width / 2.0f, this.height / 2.0f);
+        g.pose().scale(scale, scale);
+        g.pose().translate(-this.width / 2.0f, -this.height / 2.0f);
+
+        renderGlow(g, x, y, w, h, eased);
+
+        roundedRect(g, x, y, w, h, 12, BG);
+        roundedOutline(g, x, y, w, h, 12, 0xFF38243E, BG);
+
+        roundedRect(g, x + 1, y + 1, SIDEBAR_W - 1, h - 2, 11, SIDEBAR_BG);
         g.fill(x + SIDEBAR_W, y + 1, x + w - 1, y + h - 1, MAIN_BG);
         g.fill(x + SIDEBAR_W, y + 1, x + SIDEBAR_W + 1, y + h - 1, LINE_SOFT);
 
         renderBrand(g, x, y);
         renderSidebar(g, x, y, mouseX, mouseY);
         renderMain(g, x, y, w, h, mouseX, mouseY);
+
+        g.pose().popMatrix();
+    }
+
+    private void renderGlow(GuiGraphics g, int x, int y, int w, int h, float amount) {
+        int accent = accent();
+        for (int i = 5; i >= 1; i--) {
+            int spread = i * 3;
+            int alpha = Math.max(3, Math.round((10 - i) * 1.7f * amount));
+            int c = (alpha << 24) | (accent & 0x00FFFFFF);
+            roundedRect(g, x - spread, y - spread, w + spread * 2, h + spread * 2, 16 + spread, c);
+        }
+
+        int purple = ThemeConfig.accentSecondary;
+        int a = Math.round(11 * amount);
+        roundedRect(g, x + w - 165, y + h - 85, 145, 65, 28, (a << 24) | (purple & 0x00FFFFFF));
     }
 
     private void renderBrand(GuiGraphics g, int x, int y) {
-        // Pink app icon
-        roundedRect(g, x + 19, y + 20, 33, 33, 8, 0xFFE13D9A);
-        g.drawString(this.font, "C", x + 31, y + 32, 0xFFFFFFFF, true);
+        int accent = accent();
 
-        g.drawString(this.font, "Sleep Client", x + 59, y + 27, TEXT, true);
-        g.drawString(this.font, "v1.0", x + 59, y + 44, MUTED_DARK, false);
+        roundedRect(g, x + 19, y + 20, 33, 33, 9, accent);
+        roundedRect(g, x + 22, y + 23, 27, 27, 8, withAlpha(ThemeConfig.accentSecondary, 58));
+
+        SmoothTextRenderer.draw(g, "C", x + 30, y + 27, 11.5f, 0xFFFFFFFF, true);
+        SmoothTextRenderer.draw(g, "Sleep Client", x + 59, y + 23, 11.7f, TEXT, true);
+        SmoothTextRenderer.draw(g, UpdateManager.currentVersion(), x + 59, y + 39, 8.2f, MUTED_DARK, false);
     }
 
     private void renderSidebar(GuiGraphics g, int x, int y, int mouseX, int mouseY) {
-        g.drawString(this.font, "MODULE", x + 20, y + 91, MUTED_DARK, true);
+        SmoothTextRenderer.draw(g, "MODULE", x + 20, y + 85, 8.0f, MUTED_DARK, true);
 
-        int itemY = y + 109;
+        int itemY = y + 108;
         for (ModuleCategory category : new ModuleCategory[]{
                 ModuleCategory.COMBAT,
                 ModuleCategory.MOVEMENT,
@@ -90,10 +121,10 @@ public final class SleepClickGuiScreen extends Screen {
             itemY += 42;
         }
 
-        g.drawString(this.font, "ALLGEMEIN", x + 20, y + 345, MUTED_DARK, true);
+        SmoothTextRenderer.draw(g, "ALLGEMEIN", x + 20, y + 340, 8.0f, MUTED_DARK, true);
 
-        renderBottomItem(g, "⚙", "GUI", x + 12, y + 365, 165, 38, selected == ModuleCategory.GUI, mouseX, mouseY);
-        renderBottomItem(g, "⌁", "Settings", x + 12, y + 407, 165, 38, false, mouseX, mouseY);
+        renderBottomItem(g, "⚙", "GUI", x + 12, y + 363, 165, 38, selected == ModuleCategory.GUI, mouseX, mouseY);
+        renderBottomItem(g, "⌁", "Settings", x + 12, y + 405, 165, 38, false, mouseX, mouseY);
     }
 
     private void renderCategory(GuiGraphics g, ModuleCategory category, int x, int y, int w, int h, int mouseX, int mouseY) {
@@ -101,11 +132,11 @@ public final class SleepClickGuiScreen extends Screen {
         boolean hover = inside(mouseX, mouseY, x, y, w, h);
 
         if (active) {
-            roundedRect(g, x, y, w, h, 8, 0xFF28132F);
-            roundedOutline(g, x, y, w, h, 8, 0xFF4C224F, 0xFF28132F);
-            g.fill(x, y + 7, x + 2, y + h - 7, PINK);
+            roundedRect(g, x, y, w, h, 9, 0xFF27142F);
+            roundedOutline(g, x, y, w, h, 9, withAlpha(accent(), 105), 0xFF27142F);
+            roundedRect(g, x + 1, y + 8, 2, h - 16, 2, accent());
         } else if (hover) {
-            roundedRect(g, x, y, w, h, 8, 0xFF151019);
+            roundedRect(g, x, y, w, h, 9, 0xFF151019);
         }
 
         String icon = switch (category) {
@@ -113,26 +144,28 @@ public final class SleepClickGuiScreen extends Screen {
             case MOVEMENT -> "➜";
             case DONUT_SMP -> "◉";
             case VISUALS -> "◇";
-            case MISC -> "◇";
+            case MISC -> "◆";
             default -> "•";
         };
 
         int color = active ? TEXT : MUTED;
-        g.drawString(this.font, icon, x + 9, y + 15, color, false);
-        g.drawString(this.font, category.displayName(), x + 27, y + 15, color, active);
+        SmoothTextRenderer.draw(g, icon, x + 9, y + 10, 10.0f, color, false);
+        SmoothTextRenderer.draw(g, category.displayName(), x + 28, y + 10, 10.2f, color, active);
     }
 
     private void renderBottomItem(GuiGraphics g, String icon, String label, int x, int y, int w, int h,
                                   boolean active, int mouseX, int mouseY) {
         boolean hover = inside(mouseX, mouseY, x, y, w, h);
         if (active) {
-            roundedRect(g, x, y, w, h, 8, 0xFF28132F);
+            roundedRect(g, x, y, w, h, 9, 0xFF27142F);
+            roundedOutline(g, x, y, w, h, 9, withAlpha(accent(), 95), 0xFF27142F);
         } else if (hover) {
-            roundedRect(g, x, y, w, h, 8, 0xFF151019);
+            roundedRect(g, x, y, w, h, 9, 0xFF151019);
         }
+
         int color = active ? TEXT : MUTED;
-        g.drawString(this.font, icon, x + 9, y + 15, color, false);
-        g.drawString(this.font, label, x + 27, y + 15, color, active);
+        SmoothTextRenderer.draw(g, icon, x + 9, y + 10, 10.0f, color, false);
+        SmoothTextRenderer.draw(g, label, x + 28, y + 10, 10.2f, color, active);
     }
 
     private void renderMain(GuiGraphics g, int x, int y, int w, int h, int mouseX, int mouseY) {
@@ -147,18 +180,16 @@ public final class SleepClickGuiScreen extends Screen {
             case GUI -> "GUI";
         };
 
-        g.drawString(this.font, title, mainX + 17, y + 29, TEXT, true);
-        g.drawString(this.font, LocalTime.now().format(TIME), mainX + 174, y + 29, PINK, true);
+        SmoothTextRenderer.draw(g, title, mainX + 17, y + 20, 11.7f, TEXT, true);
+        SmoothTextRenderer.draw(g, LocalTime.now().format(TIME), mainX + 174, y + 20, 10.0f, accent(), true);
 
-        // Search field
         int searchX = x + w - 196;
-        int searchY = y + 18;
-        roundedRect(g, searchX, searchY, 186, 31, 8, 0xFF1B1220);
-        roundedOutline(g, searchX, searchY, 186, 31, 8, LINE, 0xFF1B1220);
-        g.drawString(this.font, "Module suchen...", searchX + 11, searchY + 12, MUTED_DARK, false);
+        int searchY = y + 17;
+        roundedRect(g, searchX, searchY, 186, 32, 9, 0xFF1A1120);
+        roundedOutline(g, searchX, searchY, 186, 32, 9, LINE, 0xFF1A1120);
+        SmoothTextRenderer.draw(g, "Module suchen...", searchX + 11, searchY + 8, 9.0f, MUTED_DARK, false);
 
-        // Header divider
-        g.fill(mainX + 17, y + 55, x + w - 10, y + 56, 0xFF3B1C39);
+        g.fill(mainX + 17, y + 55, x + w - 10, y + 56, withAlpha(accent(), 58));
 
         List<Module> modules = ModuleRegistry.byCategory(selected);
 
@@ -182,25 +213,38 @@ public final class SleepClickGuiScreen extends Screen {
 
     private void renderModuleCard(GuiGraphics g, Module module, int x, int y, int w, int h, int mouseX, int mouseY) {
         boolean hover = inside(mouseX, mouseY, x, y, w, h);
-        int bg = module.enabled() ? CARD_BG_ACTIVE : CARD_BG;
-        int border = module.enabled() ? PINK_DARK : (hover ? 0xFF66335F : LINE);
 
-        roundedRect(g, x, y, w, h, 8, bg);
-        roundedOutline(g, x, y, w, h, 8, border, bg);
+        float hoverNow = hoverAnim.getOrDefault(module, 0.0f);
+        hoverNow += ((hover ? 1.0f : 0.0f) - hoverNow) * 0.18f * Math.max(0.3f, ThemeConfig.animationSpeed);
+        hoverAnim.put(module, hoverNow);
 
-        g.drawString(this.font, module.name(), x + 12, y + 22, TEXT, true);
+        float toggleNow = toggleAnim.getOrDefault(module, module.enabled() ? 1.0f : 0.0f);
+        toggleNow += ((module.enabled() ? 1.0f : 0.0f) - toggleNow) * 0.22f * Math.max(0.3f, ThemeConfig.animationSpeed);
+        toggleAnim.put(module, toggleNow);
+
+        int bg = mix(CARD_BG, CARD_HOVER, hoverNow * 0.75f);
+        int border = mix(LINE, accent(), module.enabled() ? 0.72f : hoverNow * 0.28f);
+
+        if (module.enabled()) {
+            roundedRect(g, x - 2, y - 2, w + 4, h + 4, 11, withAlpha(accent(), 15));
+        }
+
+        roundedRect(g, x, y, w, h, 9, bg);
+        roundedOutline(g, x, y, w, h, 9, border, bg);
+
+        SmoothTextRenderer.draw(g, module.name(), x + 12, y + 17, 10.2f, TEXT, true);
 
         int trackX = x + w - 39;
         int trackY = y + 19;
-        renderToggle(g, trackX, trackY, module.enabled());
+        renderToggle(g, trackX, trackY, toggleNow);
     }
 
-    private void renderToggle(GuiGraphics g, int x, int y, boolean enabled) {
-        int track = enabled ? PINK : OFF_TRACK;
+    private void renderToggle(GuiGraphics g, int x, int y, float enabledAmount) {
+        int track = mix(OFF_TRACK, accent(), enabledAmount);
         roundedRect(g, x, y, 28, 15, 8, track);
 
-        int knobX = enabled ? x + 15 : x + 3;
-        roundedRect(g, knobX, y + 3, 9, 9, 5, enabled ? 0xFFFFFFFF : OFF_KNOB);
+        float knob = x + 3 + 12.0f * enabledAmount;
+        roundedRect(g, Math.round(knob), y + 3, 9, 9, 5, mix(OFF_KNOB, 0xFFFFFFFF, enabledAmount));
     }
 
     @Override
@@ -213,7 +257,7 @@ public final class SleepClickGuiScreen extends Screen {
         int x = (this.width - w) / 2;
         int y = (this.height - h) / 2;
 
-        int itemY = y + 109;
+        int itemY = y + 108;
         for (ModuleCategory category : new ModuleCategory[]{
                 ModuleCategory.COMBAT,
                 ModuleCategory.MOVEMENT,
@@ -229,7 +273,7 @@ public final class SleepClickGuiScreen extends Screen {
             itemY += 42;
         }
 
-        if (inside(mouseX, mouseY, x + 12, y + 365, 165, 38)) {
+        if (inside(mouseX, mouseY, x + 12, y + 363, 165, 38)) {
             selected = ModuleCategory.GUI;
             scrollOffset = 0;
             return true;
@@ -263,8 +307,36 @@ public final class SleepClickGuiScreen extends Screen {
         int contentHeight = rows * 64;
         int visible = Math.min(this.height - 16, TARGET_H) - 88;
         int max = Math.max(0, contentHeight - visible);
-        scrollOffset = Math.max(0, Math.min(max, scrollOffset - (int) (verticalAmount * 26)));
+        scrollOffset = Math.max(0, Math.min(max, scrollOffset - (int)(verticalAmount * 26)));
         return true;
+    }
+
+    private static int accent() {
+        return ThemeConfig.accent;
+    }
+
+    private static int withAlpha(int color, int alpha) {
+        return ((alpha & 0xFF) << 24) | (color & 0x00FFFFFF);
+    }
+
+    private static int mix(int a, int b, float t) {
+        t = Math.max(0.0f, Math.min(1.0f, t));
+        int aa = (a >>> 24) & 0xFF;
+        int ar = (a >>> 16) & 0xFF;
+        int ag = (a >>> 8) & 0xFF;
+        int ab = a & 0xFF;
+
+        int ba = (b >>> 24) & 0xFF;
+        int br = (b >>> 16) & 0xFF;
+        int bg = (b >>> 8) & 0xFF;
+        int bb = b & 0xFF;
+
+        int oa = Math.round(aa + (ba - aa) * t);
+        int or = Math.round(ar + (br - ar) * t);
+        int og = Math.round(ag + (bg - ag) * t);
+        int ob = Math.round(ab + (bb - ab) * t);
+
+        return (oa << 24) | (or << 16) | (og << 8) | ob;
     }
 
     private static boolean inside(double mx, double my, int x, int y, int w, int h) {
@@ -293,6 +365,6 @@ public final class SleepClickGuiScreen extends Screen {
     private static int cornerInset(int radius, int row) {
         double dy = radius - row - 0.5;
         double dx = Math.sqrt(Math.max(0.0, radius * radius - dy * dy));
-        return radius - (int) Math.floor(dx);
+        return radius - (int)Math.floor(dx);
     }
 }
