@@ -43,6 +43,9 @@ java {
 publishing {
     publications {
         maven(MavenPublication) {
+            groupId = System.getenv("GROUP") ?: project.group.toString()
+            artifactId = System.getenv("ARTIFACT") ?: "netherite-button"
+            version = System.getenv("VERSION") ?: project.version.toString()
             artifact(remapJar)
             artifact(sourcesJar)
         }
