@@ -11,6 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Items;
 
 import java.util.regex.Pattern;
+import org.lwjgl.glfw.GLFW;
 
 public final class NetheriteButtonClient implements ClientModInitializer {
     public static final String MOD_ID = "netheritebutton";
@@ -30,7 +31,7 @@ public final class NetheriteButtonClient implements ClientModInitializer {
         openMenuKey = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.netheritebutton.open_menu",
                 InputConstants.Type.KEYSYM,
-                InputConstants.KEY_N,
+                GLFW.GLFW_KEY_UNKNOWN,
                 category
         ));
 
