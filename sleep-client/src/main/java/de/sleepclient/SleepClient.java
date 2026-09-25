@@ -23,7 +23,9 @@ public final class SleepClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModuleRegistry.init();
-        LicenseManager.verifySaved();
+        LicenseManager.verifySaved().thenAccept(ok -> {
+            if (ok) UpdateManager.checkForUpdates();
+        });
 
         openGui = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.sleepclient.open_gui",
@@ -49,6 +51,22 @@ public final class SleepClient implements ClientModInitializer {
                                 return 1;
                             })));
 
+            dispatcher.register(ClientCommandManager.literal("sleepupdate")
+                    .executes(context -> {
+                        if (!LicenseManager.verified()) {
+                            context.getSource().sendFeedback(Component.literal("Sleep Client: sign in first with /sleepkey."));
+                            return 1;
+                        }
+                        UpdateManager.checkForUpdates().thenRun(() -> Minecraft.getInstance().execute(() -> {
+                            String text = UpdateManager.updateAvailable()
+                                    ? "Sleep Client: version " + UpdateManager.latestVersion() + " is available. Opening download page..."
+                                    : "Sleep Client: you already have the latest version (" + UpdateManager.currentVersion() + ").";
+                            context.getSource().sendFeedback(Component.literal(text));
+                            if (UpdateManager.updateAvailable()) UpdateManager.openLatestDownload();
+                        }));
+                        return 1;
+                    }));
+
             dispatcher.register(ClientCommandManager.literal("sleepaccount")
                     .executes(context -> {
                         String text = LicenseManager.verified()
@@ -64,6 +82,7 @@ public final class SleepClient implements ClientModInitializer {
                 client.setScreen(new SleepClickGuiScreen());
             }
             ModuleRuntime.tick(client);
+            UpdateManager.tick(client);
         });
     }
 }
