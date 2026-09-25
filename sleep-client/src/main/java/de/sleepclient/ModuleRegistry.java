@@ -97,5 +97,12 @@ public final class ModuleRegistry {
         return MODULES.stream().filter(m -> m.category() == category).toList();
     }
 
+    public static Module find(String name) {
+        return MODULES.stream()
+                .filter(m -> m.name().equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
+    }
+
     private ModuleRegistry() {}
 }
