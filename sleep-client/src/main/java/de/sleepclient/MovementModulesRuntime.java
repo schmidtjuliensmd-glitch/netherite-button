@@ -14,7 +14,7 @@ public final class MovementModulesRuntime {
     private static Boolean originalFlying;
 
     public static void tick(Minecraft client) {
-        if (!LicenseManager.verified() || client.player == null || client.level == null) {
+        if (client.player == null || client.level == null) {
             restoreKeys(client);
             restoreFlight(client);
             return;
