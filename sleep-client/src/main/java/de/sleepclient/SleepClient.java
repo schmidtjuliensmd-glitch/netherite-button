@@ -41,10 +41,6 @@ public final class SleepClient implements ClientModInitializer {
                 (graphics, deltaTracker) -> PlayerEsp.renderHud(graphics)
         );
         HudElementRegistry.addLast(
-                Identifier.fromNamespaceAndPath("sleepclient", "block_search_hud"),
-                (graphics, deltaTracker) -> BlockSearchRuntime.renderHud(graphics)
-        );
-        HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath("sleepclient", "storage_esp_hud"),
                 (graphics, deltaTracker) -> StorageEsp.renderHud(graphics)
         );

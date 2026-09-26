@@ -65,10 +65,10 @@ public final class ModuleRegistry {
         add(ModuleCategory.DONUT_SMP,"AutoMine","Straight-line mining workflow with lava avoidance.");
         add(ModuleCategory.DONUT_SMP,"BoneDropper","Bone-farm collection and drop workflow.");
         add(ModuleCategory.DONUT_SMP,"Auto Villager Trade","Configurable villager trading workflow.");
-        add(ModuleCategory.DONUT_SMP,"ChunkFinder","Find loaded chunks containing amethyst clusters.");
-        add(ModuleCategory.DONUT_SMP,"ChunkFinderV2","Extended loaded-chunk analysis.");
-        add(ModuleCategory.DONUT_SMP,"Sus Chunk Finder","Suspicious loaded-chunk analysis.");
-        add(ModuleCategory.DONUT_SMP,"SusChunkFinderV2","Extended suspicious-chunk analysis.");
+        add(ModuleCategory.DONUT_SMP,"ChunkFinder","Mark loaded chunks with detected amethyst buds or clusters in red.");
+        add(ModuleCategory.DONUT_SMP,"ChunkFinderV2","Scan loaded chunks for amethyst growth and mark them with red plates.");
+        add(ModuleCategory.DONUT_SMP,"Sus Chunk Finder","Trigger only after detecting an amethyst bud or cluster.");
+        add(ModuleCategory.DONUT_SMP,"SusChunkFinderV2","Amethyst-based chunk detection with a configurable red plate height.");
         add(ModuleCategory.DONUT_SMP,"Netherite Finder","Highlights ancient debris in loaded chunks.");
         add(ModuleCategory.DONUT_SMP,"Auto Elytra Finder","End exploration workflow for elytra searches.");
         add(ModuleCategory.DONUT_SMP,"Deep Player Finder","Highlights loaded players below a configured Y level.");

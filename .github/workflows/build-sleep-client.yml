@@ -28,6 +28,9 @@ jobs:
       - name: Build Sleep Client
         working-directory: sleep-client
         run: gradle build --stacktrace
+      - name: Verify chunk detection rules
+        working-directory: sleep-client
+        run: java -cp build/classes/java/main checks/ChunkFinderChecks.java
       - name: Upload Sleep Client jar
         uses: actions/upload-artifact@v4
         with:

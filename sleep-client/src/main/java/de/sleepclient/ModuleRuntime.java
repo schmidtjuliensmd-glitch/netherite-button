@@ -6,6 +6,7 @@ public final class ModuleRuntime {
     private static Double originalGamma;
 
     public static void tick(Minecraft client) {
+        SusChunkFinder.tick(client); // Also clears evidence on disconnect or license changes.
         if (!LicenseManager.verified()) {
             restoreGamma(client);
             return;
@@ -16,7 +17,6 @@ public final class ModuleRuntime {
             return;
         }
 
-        SusChunkFinder.tick(client);
         StorageEsp.tick(client);
         BlockSearchRuntime.tick(client);
         DonutUtilityRuntime.tick(client);

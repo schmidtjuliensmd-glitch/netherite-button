@@ -17,7 +17,7 @@ import java.util.Map;
 
 public final class SleepClickGuiScreen extends Screen {
     private static final int W = 604, H = 498, SIDEBAR = 190;
-    private static final float COMPACT_SCALE = .88f;
+    private static final float COMPACT_SCALE = .88f * .95f;
     private static final int TEXT = 0xFFF7F3F8, MUTED = 0xFF9F909C, QUIET = 0xFF706372;
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
     private static final ModuleCategory[] CATEGORIES = {

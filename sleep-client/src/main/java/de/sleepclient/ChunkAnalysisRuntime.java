@@ -36,8 +36,6 @@ public final class ChunkAnalysisRuntime {
         int radius = 8;
         radius = Math.max(radius, ConfigManager.intOption("BaseFinder","radius",8));
         radius = Math.max(radius, ConfigManager.intOption("StashFinder","radius",8));
-        radius = Math.max(radius, ConfigManager.intOption("ChunkFinderV2","radius",8));
-        radius = Math.max(radius, ConfigManager.intOption("SusChunkFinderV2","radius",8));
         radius = Math.max(radius, ConfigManager.intOption("SpawnerFinder","radius",6));
         radius = Math.max(radius, ConfigManager.intOption("Beacon Finder","radius",6));
         radius = Math.max(radius, ConfigManager.intOption("Shulker Finder","radius",6));
@@ -131,23 +129,6 @@ public final class ChunkAnalysisRuntime {
             }
         }
 
-        if (enabled("ChunkFinderV2")) {
-            int threshold = ConfigManager.intOption("ChunkFinderV2","confidence",65);
-            for (ChunkStats stats : STATS.values()) {
-                int confidence = Math.min(100, stats.score() * 4);
-                if (confidence < threshold) continue;
-                renderChunk(context, stats, 0xFFB46CFF, 2.2f);
-            }
-        }
-
-        if (enabled("SusChunkFinderV2")) {
-            int threshold = ConfigManager.intOption("SusChunkFinderV2","confidence",70);
-            for (ChunkStats stats : STATS.values()) {
-                int confidence = Math.min(100, stats.score() * 5);
-                if (confidence < threshold) continue;
-                renderChunk(context, stats, 0xFFFF4F9F, 2.5f);
-            }
-        }
     }
 
     private static void renderChunkScores(WorldRenderContext context, String module, int minScore, int color) {
@@ -199,10 +180,6 @@ public final class ChunkAnalysisRuntime {
             threshold = ConfigManager.intOption("BaseFinder","storageWeight",5) * 3;
         } else if (enabled("StashFinder")) {
             active = "StashFinder";
-        } else if (enabled("ChunkFinderV2")) {
-            active = "ChunkFinderV2";
-        } else if (enabled("SusChunkFinderV2")) {
-            active = "SusChunkFinderV2";
         }
 
         if (active == null) return;
@@ -213,8 +190,6 @@ public final class ChunkAnalysisRuntime {
         List<ChunkStats> hits = STATS.values().stream()
                 .filter(s -> switch (activeModule) {
                     case "StashFinder" -> s.storage() >= ConfigManager.intOption("StashFinder","minStorage",8);
-                    case "ChunkFinderV2" -> Math.min(100,s.score()*4) >= ConfigManager.intOption("ChunkFinderV2","confidence",65);
-                    case "SusChunkFinderV2" -> Math.min(100,s.score()*5) >= ConfigManager.intOption("SusChunkFinderV2","confidence",70);
                     default -> s.score() >= scoreThreshold;
                 })
                 .sorted(Comparator.comparingInt(ChunkStats::score).reversed())

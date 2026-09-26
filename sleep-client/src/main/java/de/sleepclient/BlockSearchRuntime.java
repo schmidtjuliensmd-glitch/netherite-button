@@ -2,7 +2,6 @@ package de.sleepclient;
 
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -10,13 +9,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class BlockSearchRuntime {
-    private static final Map<Long, ChunkHit> AMETHYST_CHUNKS = new HashMap<>();
     private static final Map<Long, List<BlockPos>> NETHERITE = new HashMap<>();
     private static final Map<Long, List<BlockPos>> BLOCK_ESP = new HashMap<>();
 
@@ -31,19 +28,15 @@ public final class BlockSearchRuntime {
             return;
         }
 
-        boolean chunkFinder = enabled("ChunkFinder");
         boolean netheriteFinder = enabled("Netherite Finder");
         boolean blockEsp = enabled("BlockESP");
 
-        if (!chunkFinder) AMETHYST_CHUNKS.clear();
         if (!netheriteFinder) NETHERITE.clear();
         if (!blockEsp) BLOCK_ESP.clear();
 
-        if (!chunkFinder && !netheriteFinder && !blockEsp) return;
+        if (!netheriteFinder && !blockEsp) return;
 
-        int delay = chunkFinder
-                ? ConfigManager.intOption("ChunkFinder", "scanDelay", 4)
-                : 4;
+        int delay = 4;
 
         if (++tick < Math.max(1, delay)) return;
         tick = 0;
@@ -52,7 +45,6 @@ public final class BlockSearchRuntime {
         int pcz = client.player.blockPosition().getZ() >> 4;
 
         int chunkRadius = 2;
-        if (chunkFinder) chunkRadius = Math.max(chunkRadius, ConfigManager.intOption("ChunkFinder", "radius", 7));
         if (netheriteFinder) chunkRadius = Math.max(chunkRadius, ConfigManager.intOption("Netherite Finder", "radius", 5));
         if (blockEsp) {
             int blockRange = ConfigManager.intOption("BlockESP", "range", 32);
@@ -77,24 +69,20 @@ public final class BlockSearchRuntime {
 
         if (!client.level.hasChunk(cx, cz)) return;
 
-        scanChunk(client, cx, cz, chunkFinder, netheriteFinder, blockEsp);
+        scanChunk(client, cx, cz, netheriteFinder, blockEsp);
     }
 
-    private static void scanChunk(Minecraft client, int cx, int cz, boolean chunkFinder, boolean netheriteFinder, boolean blockEsp) {
+    private static void scanChunk(Minecraft client, int cx, int cz, boolean netheriteFinder, boolean blockEsp) {
         long key = key(cx, cz);
-        AMETHYST_CHUNKS.remove(key);
         NETHERITE.remove(key);
         BLOCK_ESP.remove(key);
 
         String targetName = ConfigManager.stringOption("BlockESP", "target", "Amethyst Cluster");
         int maxBlockEsp = ConfigManager.intOption("BlockESP", "maxResults", 192);
-        int minClusters = ConfigManager.intOption("ChunkFinder", "minClusters", 1);
 
         List<BlockPos> netheriteFound = new ArrayList<>();
         List<BlockPos> blockEspFound = new ArrayList<>();
 
-        int clusters = 0;
-        BlockPos firstCluster = null;
 
         int minY = -64;
         int maxY = 96;
@@ -111,11 +99,6 @@ public final class BlockSearchRuntime {
                     BlockState state = client.level.getBlockState(pos);
                     Block block = state.getBlock();
 
-                    if (chunkFinder && block == Blocks.AMETHYST_CLUSTER) {
-                        clusters++;
-                        if (firstCluster == null) firstCluster = pos.immutable();
-                    }
-
                     if (netheriteFinder && y <= 40 && block == Blocks.ANCIENT_DEBRIS && netheriteFound.size() < 64) {
                         netheriteFound.add(pos.immutable());
                     }
@@ -125,10 +108,6 @@ public final class BlockSearchRuntime {
                     }
                 }
             }
-        }
-
-        if (chunkFinder && clusters >= minClusters && firstCluster != null) {
-            AMETHYST_CHUNKS.put(key, new ChunkHit(cx, cz, clusters, firstCluster));
         }
 
         if (netheriteFinder && !netheriteFound.isEmpty()) NETHERITE.put(key, netheriteFound);
@@ -151,20 +130,6 @@ public final class BlockSearchRuntime {
     public static void renderWorld(WorldRenderContext context) {
         Minecraft client = Minecraft.getInstance();
         if (!LicenseManager.verified() || client.player == null) return;
-
-        if (enabled("ChunkFinder")) {
-            double y = client.player.getY() - 0.15;
-            for (ChunkHit hit : AMETHYST_CHUNKS.values()) {
-                double x = hit.chunkX() * 16.0;
-                double z = hit.chunkZ() * 16.0;
-                WorldBoxRenderer.box(context, new AABB(x, y, z, x + 16.0, y + 0.12, z + 16.0),
-                        0xFFB46CFF, 0.95f, 2.4f);
-
-                BlockPos p = hit.firstCluster();
-                WorldBoxRenderer.box(context, new AABB(p.getX(), p.getY(), p.getZ(), p.getX()+1, p.getY()+1, p.getZ()+1),
-                        0xFFD18CFF, 1.0f, 2.2f);
-            }
-        }
 
         if (enabled("Netherite Finder")) {
             float width = ConfigManager.floatOption("Netherite Finder", "lineWidth", 2.2f);
@@ -195,32 +160,6 @@ public final class BlockSearchRuntime {
         }
     }
 
-    public static void renderHud(GuiGraphics g) {
-        if (!enabled("ChunkFinder")
-                || !LicenseManager.verified()
-                || !ConfigManager.boolOption("ChunkFinder", "hud", true)) return;
-
-        List<ChunkHit> hits = AMETHYST_CHUNKS.values().stream()
-                .sorted(Comparator.comparingInt(ChunkHit::clusters).reversed())
-                .limit(5)
-                .toList();
-
-        int h = 42 + hits.size() * 17;
-        int x = 14;
-        int y = 55;
-
-        SmoothShapeRenderer.glow(g, x, y, 212, h, 10, 0x55B46CFF, 4);
-        SmoothShapeRenderer.roundedRect(g, x, y, 212, h, 10, 0xE80D0912);
-        SmoothTextRenderer.draw(g, "Chunk Finder · Amethyst", x + 11, y + 8, 9.2f, 0xFFF4EFF7, true);
-        SmoothTextRenderer.draw(g, AMETHYST_CHUNKS.size() + " Chunk Treffer", x + 11, y + 24, 7.9f, 0xFFBFA7D7, false);
-
-        for (int i = 0; i < hits.size(); i++) {
-            ChunkHit hit = hits.get(i);
-            String text = "Chunk " + hit.chunkX() + ", " + hit.chunkZ() + " · " + hit.clusters() + " Cluster";
-            SmoothTextRenderer.draw(g, text, x + 11, y + 42 + i * 17, 7.9f, 0xFFDCCFE6, false);
-        }
-    }
-
     private static boolean enabled(String name) {
         Module module = ModuleRegistry.find(name);
         return module != null && module.enabled();
@@ -231,12 +170,10 @@ public final class BlockSearchRuntime {
     }
 
     private static void clear() {
-        AMETHYST_CHUNKS.clear();
         NETHERITE.clear();
         BLOCK_ESP.clear();
     }
 
-    private record ChunkHit(int chunkX, int chunkZ, int clusters, BlockPos firstCluster) {}
 
     private BlockSearchRuntime() {}
 }

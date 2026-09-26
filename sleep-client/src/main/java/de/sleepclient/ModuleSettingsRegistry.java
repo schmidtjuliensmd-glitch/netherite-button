@@ -54,26 +54,12 @@ public final class ModuleSettingsRegistry {
                     SettingSpec.decimal("lineWidth", "Linienstärke", "Stärke der Block-Markierung.", 1.0, 5.0, 0.2, 2.0),
                     SettingSpec.integer("maxResults", "Max. Treffer", "Begrenzt gleichzeitig angezeigte Treffer.", 32, 512, 32, 192)
             );
-            case "ChunkFinder" -> List.of(
-                    SettingSpec.integer("radius", "Scan Radius", "Radius bereits geladener Chunks.", 2, 12, 1, 7),
-                    SettingSpec.integer("minClusters", "Min. Cluster", "Mindestzahl Amethyst-Cluster für einen Treffer.", 1, 16, 1, 1),
-                    SettingSpec.integer("scanDelay", "Scan Tempo", "Ticks zwischen zwei Chunk-Scans.", 1, 20, 1, 4),
-                    SettingSpec.bool("hud", "HUD", "Gefundene Amethyst-Chunks anzeigen.", true)
-            );
-            case "Sus Chunk Finder" -> List.of(
-                    SettingSpec.integer("radius", "Scan Radius", "Radius der analysierten geladenen Chunks.", 2, 12, 1, 7),
-                    SettingSpec.integer("minScore", "Mindest Score", "Ab welchem Score ein Chunk verdächtig ist.", 1, 40, 1, 8),
-                    SettingSpec.bool("hud", "HUD", "Gefundene Chunks oben links anzeigen.", true)
-            );
-            case "ChunkFinderV2" -> List.of(
-                    SettingSpec.integer("radius", "Scan Radius", "Radius für die erweiterte Chunk-Analyse.", 2, 12, 1, 8),
-                    SettingSpec.integer("confidence", "Confidence", "Mindestwert für einen Treffer.", 10, 100, 5, 65),
-                    SettingSpec.bool("mapOverlay", "Map Overlay", "Treffer auf einer Karten-Ansicht darstellen.", true)
-            );
-            case "SusChunkFinderV2" -> List.of(
-                    SettingSpec.integer("radius", "Scan Radius", "Radius der erweiterten Analyse.", 2, 12, 1, 8),
-                    SettingSpec.integer("confidence", "Confidence", "Mindestwahrscheinlichkeit für einen Treffer.", 10, 100, 5, 70),
-                    SettingSpec.bool("mapOverlay", "Top Down Map", "Zusätzliche Draufsicht aktivieren.", true)
+            case "ChunkFinder", "Sus Chunk Finder", "ChunkFinderV2", "SusChunkFinderV2" -> List.of(
+                    SettingSpec.integer("plateHeight", "Flächenhöhe (Y)", "Feste Y-Höhe der roten 16×16-Chunk-Fläche.", -64, 320, 1, 64),
+                    SettingSpec.integer("radius", "Scan-Radius", "Nur tatsächlich geladene Chunks in diesem Radius prüfen.", 2, 12, 1, n.endsWith("V2") ? 8 : 7),
+                    SettingSpec.integer("minClusters", "Min. Amethyst-Funde", "Kleine, mittlere und große Knospen sowie ausgewachsene Cluster zählen.", 1, 16, 1, 1),
+                    SettingSpec.integer("scanDelay", "Scan-Intervall", "Ticks zwischen Scans; kleinere Werte aktualisieren schneller.", 1, 20, 1, 4),
+                    SettingSpec.bool("hud", "Trefferliste", "Zeigt erst nach einem Amethyst-Fund eine Liste an.", true)
             );
             case "Netherite Finder" -> List.of(
                     SettingSpec.integer("radius", "Scan Radius", "Geladene Chunks nach Ancient Debris scannen.", 2, 10, 1, 5),
