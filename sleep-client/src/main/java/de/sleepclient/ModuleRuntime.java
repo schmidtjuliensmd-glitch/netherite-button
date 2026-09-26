@@ -23,6 +23,7 @@ public final class ModuleRuntime {
         ChunkAnalysisRuntime.tick(client);
         CombatModulesRuntime.tick(client);
         CombatExtrasRuntime.tick(client);
+        SocialCombatRuntime.tick(client);
         MiscAutomationRuntime.tick(client);
         InventoryModulesRuntime.tick(client);
         ViewVisualRuntime.tick(client);
