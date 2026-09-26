@@ -77,6 +77,7 @@ public final class SleepClient implements ClientModInitializer {
         WorldRenderEvents.AFTER_ENTITIES.register(DonutUtilityRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(EntityVisualRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(ChunkAnalysisRuntime::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(ViewVisualRuntime::renderWorld);
         LicenseManager.verifySaved().thenAccept(ok -> {
             if (ok) UpdateManager.checkForUpdates();
         });
