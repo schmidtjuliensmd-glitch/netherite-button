@@ -31,7 +31,7 @@ public final class BlockSearchRuntime {
             return;
         }
 
-        boolean chunkFinder = enabled("Chunk Finder");
+        boolean chunkFinder = enabled("ChunkFinder");
         boolean netheriteFinder = enabled("Netherite Finder");
         boolean blockEsp = enabled("BlockESP");
 
@@ -42,7 +42,7 @@ public final class BlockSearchRuntime {
         if (!chunkFinder && !netheriteFinder && !blockEsp) return;
 
         int delay = chunkFinder
-                ? ConfigManager.intOption("Chunk Finder", "scanDelay", 4)
+                ? ConfigManager.intOption("ChunkFinder", "scanDelay", 4)
                 : 4;
 
         if (++tick < Math.max(1, delay)) return;
@@ -52,7 +52,7 @@ public final class BlockSearchRuntime {
         int pcz = client.player.blockPosition().getZ() >> 4;
 
         int chunkRadius = 2;
-        if (chunkFinder) chunkRadius = Math.max(chunkRadius, ConfigManager.intOption("Chunk Finder", "radius", 7));
+        if (chunkFinder) chunkRadius = Math.max(chunkRadius, ConfigManager.intOption("ChunkFinder", "radius", 7));
         if (netheriteFinder) chunkRadius = Math.max(chunkRadius, ConfigManager.intOption("Netherite Finder", "radius", 5));
         if (blockEsp) {
             int blockRange = ConfigManager.intOption("BlockESP", "range", 32);
@@ -88,7 +88,7 @@ public final class BlockSearchRuntime {
 
         String targetName = ConfigManager.stringOption("BlockESP", "target", "Amethyst Cluster");
         int maxBlockEsp = ConfigManager.intOption("BlockESP", "maxResults", 192);
-        int minClusters = ConfigManager.intOption("Chunk Finder", "minClusters", 1);
+        int minClusters = ConfigManager.intOption("ChunkFinder", "minClusters", 1);
 
         List<BlockPos> netheriteFound = new ArrayList<>();
         List<BlockPos> blockEspFound = new ArrayList<>();
@@ -152,7 +152,7 @@ public final class BlockSearchRuntime {
         Minecraft client = Minecraft.getInstance();
         if (!LicenseManager.verified() || client.player == null) return;
 
-        if (enabled("Chunk Finder")) {
+        if (enabled("ChunkFinder")) {
             double y = client.player.getY() - 0.15;
             for (ChunkHit hit : AMETHYST_CHUNKS.values()) {
                 double x = hit.chunkX() * 16.0;
@@ -196,9 +196,9 @@ public final class BlockSearchRuntime {
     }
 
     public static void renderHud(GuiGraphics g) {
-        if (!enabled("Chunk Finder")
+        if (!enabled("ChunkFinder")
                 || !LicenseManager.verified()
-                || !ConfigManager.boolOption("Chunk Finder", "hud", true)) return;
+                || !ConfigManager.boolOption("ChunkFinder", "hud", true)) return;
 
         List<ChunkHit> hits = AMETHYST_CHUNKS.values().stream()
                 .sorted(Comparator.comparingInt(ChunkHit::clusters).reversed())
