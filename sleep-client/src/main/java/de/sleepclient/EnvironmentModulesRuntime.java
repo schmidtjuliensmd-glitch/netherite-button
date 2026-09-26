@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 
 public final class EnvironmentModulesRuntime {
     public static void tick(Minecraft client) {
-        if (!LicenseManager.verified() || client.level == null || client.player == null) return;
+        if (client.level == null || client.player == null) return;
 
         if (enabled("No Weather")) {
             client.level.setRainLevel(0.0f);
