@@ -19,7 +19,7 @@ public final class EnvironmentModulesRuntime {
                 case "Midnight" -> 18000L;
                 default -> 1000L;
             };
-            client.level.setDayTime(value);
+            client.level.setTimeFromServer(client.level.getGameTime(), value, false);
         }
 
         if (enabled("No Hurt Cam")) {
