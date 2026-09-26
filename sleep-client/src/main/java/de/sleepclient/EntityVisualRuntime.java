@@ -17,7 +17,7 @@ import java.util.List;
 
 public final class EntityVisualRuntime {
     public static void renderWorld(WorldRenderContext context) {
-        if (!LicenseManager.verified()) return;
+        
 
         Minecraft client = Minecraft.getInstance();
         if (client.level == null || client.player == null) return;
@@ -117,7 +117,7 @@ public final class EntityVisualRuntime {
     }
 
     public static void renderHud(GuiGraphics g) {
-        if (!LicenseManager.verified()) return;
+        
 
         Minecraft client = Minecraft.getInstance();
         if (client.level == null || client.player == null) return;
