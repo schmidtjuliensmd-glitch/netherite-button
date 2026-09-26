@@ -31,7 +31,7 @@ public final class SleepConfigScreen extends Screen {
             "Auto Walk","Sneak","Bunny Hop","High Jump","Fast Fall","Speed","Flight",
             "Elytra Boost","Long Jump","Anti Void","Aim Assist","Bow Aim","KillAura",
             "Trigger Bot","AutoClicker","Criticals","Anti AFK","Auto Tool","Auto Eat",
-            "Auto Gap","Auto XP","Auto Leave"
+            "Auto Gap","Auto XP","Auto Leave","Auto Totem","Auto Inventory Totem","Auto Refill Hotbar","Auto Weapon","Auto Armor","Mace Swap","Key Pearl","Auto Respawn","Auto Reconnect","No Weather","Time Changer","No Hurt Cam","Potion HUD","Keystrokes","Pearl Cooldown"
     );
 
     private Page page = Page.MODULES;
