@@ -2,6 +2,7 @@ package de.sleepclient;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.Item;
@@ -10,16 +11,81 @@ import net.minecraft.world.item.Items;
 
 public final class InventoryModulesRuntime {
     private static int actionCooldown;
+    private static int restoreSelectedSlot = -1;
+    private static int restoreDelay;
+    private static boolean previousAttackDown;
 
     public static void tick(Minecraft client) {
         if (!LicenseManager.verified() || client.player == null || client.gameMode == null) return;
         if (actionCooldown > 0) actionCooldown--;
+        if (restoreDelay > 0 && --restoreDelay == 0 && restoreSelectedSlot >= 0) {
+            setHeldSlot(client, restoreSelectedSlot);
+            restoreSelectedSlot = -1;
+        }
 
+        tickMaceSwap(client);
         tickAutoTotem(client);
         tickAutoInventoryTotem(client);
         tickAutoRefill(client);
         tickAutoWeapon(client);
         tickAutoArmor(client);
+    }
+
+    public static void triggerKeyPearl(Minecraft client) {
+        if (!LicenseManager.verified() || client.player == null || client.gameMode == null) return;
+        if (!enabled("Key Pearl")) return;
+
+        int configured = ConfigManager.intOption("Key Pearl","slot",2) - 1;
+        int pearlSlot = configured >= 0 && configured < 9
+                && client.player.getInventory().getItem(configured).is(Items.ENDER_PEARL)
+                ? configured
+                : findInventory(client, Items.ENDER_PEARL, 0, 8);
+
+        if (pearlSlot < 0) return;
+
+        int old = client.player.getInventory().getSelectedSlot();
+        setHeldSlot(client, pearlSlot);
+        client.gameMode.useItem(client.player, net.minecraft.world.InteractionHand.MAIN_HAND);
+
+        if (ConfigManager.boolOption("Key Pearl","swapBack",true)) {
+            restoreSelectedSlot = old;
+            restoreDelay = 2;
+        }
+    }
+
+    private static void tickMaceSwap(Minecraft client) {
+        Module module = ModuleRegistry.find("Mace Swap");
+        if (module == null || !module.enabled()) {
+            previousAttackDown = client.options.keyAttack.isDown();
+            return;
+        }
+
+        boolean attack = client.options.keyAttack.isDown();
+        if (attack && !previousAttackDown) {
+            int configured = ConfigManager.intOption("Mace Swap","slot",1) - 1;
+            int maceSlot = configured >= 0 && configured < 9
+                    && client.player.getInventory().getItem(configured).is(Items.MACE)
+                    ? configured
+                    : findInventory(client, Items.MACE, 0, 8);
+
+            if (maceSlot >= 0) {
+                int old = client.player.getInventory().getSelectedSlot();
+                setHeldSlot(client, maceSlot);
+                if (ConfigManager.boolOption("Mace Swap","swapBack",true)) {
+                    restoreSelectedSlot = old;
+                    restoreDelay = 3;
+                }
+            }
+        }
+        previousAttackDown = attack;
+    }
+
+    private static void setHeldSlot(Minecraft client, int slot) {
+        if (slot < 0 || slot > 8 || client.player == null) return;
+        client.player.getInventory().setSelectedSlot(slot);
+        if (client.getConnection() != null) {
+            client.getConnection().send(new ServerboundSetCarriedItemPacket(slot));
+        }
     }
 
     private static void tickAutoTotem(Minecraft client) {
