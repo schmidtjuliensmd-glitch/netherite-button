@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -73,7 +74,8 @@ public final class CombatModulesRuntime {
     private static void tickTriggerBot(Minecraft client) {
         if (!(client.hitResult instanceof EntityHitResult hit)) return;
         Entity target = hit.getEntity();
-        if (!(target instanceof AbstractClientPlayer)) return;
+        if (!(target instanceof AbstractClientPlayer playerTarget)) return;
+        if (!validCombatTarget(client, playerTarget)) return;
         if (client.player.getAttackStrengthScale(0.0f) < 0.9f) return;
 
         int cps = Math.max(1, ConfigManager.intOption("Trigger Bot", "cps", 10));
@@ -87,6 +89,7 @@ public final class CombatModulesRuntime {
     private static void tickAutoClicker(Minecraft client) {
         if (!client.options.keyAttack.isDown()) return;
         if (!(client.hitResult instanceof EntityHitResult hit)) return;
+        if (hit.getEntity() instanceof AbstractClientPlayer playerTarget && !validCombatTarget(client, playerTarget)) return;
         if (clickCooldown > 0) return;
 
         int min = Math.max(1, ConfigManager.intOption("AutoClicker", "minCps", 8));
@@ -157,10 +160,18 @@ public final class CombatModulesRuntime {
 
     private static int armorValue(AbstractClientPlayer player) {
         int value = 0;
-        for (var stack : player.getArmorSlots()) {
-            if (!stack.isEmpty()) value += stack.getMaxDamage() > 0 ? 1 : 0;
+        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+            var stack = player.getItemBySlot(slot);
+            if (!stack.isEmpty()) value++;
         }
         return value;
+    }
+
+    private static boolean validCombatTarget(Minecraft client, AbstractClientPlayer player) {
+        if (player == client.player || player.isRemoved() || !player.isAlive() || player.isSpectator()) return false;
+        if (enabled("Friends") && FriendManager.isFriend(player.getName().getString())) return false;
+        if (enabled("Teams") && client.player.isAlliedTo(player)) return false;
+        return !enabled("Anti Bot") || passesAntiBot(client, player);
     }
 
     private static Rotation rotationTo(Vec3 from, Vec3 to) {
