@@ -399,10 +399,13 @@ public final class ModuleSettingsRegistry {
                     SettingSpec.integer("delay","Delay","Ticks zwischen Aktionen.",0,20,1,2),
                     SettingSpec.bool("safety","Safety","Eigenen Schaden begrenzen.",true)
             );
-            case "Bow Aim", "Auto Bow Release" -> List.of(
+            case "Bow Aim" -> List.of(
                     SettingSpec.decimal("range","Reichweite","Maximale Zielreichweite.",8.0,128.0,4.0,48.0),
                     SettingSpec.decimal("smoothing","Smoothing","Stärke der Zielbewegung.",0.05,1.0,0.05,0.35),
                     SettingSpec.bool("prediction","Prediction","Bewegung des Ziels vorhersagen.",true)
+            );
+            case "Auto Bow Release" -> List.of(
+                    SettingSpec.integer("chargeTicks","Charge Ticks","Nach wie vielen Ticks der Bogen losgelassen wird.",1,40,1,20)
             );
             case "Bow Spam" -> List.of(
                     SettingSpec.integer("chargeTicks","Charge Ticks","Ticks bis zum Schuss.",1,20,1,5),
