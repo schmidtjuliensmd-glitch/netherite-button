@@ -21,6 +21,7 @@ public final class ModuleRuntime {
         BlockSearchRuntime.tick(client);
         DonutUtilityRuntime.tick(client);
         ChunkAnalysisRuntime.tick(client);
+        LoadedFinderRuntime.tick(client);
         CombatModulesRuntime.tick(client);
         CombatExtrasRuntime.tick(client);
         SocialCombatRuntime.tick(client);
@@ -30,6 +31,7 @@ public final class ModuleRuntime {
         EnvironmentModulesRuntime.tick(client);
         MovementModulesRuntime.tick(client);
         HudModulesRuntime.tick(client);
+        VisualEffectsRuntime.tick(client);
 
         Module fullbright = ModuleRegistry.find("Fullbright");
         if (fullbright != null && fullbright.enabled()) {
