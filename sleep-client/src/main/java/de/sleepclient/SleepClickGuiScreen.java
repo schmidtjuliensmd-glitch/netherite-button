@@ -1,357 +1,348 @@
 package de.sleepclient;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public final class SleepClickGuiScreen extends Screen {
-    private static final int TARGET_W = 604;
-    private static final int TARGET_H = 498;
-    private static final int SIDEBAR_W = 188;
-
-    private static final int BG = 0xFF09070D;
-    private static final int SIDEBAR_BG = 0xFF0B0810;
-    private static final int MAIN_BG = 0xFF110A17;
-    private static final int CARD_BG = 0xFF18101D;
-    private static final int CARD_HOVER = 0xFF1C1222;
-    private static final int LINE = 0xFF34223B;
-    private static final int LINE_SOFT = 0xFF241729;
-    private static final int TEXT = 0xFFF5F1F7;
-    private static final int MUTED = 0xFFAAA1AF;
-    private static final int MUTED_DARK = 0xFF706777;
-    private static final int OFF_TRACK = 0xFF46515D;
-    private static final int OFF_KNOB = 0xFFA8B0B9;
-
+    private static final int W = 604, H = 498, SIDEBAR = 190;
+    private static final int TEXT = 0xFFF7F3F8, MUTED = 0xFF9F909C, QUIET = 0xFF706372;
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
+    private static final ModuleCategory[] CATEGORIES = {
+            ModuleCategory.COMBAT, ModuleCategory.MOVEMENT, ModuleCategory.DONUT_SMP,
+            ModuleCategory.VISUALS, ModuleCategory.MISC
+    };
+    private static final List<String> FIRST_COMBAT = List.of(
+            "Auto Crystal", "Anchor Macro", "Aim Assist", "Auto Totem",
+            "Reach", "Auto Mace", "Trigger Bot", "Auto Refill Hotbar");
 
     private final long openedAt = System.nanoTime();
-    private final Map<Module, Float> toggleAnim = new HashMap<>();
-    private final Map<Module, Float> hoverAnim = new HashMap<>();
-
+    private long lastFrame = openedAt;
+    private final Map<Module, Float> toggles = new HashMap<>();
+    private final Map<Module, Float> hovers = new HashMap<>();
     private ModuleCategory selected = ModuleCategory.COMBAT;
-    private int scrollOffset = 0;
+    private int scroll;
+    private String query = "";
+    private EditBox search;
+    private ModuleSettingsPanel settings;
+    private GuiLayout layout = GuiLayout.fit(624, 518, W, H, 1f);
+    private float frameBlend = .2f;
 
     public SleepClickGuiScreen() {
         super(Component.literal("Sleep Client"));
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
+    protected void init() {
+        search = new EditBox(font, 0, 0, 190, 32, Component.literal("Module suchen"));
+        search.setMaxLength(64);
+        search.setBordered(false);
+        search.setValue(query);
+        search.setResponder(value -> { query = value; scroll = 0; });
+        addWidget(search); // Native keyboard handling; the visible text uses our smooth font.
     }
+
+    @Override
+    public boolean isPauseScreen() { return false; }
 
     @Override
     public void render(GuiGraphics g, int mouseX, int mouseY, float delta) {
         super.render(g, mouseX, mouseY, delta);
+        long now = System.nanoTime();
+        float elapsed = Math.min(.1f, Math.max(0f, (now - lastFrame) / 1_000_000_000f));
+        lastFrame = now;
+        frameBlend = 1f - (float) Math.exp(-16f * elapsed * ThemeConfig.animationSpeed);
+        float progress = Math.min(1f, (now - openedAt) / (220_000_000f / ThemeConfig.animationSpeed));
+        float eased = 1f - (float) Math.pow(1f - progress, 3);
+        layout = GuiLayout.fit(width, height, W, H, ThemeConfig.guiScale);
+        float entranceScale = .98f + .02f * eased;
+        layout = new GuiLayout(layout.x() + W * layout.scale() * (1f - entranceScale) / 2f,
+                layout.y() + H * layout.scale() * (1f - entranceScale) / 2f,
+                layout.scale() * entranceScale, W, H);
+        double mx = layout.localX(mouseX), my = layout.localY(mouseY);
 
-        int w = Math.min(this.width - 16, TARGET_W);
-        int h = Math.min(this.height - 16, TARGET_H);
-        int x = (this.width - w) / 2;
-        int y = (this.height - h) / 2;
-
-        float progress = Math.min(1.0f, (System.nanoTime() - openedAt) / 240_000_000.0f);
-        float eased = 1.0f - (float)Math.pow(1.0f - progress, 3.0);
-        float scale = 0.965f + 0.035f * eased;
+        search.setX(Math.round(layout.screenX(408)));
+        search.setY(Math.round(layout.screenY(17)));
+        search.setWidth(Math.max(1, Math.round(190 * layout.scale())));
+        search.setHeight(Math.max(1, Math.round(32 * layout.scale())));
+        search.active = settings == null;
 
         g.pose().pushMatrix();
-        g.pose().translate(this.width / 2.0f, this.height / 2.0f);
-        g.pose().scale(scale, scale);
-        g.pose().translate(-this.width / 2.0f, -this.height / 2.0f);
-
-        renderGlow(g, x, y, w, h, eased);
-
-        roundedRect(g, x, y, w, h, 12, BG);
-        roundedOutline(g, x, y, w, h, 12, 0xFF38243E, BG);
-
-        roundedRect(g, x + 1, y + 1, SIDEBAR_W - 1, h - 2, 11, SIDEBAR_BG);
-        g.fill(x + SIDEBAR_W, y + 1, x + w - 1, y + h - 1, MAIN_BG);
-        g.fill(x + SIDEBAR_W, y + 1, x + SIDEBAR_W + 1, y + h - 1, LINE_SOFT);
-
-        renderBrand(g, x, y);
-        renderSidebar(g, x, y, mouseX, mouseY);
-        renderMain(g, x, y, w, h, mouseX, mouseY);
-
+        g.pose().translate(layout.x(), layout.y());
+        g.pose().scale(layout.scale(), layout.scale());
+        renderShell(g);
+        renderSidebar(g, mx, my);
+        if (settings == null) {
+            renderHeader(g);
+            renderModules(g, mx, my);
+        } else {
+            settings.render(g, layout, mx, my);
+        }
         g.pose().popMatrix();
     }
 
-    private void renderGlow(GuiGraphics g, int x, int y, int w, int h, float amount) {
-        int accent = accent();
-        int glowAlpha = Math.max(1, Math.round(85 * amount));
-        SmoothShapeRenderer.glow(g, x, y, w, h, 14, withAlpha(accent, glowAlpha), 12);
+    private void renderShell(GuiGraphics g) {
+        SmoothShapeRenderer.roundedGradient(g, 0, 0, W, H, 22, 0xFF1B101E, 0xFF09070D, false);
+        SmoothShapeRenderer.roundedOutline(g, 0, 0, W, H, 22, 0xFF352B3A);
+        SmoothShapeRenderer.roundedRect(g, 1, 1, SIDEBAR - 1, H - 2, 21, 0xFF0C080F);
+        g.fill(166, 1, SIDEBAR, H - 1, 0xFF0C080F);
+        g.fill(SIDEBAR - 1, 0, SIDEBAR, H - 1, 0xFF25182A);
 
-        int purple = ThemeConfig.accentSecondary;
-        int a = Math.max(1, Math.round(24 * amount));
-        SmoothShapeRenderer.glow(g, x + w - 160, y + h - 78, 125, 45, 20, withAlpha(purple, a), 10);
+        SmoothShapeRenderer.roundedGradient(g, 19, 21, 32, 32, 11,
+                ThemeConfig.accent, ThemeConfig.accentSecondary, true);
+        SmoothTextRenderer.draw(g, "☾", 28, 27, 17f, 0xFFFFFFFF, false);
+        SmoothTextRenderer.draw(g, "Sleep Client", 59, 22, 13f, TEXT, true);
+        SmoothTextRenderer.draw(g, "v" + UpdateManager.currentVersion(), 59, 43, 9f, QUIET, false);
     }
 
-    private void renderBrand(GuiGraphics g, int x, int y) {
-        int accent = accent();
-
-        SmoothShapeRenderer.glow(g, x + 19, y + 20, 33, 33, 9, withAlpha(accent, 115), 6);
-        roundedRect(g, x + 19, y + 20, 33, 33, 9, accent);
-        roundedRect(g, x + 22, y + 23, 27, 27, 8, withAlpha(ThemeConfig.accentSecondary, 62));
-
-        SmoothTextRenderer.draw(g, "☾", x + 28, y + 25, 14.0f, 0xFFFFFFFF, true);
-        SmoothTextRenderer.draw(g, "Sleep Client", x + 59, y + 23, 11.7f, TEXT, true);
-        SmoothTextRenderer.draw(g, UpdateManager.currentVersion(), x + 59, y + 39, 8.2f, MUTED_DARK, false);
-    }
-
-    private void renderSidebar(GuiGraphics g, int x, int y, int mouseX, int mouseY) {
-        SmoothTextRenderer.draw(g, "MODULE", x + 20, y + 85, 8.0f, MUTED_DARK, true);
-
-        int itemY = y + 108;
-        for (ModuleCategory category : new ModuleCategory[]{
-                ModuleCategory.COMBAT,
-                ModuleCategory.MOVEMENT,
-                ModuleCategory.DONUT_SMP,
-                ModuleCategory.VISUALS,
-                ModuleCategory.MISC
-        }) {
-            renderCategory(g, category, x + 12, itemY, 165, 38, mouseX, mouseY);
-            itemY += 42;
+    private void renderSidebar(GuiGraphics g, double mx, double my) {
+        SmoothTextRenderer.draw(g, "MODULE", 20, 88, 9f, QUIET, true);
+        for (int i = 0; i < CATEGORIES.length; i++) {
+            ModuleCategory category = CATEGORIES[i];
+            String icon = switch (category) {
+                case COMBAT -> "⚔";
+                case MOVEMENT -> "➜";
+                case DONUT_SMP -> "⊙";
+                case VISUALS -> "◈";
+                case MISC -> "◇";
+                default -> "•";
+            };
+            renderNavigation(g, icon, category.displayName(), 109 + i * 42,
+                    selected == category, mx, my);
         }
-
-        SmoothTextRenderer.draw(g, "ALLGEMEIN", x + 20, y + 340, 8.0f, MUTED_DARK, true);
-
-        renderBottomItem(g, "⚙", "GUI", x + 12, y + 363, 165, 38, selected == ModuleCategory.GUI, mouseX, mouseY);
-        renderBottomItem(g, "⌁", "Settings", x + 12, y + 405, 165, 38, false, mouseX, mouseY);
+        SmoothTextRenderer.draw(g, "ALLGEMEIN", 20, 342, 9f, QUIET, true);
+        renderNavigation(g, "⚙", "GUI", 363, selected == ModuleCategory.GUI, mx, my);
+        renderNavigation(g, "⌁", "Settings", 405, false, mx, my);
     }
 
-    private void renderCategory(GuiGraphics g, ModuleCategory category, int x, int y, int w, int h, int mouseX, int mouseY) {
-        boolean active = selected == category;
-        boolean hover = inside(mouseX, mouseY, x, y, w, h);
-
+    private void renderNavigation(GuiGraphics g, String icon, String label, int y,
+                                  boolean active, double mx, double my) {
+        boolean hover = GuiLayout.inside(mx, my, 12, y, 165, 38);
         if (active) {
-            roundedRect(g, x, y, w, h, 9, 0xFF27142F);
-            roundedOutline(g, x, y, w, h, 9, withAlpha(accent(), 105), 0xFF27142F);
-            roundedRect(g, x + 1, y + 8, 2, h - 16, 2, accent());
+            SmoothShapeRenderer.roundedGradient(g, 12, y, 165, 38, 9, 0xFF29132B, 0xFF1B1228, true);
+            SmoothShapeRenderer.roundedRect(g, 12, y + 6, 2, 26, 1, ThemeConfig.accent);
         } else if (hover) {
-            roundedRect(g, x, y, w, h, 9, 0xFF151019);
+            SmoothShapeRenderer.roundedRect(g, 12, y, 165, 38, 9, 0xFF19111E);
         }
-
-        String icon = switch (category) {
-            case COMBAT -> "⚔";
-            case MOVEMENT -> "➜";
-            case DONUT_SMP -> "◉";
-            case VISUALS -> "◇";
-            case MISC -> "◆";
-            default -> "•";
-        };
-
         int color = active ? TEXT : MUTED;
-        SmoothTextRenderer.draw(g, icon, x + 9, y + 10, 10.0f, color, false);
-        SmoothTextRenderer.draw(g, category.displayName(), x + 28, y + 10, 10.2f, color, active);
+        SmoothTextRenderer.draw(g, icon, 22, y + 11, 12f, color, false);
+        SmoothTextRenderer.draw(g, label, 37, y + 11, 12f, color, true);
     }
 
-    private void renderBottomItem(GuiGraphics g, String icon, String label, int x, int y, int w, int h,
-                                  boolean active, int mouseX, int mouseY) {
-        boolean hover = inside(mouseX, mouseY, x, y, w, h);
-        if (active) {
-            roundedRect(g, x, y, w, h, 9, 0xFF27142F);
-            roundedOutline(g, x, y, w, h, 9, withAlpha(accent(), 95), 0xFF27142F);
-        } else if (hover) {
-            roundedRect(g, x, y, w, h, 9, 0xFF151019);
-        }
-
-        int color = active ? TEXT : MUTED;
-        SmoothTextRenderer.draw(g, icon, x + 9, y + 10, 10.0f, color, false);
-        SmoothTextRenderer.draw(g, label, x + 28, y + 10, 10.2f, color, active);
-    }
-
-    private void renderMain(GuiGraphics g, int x, int y, int w, int h, int mouseX, int mouseY) {
-        int mainX = x + SIDEBAR_W;
-
-        String title = switch (selected) {
+    private void renderHeader(GuiGraphics g) {
+        String title = query.isBlank() ? switch (selected) {
             case COMBAT -> "Kampf";
             case MOVEMENT -> "Movement";
             case DONUT_SMP -> "DonutSMP";
             case VISUALS -> "Visuals";
             case MISC -> "Misc";
             case GUI -> "GUI";
-        };
+        } : "Suche";
+        SmoothTextRenderer.draw(g, title, 205, 24, 13f, TEXT, true);
+        SmoothTextRenderer.draw(g, LocalTime.now().format(TIME), 361, 24, 12f, ThemeConfig.accent, true);
+        SmoothShapeRenderer.roundedRect(g, 408, 17, 190, 32, 9, 0xFF1A111D);
+        SmoothShapeRenderer.roundedOutline(g, 408, 17, 190, 32, 9,
+                search.isFocused() ? alpha(ThemeConfig.accent, 150) : 0xFF33263A);
+        String text = query.isEmpty() ? "Module suchen..." : query;
+        // Keep the caret visible without painting Minecraft's pixel font or its background.
+        while (!query.isEmpty() && SmoothTextRenderer.width(text, 10.5f, false) > 162) {
+            text = text.substring(text.offsetByCodePoints(0, 1));
+        }
+        SmoothTextRenderer.draw(g, text, 417, 26, 10.5f, query.isEmpty() ? QUIET : TEXT, false);
+        if (search.isFocused() && (System.currentTimeMillis() / 500) % 2 == 0) {
+            int cursor = Math.min(586, 417 + (query.isEmpty() ? 0 : SmoothTextRenderer.width(text, 10.5f, false)));
+            g.fill(cursor, 27, cursor + 1, 39, TEXT);
+        }
+        g.fill(205, 54, 598, 55, alpha(ThemeConfig.accent, 46));
+    }
 
-        SmoothTextRenderer.draw(g, title, mainX + 17, y + 20, 11.7f, TEXT, true);
-        SmoothTextRenderer.draw(g, LocalTime.now().format(TIME), mainX + 174, y + 20, 10.0f, accent(), true);
+    private List<Module> modules() {
+        List<Module> modules = new ArrayList<>(query.isBlank() ? ModuleRegistry.byCategory(selected) : ModuleRegistry.all());
+        if (!query.isBlank()) {
+            String q = query.trim().toLowerCase(Locale.ROOT);
+            modules.removeIf(module -> !module.name().toLowerCase(Locale.ROOT).contains(q));
+        } else if (selected == ModuleCategory.COMBAT) {
+            modules.sort(Comparator.comparingInt(module -> {
+                int index = FIRST_COMBAT.indexOf(module.name());
+                return index < 0 ? FIRST_COMBAT.size() : index;
+            }));
+        }
+        return modules;
+    }
 
-        int searchX = x + w - 196;
-        int searchY = y + 17;
-        roundedRect(g, searchX, searchY, 186, 32, 9, 0xFF1A1120);
-        roundedOutline(g, searchX, searchY, 186, 32, 9, LINE, 0xFF1A1120);
-        SmoothTextRenderer.draw(g, "Module suchen...", searchX + 11, searchY + 8, 9.0f, MUTED_DARK, false);
-
-        g.fill(mainX + 17, y + 55, x + w - 10, y + 56, withAlpha(accent(), 58));
-
-        List<Module> modules = ModuleRegistry.byCategory(selected);
-
-        int left = mainX + 17;
-        int top = y + 70 - scrollOffset;
-        int gap = 10;
-        int cardW = (w - SIDEBAR_W - 44) / 2;
-        int cardH = 54;
-
+    private void renderModules(GuiGraphics g, double mx, double my) {
+        List<Module> modules = modules();
+        scroll = Math.min(scroll, GuiLayout.maxGridScroll(modules.size()));
+        clip(g, layout, 205, 69, 598, 482);
+        int hovered = GuiLayout.cardAt(mx, my, scroll, modules.size());
         for (int i = 0; i < modules.size(); i++) {
-            Module module = modules.get(i);
-            int col = i % 2;
-            int row = i / 2;
-            int cx = left + col * (cardW + gap);
-            int cy = top + row * (cardH + gap);
-
-            if (cy + cardH < y + 58 || cy > y + h - 12) continue;
-            renderModuleCard(g, module, cx, cy, cardW, cardH, mouseX, mouseY);
+            int cy = 69 + (i / 2) * 63 - scroll;
+            if (cy + 54 <= 69 || cy >= 482) continue;
+            renderModule(g, modules.get(i), 205 + (i % 2) * 201, cy, i == hovered);
+        }
+        if (modules.isEmpty()) SmoothTextRenderer.draw(g, "Keine Module gefunden.", 217, 92, 12f, MUTED, false);
+        g.disableScissor();
+        if (GuiLayout.maxGridScroll(modules.size()) > 0 && GuiLayout.inside(mx, my, 190, 59, 414, 424)) {
+            int thumb = Math.max(25, Math.round(413f * 413 / (GuiLayout.maxGridScroll(modules.size()) + 413)));
+            int top = 69 + Math.round((413f - thumb) * scroll / GuiLayout.maxGridScroll(modules.size()));
+            SmoothShapeRenderer.roundedRect(g, 600, top, 2, thumb, 1, alpha(ThemeConfig.accent, 130));
         }
     }
 
-    private void renderModuleCard(GuiGraphics g, Module module, int x, int y, int w, int h, int mouseX, int mouseY) {
-        boolean hover = inside(mouseX, mouseY, x, y, w, h);
-
-        float hoverNow = hoverAnim.getOrDefault(module, 0.0f);
-        hoverNow += ((hover ? 1.0f : 0.0f) - hoverNow) * 0.18f * Math.max(0.3f, ThemeConfig.animationSpeed);
-        hoverAnim.put(module, hoverNow);
-
-        float toggleNow = toggleAnim.getOrDefault(module, module.enabled() ? 1.0f : 0.0f);
-        toggleNow += ((module.enabled() ? 1.0f : 0.0f) - toggleNow) * 0.22f * Math.max(0.3f, ThemeConfig.animationSpeed);
-        toggleAnim.put(module, toggleNow);
-
-        int bg = mix(CARD_BG, CARD_HOVER, hoverNow * 0.72f);
-        int border = mix(LINE, accent(), module.enabled() ? 0.76f : hoverNow * 0.30f);
-
-        if (module.enabled()) {
-            SmoothShapeRenderer.glow(g, x, y, w, h, 10, withAlpha(accent(), 78), 5);
-        }
-
-        roundedRect(g, x, y, w, h, 10, bg);
-        roundedOutline(g, x, y, w, h, 10, border, bg);
-
-        SmoothTextRenderer.draw(g, module.name(), x + 12, y + 17, 10.2f, TEXT, true);
-
-        int trackX = x + w - 39;
-        int trackY = y + 19;
-        renderToggle(g, trackX, trackY, toggleNow);
+    private void renderModule(GuiGraphics g, Module module, int x, int y, boolean hovered) {
+        float hover = hovers.getOrDefault(module, 0f);
+        hover += ((hovered ? 1f : 0f) - hover) * frameBlend;
+        hovers.put(module, hover);
+        float toggle = toggles.getOrDefault(module, module.enabled() ? 1f : 0f);
+        toggle += ((module.enabled() ? 1f : 0f) - toggle) * frameBlend;
+        toggles.put(module, toggle);
+        int bg = mix(0xFF1B121E, 0xFF241726, hover);
+        SmoothShapeRenderer.roundedRect(g, x, y, 192, 54, 11, bg);
+        int border = module.enabled() ? alpha(ThemeConfig.accent, 118) : mix(0xFF35293A, 0xFF70415F, hover);
+        SmoothShapeRenderer.roundedOutline(g, x, y, 192, 54, 11, border);
+        String label = SmoothTextRenderer.fit(module.name(), 12f, true, 132);
+        SmoothTextRenderer.draw(g, label, x + 12, y + 18, 12f, 0xFFCDBFCA, true);
+        drawToggle(g, x + 152, y + 19, toggle);
     }
 
-    private void renderToggle(GuiGraphics g, int x, int y, float enabledAmount) {
-        int track = mix(OFF_TRACK, accent(), enabledAmount);
-        roundedRect(g, x, y, 28, 15, 8, track);
-
-        float knob = x + 3 + 12.0f * enabledAmount;
-        roundedRect(g, Math.round(knob), y + 3, 9, 9, 5, mix(OFF_KNOB, 0xFFFFFFFF, enabledAmount));
+    static void drawToggle(GuiGraphics g, int x, int y, float amount) {
+        SmoothShapeRenderer.roundedRect(g, x, y, 28, 15, 7, 0xFF29303A);
+        if (amount > .002f) {
+            SmoothShapeRenderer.roundedGradient(g, x, y, 28, 15, 7,
+                    alpha(ThemeConfig.accent, Math.round(255 * amount)),
+                    alpha(ThemeConfig.accentSecondary, Math.round(255 * amount)), true);
+        }
+        SmoothShapeRenderer.roundedRect(g, x + 2 + Math.round(13 * amount), y + 2, 11, 11, 5,
+                mix(0xFF76808A, 0xFFFFFFFF, amount));
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
-        double mouseX = click.x();
-        double mouseY = click.y();
+        double mx = layout.localX(click.x()), my = layout.localY(click.y());
+        int button = click.button();
+        if (button != 0 && button != 1) return super.mouseClicked(click, doubled);
+        if (settings == null && button == 0 && GuiLayout.inside(mx, my, 408, 17, 190, 32)) {
+            setFocused(search);
+            search.setFocused(true);
+            return true;
+        }
+        search.setFocused(false);
+        setFocused(null);
 
-        int w = Math.min(this.width - 16, TARGET_W);
-        int h = Math.min(this.height - 16, TARGET_H);
-        int x = (this.width - w) / 2;
-        int y = (this.height - h) / 2;
-
-        int itemY = y + 108;
-        for (ModuleCategory category : new ModuleCategory[]{
-                ModuleCategory.COMBAT,
-                ModuleCategory.MOVEMENT,
-                ModuleCategory.DONUT_SMP,
-                ModuleCategory.VISUALS,
-                ModuleCategory.MISC
-        }) {
-            if (inside(mouseX, mouseY, x + 12, itemY, 165, 38)) {
-                selected = category;
-                scrollOffset = 0;
+        if (button == 0) {
+            for (int i = 0; i < CATEGORIES.length; i++) {
+                if (GuiLayout.inside(mx, my, 12, 109 + i * 42, 165, 38)) {
+                    selectCategory(CATEGORIES[i]); return true;
+                }
+            }
+            if (GuiLayout.inside(mx, my, 12, 363, 165, 38)) {
+                selectCategory(ModuleCategory.GUI); return true;
+            }
+            if (GuiLayout.inside(mx, my, 12, 405, 165, 38)) {
+                closeSettings();
+                minecraft.setScreen(new SleepConfigScreen(this));
                 return true;
             }
-            itemY += 42;
         }
-
-        if (inside(mouseX, mouseY, x + 12, y + 363, 165, 38)) {
-            selected = ModuleCategory.GUI;
-            scrollOffset = 0;
-            return true;
+        if (settings != null) {
+            if (button == 0 && GuiLayout.inside(mx, my, 205, 17, 32, 32)) {
+                closeSettings(); return true;
+            }
+            return settings.mouseClicked(mx, my, button);
         }
-
-        if (inside(mouseX, mouseY, x + 12, y + 405, 165, 38)) {
-            this.minecraft.setScreen(new SleepConfigScreen());
-            return true;
-        }
-
-        List<Module> modules = ModuleRegistry.byCategory(selected);
-        int mainX = x + SIDEBAR_W;
-        int left = mainX + 17;
-        int top = y + 70 - scrollOffset;
-        int gap = 10;
-        int cardW = (w - SIDEBAR_W - 44) / 2;
-        int cardH = 54;
-
-        for (int i = 0; i < modules.size(); i++) {
-            int col = i % 2;
-            int row = i / 2;
-            int cx = left + col * (cardW + gap);
-            int cy = top + row * (cardH + gap);
-            if (inside(mouseX, mouseY, cx, cy, cardW, cardH)) {
-                modules.get(i).toggle();
+        List<Module> modules = modules();
+        int index = GuiLayout.cardAt(mx, my, scroll, modules.size());
+        if (index >= 0) {
+            Module module = modules.get(index);
+            if (button == 1) {
+                settings = new ModuleSettingsPanel(module);
+            } else {
+                module.toggle();
                 ConfigManager.save();
-                return true;
             }
+            return true;
         }
-
         return super.mouseClicked(click, doubled);
+    }
+
+    private void selectCategory(ModuleCategory category) {
+        closeSettings();
+        selected = category;
+        scroll = 0;
+        search.setValue("");
+    }
+
+    private void closeSettings() {
+        if (settings != null) settings.close();
+        settings = null;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
+        if (settings != null && settings.mouseDragged(layout.localX(event.x()), layout.localY(event.y()))) return true;
+        return super.mouseDragged(event, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        if (settings != null) settings.release();
+        return super.mouseReleased(event);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
-        int rows = (ModuleRegistry.byCategory(selected).size() + 1) / 2;
-        int contentHeight = rows * 64;
-        int visible = Math.min(this.height - 16, TARGET_H) - 88;
-        int max = Math.max(0, contentHeight - visible);
-        scrollOffset = Math.max(0, Math.min(max, scrollOffset - (int)(verticalAmount * 26)));
+        double mx = layout.localX(mouseX), my = layout.localY(mouseY);
+        if (!GuiLayout.inside(mx, my, 190, 59, 414, 424)) return false;
+        if (settings != null) return settings.mouseScrolled(verticalAmount);
+        scroll = Math.max(0, Math.min(GuiLayout.maxGridScroll(modules().size()), scroll - (int) (verticalAmount * 32)));
         return true;
     }
 
-    private static int accent() {
-        return ThemeConfig.accent;
+    @Override
+    public void onClose() {
+        if (settings != null) { closeSettings(); return; }
+        if (search != null && search.isFocused()) {
+            search.setFocused(false); setFocused(null); return;
+        }
+        ConfigManager.save();
+        super.onClose();
     }
 
-    private static int withAlpha(int color, int alpha) {
-        return ((alpha & 0xFF) << 24) | (color & 0x00FFFFFF);
+    @Override
+    public void removed() {
+        if (settings != null) settings.release();
+        ConfigManager.save();
+        super.removed();
     }
 
-    private static int mix(int a, int b, float t) {
-        t = Math.max(0.0f, Math.min(1.0f, t));
-        int aa = (a >>> 24) & 0xFF;
-        int ar = (a >>> 16) & 0xFF;
-        int ag = (a >>> 8) & 0xFF;
-        int ab = a & 0xFF;
-
-        int ba = (b >>> 24) & 0xFF;
-        int br = (b >>> 16) & 0xFF;
-        int bg = (b >>> 8) & 0xFF;
-        int bb = b & 0xFF;
-
-        int oa = Math.round(aa + (ba - aa) * t);
-        int or = Math.round(ar + (br - ar) * t);
-        int og = Math.round(ag + (bg - ag) * t);
-        int ob = Math.round(ab + (bb - ab) * t);
-
-        return (oa << 24) | (or << 16) | (og << 8) | ob;
+    static void clip(GuiGraphics g, GuiLayout layout, int x1, int y1, int x2, int y2) {
+        // Supply screen coordinates under an identity pose, then restore the drawing pose.
+        g.pose().pushMatrix();
+        g.pose().identity();
+        g.enableScissor((int) Math.floor(layout.screenX(x1)), (int) Math.floor(layout.screenY(y1)),
+                (int) Math.ceil(layout.screenX(x2)), (int) Math.ceil(layout.screenY(y2)));
+        g.pose().popMatrix();
     }
 
-    private static boolean inside(double mx, double my, int x, int y, int w, int h) {
-        return mx >= x && mx <= x + w && my >= y && my <= y + h;
-    }
-
-    private static void roundedOutline(GuiGraphics g, int x, int y, int w, int h, int r, int border, int fill) {
-        SmoothShapeRenderer.roundedRect(g, x, y, w, h, r, border);
-        SmoothShapeRenderer.roundedRect(g, x + 1, y + 1, w - 2, h - 2, Math.max(1, r - 1), fill);
-    }
-
-    private static void roundedRect(GuiGraphics g, int x, int y, int w, int h, int r, int color) {
-        SmoothShapeRenderer.roundedRect(g, x, y, w, h, r, color);
+    static int alpha(int color, int alpha) { return (Math.max(0, Math.min(255, alpha)) << 24) | (color & 0xFFFFFF); }
+    static int mix(int a, int b, float amount) {
+        float t = Math.max(0, Math.min(1, amount));
+        int result = 0;
+        for (int shift : new int[]{24, 16, 8, 0}) {
+            int value = Math.round(((a >>> shift) & 255) * (1 - t) + ((b >>> shift) & 255) * t);
+            result |= value << shift;
+        }
+        return result;
     }
 }

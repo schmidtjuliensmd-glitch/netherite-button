@@ -29,6 +29,7 @@ public final class ConfigManager {
         ThemeConfig.accentSecondary = parseHex(p.getProperty("theme.accentSecondary"), ThemeConfig.accentSecondary);
         ThemeConfig.animationSpeed = clamp(parseFloat(p.getProperty("theme.animationSpeed"), ThemeConfig.animationSpeed), 0.35f, 2.0f);
         ThemeConfig.panelOpacity = clamp(parseFloat(p.getProperty("theme.panelOpacity"), ThemeConfig.panelOpacity), 0.55f, 1.0f);
+        ThemeConfig.guiScale = clamp(parseFloat(p.getProperty("theme.guiScale"), ThemeConfig.guiScale), 0.75f, 1.5f);
 
         SETTINGS.clear();
         for (String key : p.stringPropertyNames()) {
@@ -56,6 +57,7 @@ public final class ConfigManager {
         p.setProperty("theme.accentSecondary", toHex(ThemeConfig.accentSecondary));
         p.setProperty("theme.animationSpeed", Float.toString(ThemeConfig.animationSpeed));
         p.setProperty("theme.panelOpacity", Float.toString(ThemeConfig.panelOpacity));
+        p.setProperty("theme.guiScale", Float.toString(ThemeConfig.guiScale));
 
         for (Map.Entry<String, String> entry : SETTINGS.entrySet()) {
             p.setProperty(entry.getKey(), entry.getValue());
@@ -95,9 +97,14 @@ public final class ConfigManager {
     }
 
     public static void setRawOption(String module, String key, String value) {
+        previewRawOption(module, key, value);
+        save();
+    }
+
+    /** Apply a dragged value immediately; the settings panel saves once on release. */
+    public static void previewRawOption(String module, String key, String value) {
         SETTINGS.put(settingKey(module, key), value);
         applySpecial(module, key, value);
-        save();
     }
 
     public static void adjust(String module, ModuleSettingsRegistry.SettingSpec spec, int direction) {

@@ -38,9 +38,15 @@ public final class SleepConfigScreen extends Screen {
     private Module selectedModule;
     private int moduleScroll;
     private int settingsScroll;
+    private final Screen parent;
 
     public SleepConfigScreen() {
+        this(null);
+    }
+
+    public SleepConfigScreen(Screen parent) {
         super(Component.literal("Sleep Client Config"));
+        this.parent = parent;
     }
 
     @Override
@@ -262,7 +268,7 @@ public final class SleepConfigScreen extends Screen {
                 selectedModule = null;
                 settingsScroll = 0;
             } else {
-                Minecraft.getInstance().setScreen(new SleepClickGuiScreen());
+                onClose();
             }
             return true;
         }
@@ -353,6 +359,12 @@ public final class SleepConfigScreen extends Screen {
         int max = Math.max(0, content - 250);
         settingsScroll = Math.max(0, Math.min(max, settingsScroll - (int)(verticalAmount * 28)));
         return true;
+    }
+
+    @Override
+    public void onClose() {
+        ConfigManager.save();
+        Minecraft.getInstance().setScreen(parent != null ? parent : new SleepClickGuiScreen());
     }
 
     private static int alpha(int color, int alpha) {
