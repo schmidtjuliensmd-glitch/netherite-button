@@ -65,7 +65,7 @@ public final class ModuleRegistry {
         add(ModuleCategory.DONUT_SMP,"AutoMine","Straight-line mining workflow with lava avoidance.");
         add(ModuleCategory.DONUT_SMP,"BoneDropper","Bone-farm collection and drop workflow.");
         add(ModuleCategory.DONUT_SMP,"Auto Villager Trade","Configurable villager trading workflow.");
-        add(ModuleCategory.DONUT_SMP,"Chunk Finder","Find loaded chunks containing amethyst clusters.");
+        add(ModuleCategory.DONUT_SMP,"ChunkFinder","Find loaded chunks containing amethyst clusters.");
         add(ModuleCategory.DONUT_SMP,"ChunkFinderV2","Extended loaded-chunk analysis.");
         add(ModuleCategory.DONUT_SMP,"Sus Chunk Finder","Suspicious loaded-chunk analysis.");
         add(ModuleCategory.DONUT_SMP,"SusChunkFinderV2","Extended suspicious-chunk analysis.");
@@ -75,6 +75,14 @@ public final class ModuleRegistry {
         add(ModuleCategory.DONUT_SMP,"TraderFinder","Highlights loaded wandering traders and trader llamas.");
         add(ModuleCategory.DONUT_SMP,"RegionMap","Region and chunk-grid HUD.");
         add(ModuleCategory.DONUT_SMP,"SeedAnalyzer","World-seed analysis tools.");
+        add(ModuleCategory.DONUT_SMP,"Staff List","HUD panel for likely staff currently visible online.");
+        add(ModuleCategory.DONUT_SMP,"RTP Base Alert","Detects large teleports and alerts on nearby loaded base clues.");
+        add(ModuleCategory.DONUT_SMP,"AutoAuctionFlipper","Auction analysis and configurable price-watch workflow.");
+        add(ModuleCategory.DONUT_SMP,"AutoSell","Configurable sell workflow.");
+        add(ModuleCategory.DONUT_SMP,"GamblingRigger","Local gambling helper configuration.");
+        add(ModuleCategory.DONUT_SMP,"FakePay","Local-only payment preview module.");
+        add(ModuleCategory.DONUT_SMP,"FakeStats","Local-only custom stats preview.");
+        add(ModuleCategory.DONUT_SMP,"SpawnerProtect","Alerts or disconnects when players approach a loaded spawner.");
 
         add(ModuleCategory.DONUT_SMP,"Auto Schematic Builder","Alternative schematic building workflow.");
         add(ModuleCategory.DONUT_SMP,"BaseFinder","Loaded-chunk base clue scanner.");
