@@ -4,15 +4,22 @@
   "version": "${version}",
   "name": "Sleep Client",
   "description": "Configurable Minecraft 1.21.11 client with a custom ClickGUI.",
-  "authors": ["Sleep Client"],
+  "authors": [
+    "Sleep Client"
+  ],
   "environment": "client",
   "entrypoints": {
-    "client": ["de.sleepclient.SleepClient"]
+    "client": [
+      "de.sleepclient.SleepClient"
+    ]
   },
   "depends": {
     "fabricloader": ">=0.18.4",
     "minecraft": "1.21.11",
     "java": ">=21",
     "fabric-api": "*"
-  }
+  },
+  "mixins": [
+    "sleepclient.mixins.json"
+  ]
 }
