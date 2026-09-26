@@ -54,7 +54,7 @@ public final class ModuleSettingsRegistry {
                     SettingSpec.decimal("lineWidth", "Linienstärke", "Stärke der Block-Markierung.", 1.0, 5.0, 0.2, 2.0),
                     SettingSpec.integer("maxResults", "Max. Treffer", "Begrenzt gleichzeitig angezeigte Treffer.", 32, 512, 32, 192)
             );
-            case "Chunk Finder" -> List.of(
+            case "ChunkFinder" -> List.of(
                     SettingSpec.integer("radius", "Scan Radius", "Radius bereits geladener Chunks.", 2, 12, 1, 7),
                     SettingSpec.integer("minClusters", "Min. Cluster", "Mindestzahl Amethyst-Cluster für einen Treffer.", 1, 16, 1, 1),
                     SettingSpec.integer("scanDelay", "Scan Tempo", "Ticks zwischen zwei Chunk-Scans.", 1, 20, 1, 4),
@@ -822,6 +822,45 @@ public final class ModuleSettingsRegistry {
             case "Compact Mode" -> List.of(
                     SettingSpec.bool("enabledLayout","Compact Layout","Kompakteres GUI-Layout verwenden.",true),
                     SettingSpec.integer("columns","Spalten","Anzahl der Modulspalten.",1,3,1,2)
+            );
+
+            case "Staff List" -> List.of(
+                    SettingSpec.integer("maxRows","Max. Einträge","Maximal angezeigte Staff-Einträge.",1,20,1,8),
+                    SettingSpec.bool("hideEmpty","Leer ausblenden","Panel ausblenden wenn niemand erkannt wird.",true),
+                    SettingSpec.bool("rankHeuristic","Rang-Erkennung","Admin/Mod/Staff/Helper-Tags erkennen.",true)
+            );
+            case "RTP Base Alert" -> List.of(
+                    SettingSpec.integer("teleportDistance","Teleport Distanz","Mindestdistanz für RTP-Erkennung.",64,5000,64,256),
+                    SettingSpec.integer("scanSeconds","Scan Dauer","Sekunden nach RTP nach Basis-Hinweisen suchen.",5,120,5,30),
+                    SettingSpec.integer("storageThreshold","Storage Schwelle","Ab dieser Storage-Anzahl alarmieren.",1,32,1,4),
+                    SettingSpec.bool("playerAlert","Spieler Warnung","Nahe Spieler zusätzlich melden.",true)
+            );
+            case "AutoAuctionFlipper" -> List.of(
+                    SettingSpec.integer("minMargin","Min. Marge %","Mindestmarge für lokale Preis-Hinweise.",1,200,5,20),
+                    SettingSpec.integer("maxPrice","Max. Preis","Lokales Preislimit für beobachtete Angebote.",1000,100000000,1000,1000000),
+                    SettingSpec.bool("notifyOnly","Nur Hinweis","Keine automatischen Käufe oder Verkäufe.",true)
+            );
+            case "AutoSell" -> List.of(
+                    SettingSpec.integer("delay","Delay","Ticks zwischen vorbereiteten Sell-Aktionen.",1,40,1,8),
+                    SettingSpec.bool("confirm","Bestätigen","Vor einer Sell-Aktion Bestätigung verlangen.",true)
+            );
+            case "GamblingRigger" -> List.of(
+                    SettingSpec.bool("localPreview","Nur lokal","Nur lokale Anzeige ohne Manipulation.",true)
+            );
+            case "FakePay" -> List.of(
+                    SettingSpec.bool("localOnly","Nur lokal","Keine Nachricht an den Server senden.",true),
+                    SettingSpec.integer("amount","Preview Betrag","Lokaler Vorschau-Betrag.",1,1000000,100,10000)
+            );
+            case "FakeStats" -> List.of(
+                    SettingSpec.integer("money","Money Preview","Lokaler Money-Vorschauwert.",0,100000000,1000,1000000),
+                    SettingSpec.integer("kills","Kills Preview","Lokaler Kills-Vorschauwert.",0,100000,10,100),
+                    SettingSpec.bool("hud","HUD","Lokale Vorschau als HUD anzeigen.",true)
+            );
+            case "SpawnerProtect" -> List.of(
+                    SettingSpec.integer("spawnerRange","Spawner Reichweite","Radius um geladene Spawner.",4,64,4,20),
+                    SettingSpec.integer("playerRange","Spieler Reichweite","Abstand anderer Spieler für Warnung.",8,128,8,48),
+                    SettingSpec.bool("disconnect","Disconnect","Bei Gefahr automatisch trennen.",false),
+                    SettingSpec.bool("hud","HUD Warnung","Warnung im HUD anzeigen.",true)
             );
 
             default -> List.of(
