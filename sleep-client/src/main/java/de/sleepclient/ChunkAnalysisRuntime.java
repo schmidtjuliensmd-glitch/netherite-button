@@ -207,12 +207,15 @@ public final class ChunkAnalysisRuntime {
 
         if (active == null) return;
 
+        final String activeModule = active;
+        final int scoreThreshold = threshold;
+
         List<ChunkStats> hits = STATS.values().stream()
-                .filter(s -> switch (active) {
+                .filter(s -> switch (activeModule) {
                     case "StashFinder" -> s.storage() >= ConfigManager.intOption("StashFinder","minStorage",8);
                     case "ChunkFinderV2" -> Math.min(100,s.score()*4) >= ConfigManager.intOption("ChunkFinderV2","confidence",65);
                     case "SusChunkFinderV2" -> Math.min(100,s.score()*5) >= ConfigManager.intOption("SusChunkFinderV2","confidence",70);
-                    default -> s.score() >= threshold;
+                    default -> s.score() >= scoreThreshold;
                 })
                 .sorted(Comparator.comparingInt(ChunkStats::score).reversed())
                 .limit(5)
@@ -224,7 +227,7 @@ public final class ChunkAnalysisRuntime {
         int y = 302;
 
         SmoothShapeRenderer.roundedRect(g, x, y, w, h, 9, 0xE80D0912);
-        SmoothTextRenderer.draw(g, active, x + 10, y + 8, 8.8f, 0xFFF3EEF5, true);
+        SmoothTextRenderer.draw(g, activeModule, x + 10, y + 8, 8.8f, 0xFFF3EEF5, true);
 
         for (int i = 0; i < hits.size(); i++) {
             ChunkStats s = hits.get(i);
