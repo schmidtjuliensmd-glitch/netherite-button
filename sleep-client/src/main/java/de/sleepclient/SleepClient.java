@@ -31,9 +31,7 @@ public final class SleepClient implements ClientModInitializer {
         ConfigManager.load();
         WaypointManager.load();
         FriendManager.load();
-        PaymentTracker.init();
-
-        HudElementRegistry.addLast(
+HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath("sleepclient", "sus_chunk_hud"),
                 (graphics, deltaTracker) -> SusChunkFinder.renderHud(graphics)
         );
