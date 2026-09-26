@@ -45,6 +45,7 @@
       <span class="sleep-gui-label">MODULES</span>
       <button class="sleep-demo-tab active" data-demo-category="visuals">◈ Visuals</button>
       <button class="sleep-demo-tab" data-demo-category="movement">➜ Movement</button>
+      <button class="sleep-demo-tab" data-demo-category="basefinding">⌖ Base Finding Tools</button>
       <button class="sleep-demo-tab" data-demo-category="misc">◇ Utility</button>
       <span class="sleep-gui-label general-label">GENERAL</span>
       <button class="sleep-demo-tab" data-demo-category="gui">⚙ GUI</button>
@@ -66,7 +67,7 @@
 
 <section class="section sleep-highlight-strip reveal">
   <div><strong>Custom GUI</strong><span>Theme, scale, animation speed and layout.</span></div>
-  <div><strong>Utility Tools</strong><span>Profiles, waypoints, configuration and workflow tools.</span></div>
+  <div><strong>Base Finding Tools</strong><span>Chunk scanners, stash clues and structure-finding utilities.</span></div>
   <div><strong>Visual Suite</strong><span>HUD, highlights, waypoints and custom world visuals.</span></div>
 </section>
 
@@ -79,10 +80,19 @@
     <button class="sleep-category-button active" data-module-filter="all">All</button>
     <button class="sleep-category-button" data-module-filter="visuals">Visuals</button>
     <button class="sleep-category-button" data-module-filter="movement">Movement</button>
+    <button class="sleep-category-button" data-module-filter="basefinding">Base Finding Tools</button>
     <button class="sleep-category-button" data-module-filter="misc">Utility</button>
     <button class="sleep-category-button" data-module-filter="gui">GUI</button>
   </div>
   <div class="sleep-module-grid">
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>BaseFinder</h3></div><p>Scans loaded chunks for common base clues.</p></article>
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>StashFinder</h3></div><p>Finds high concentrations of storage blocks in loaded chunks.</p></article>
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>ChunkFinder</h3></div><p>Marks loaded chunks that match configurable detection rules.</p></article>
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>Sus Chunk Finder</h3></div><p>Highlights loaded chunks with suspicious activity clues.</p></article>
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>SpawnerFinder</h3></div><p>Highlights spawners found in loaded chunks.</p></article>
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>PortalFinder</h3></div><p>Highlights portal blocks found in loaded chunks.</p></article>
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>ChestCounter</h3></div><p>Counts storage blocks in loaded chunks.</p></article>
+    <article class="sleep-feature-card" data-module-category="basefinding"><div class="sleep-feature-head"><h3>Coordinate Logger</h3></div><p>Saves useful discovered coordinates locally.</p></article>
     <article class="sleep-feature-card" data-module-category="visuals"><div class="sleep-feature-head"><h3>Fullbright</h3></div><p>Maximum client-side brightness.</p></article>
     <article class="sleep-feature-card" data-module-category="visuals"><div class="sleep-feature-head"><h3>Waypoints</h3></div><p>Save and display world positions.</p></article>
     <article class="sleep-feature-card" data-module-category="visuals"><div class="sleep-feature-head"><h3>CustomWorld</h3></div><p>Sky, light, time, weather and fog controls.</p></article>
