@@ -45,7 +45,7 @@ public final class LifecycleModulesRuntime {
         if (++respawnTicks < Math.max(0, delay)) return;
 
         respawnTicks = 0;
-        client.player.requestRespawn();
+        client.player.respawn();
     }
 
     private static void tickReconnect(Minecraft client) {
