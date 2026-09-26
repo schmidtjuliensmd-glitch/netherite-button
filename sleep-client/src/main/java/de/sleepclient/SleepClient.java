@@ -30,6 +30,7 @@ public final class SleepClient implements ClientModInitializer {
         ModuleRegistry.init();
         ConfigManager.load();
         WaypointManager.load();
+        FriendManager.load();
 
         HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath("sleepclient", "sus_chunk_hud"),
@@ -171,6 +172,26 @@ public final class SleepClient implements ClientModInitializer {
                             .executes(context -> {
                                 WaypointManager.clear();
                                 context.getSource().sendFeedback(Component.literal("Sleep Client: all waypoints cleared."));
+                                return 1;
+                            })));
+
+            dispatcher.register(ClientCommandManager.literal("sleepfriend")
+                    .then(ClientCommandManager.literal("toggle")
+                            .then(ClientCommandManager.argument("name", StringArgumentType.word())
+                                    .executes(context -> {
+                                        String name = StringArgumentType.getString(context, "name");
+                                        boolean added = FriendManager.toggle(name);
+                                        context.getSource().sendFeedback(Component.literal(
+                                                "Sleep Client: " + name + (added ? " als Freund hinzugefügt." : " aus Freunden entfernt.")
+                                        ));
+                                        return 1;
+                                    })))
+                    .then(ClientCommandManager.literal("list")
+                            .executes(context -> {
+                                String names = FriendManager.all().isEmpty()
+                                        ? "none"
+                                        : String.join(", ", FriendManager.all());
+                                context.getSource().sendFeedback(Component.literal("Sleep Client friends: " + names));
                                 return 1;
                             })));
 
