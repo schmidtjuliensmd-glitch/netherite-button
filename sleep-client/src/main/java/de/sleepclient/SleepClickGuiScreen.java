@@ -17,6 +17,7 @@ import java.util.Map;
 
 public final class SleepClickGuiScreen extends Screen {
     private static final int W = 604, H = 498, SIDEBAR = 190;
+    private static final float COMPACT_SCALE = .88f;
     private static final int TEXT = 0xFFF7F3F8, MUTED = 0xFF9F909C, QUIET = 0xFF706372;
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
     private static final ModuleCategory[] CATEGORIES = {
@@ -66,7 +67,8 @@ public final class SleepClickGuiScreen extends Screen {
         float progress = Math.min(1f, (now - openedAt) / (220_000_000f / ThemeConfig.animationSpeed));
         float eased = 1f - (float) Math.pow(1f - progress, 3);
         layout = GuiLayout.fit(width, height, W, H, ThemeConfig.guiScale);
-        float entranceScale = .98f + .02f * eased;
+        // Apply after fitting so the menu also shrinks at Minecraft's larger GUI scales.
+        float entranceScale = COMPACT_SCALE * (.98f + .02f * eased);
         layout = new GuiLayout(layout.x() + W * layout.scale() * (1f - entranceScale) / 2f,
                 layout.y() + H * layout.scale() * (1f - entranceScale) / 2f,
                 layout.scale() * entranceScale, W, H);
@@ -101,7 +103,7 @@ public final class SleepClickGuiScreen extends Screen {
 
         SmoothShapeRenderer.roundedGradient(g, 19, 21, 32, 32, 11,
                 ThemeConfig.accent, ThemeConfig.accentSecondary, true);
-        SmoothTextRenderer.draw(g, "☾", 28, 27, 17f, 0xFFFFFFFF, false);
+        GuiIconRenderer.draw(g, GuiIconArtwork.Icon.MOON, 25, 27, 20, 0xFFFFFFFF);
         SmoothTextRenderer.draw(g, "Sleep Client", 59, 22, 13f, TEXT, true);
         SmoothTextRenderer.draw(g, "v" + UpdateManager.currentVersion(), 59, 43, 9f, QUIET, false);
     }
@@ -110,23 +112,23 @@ public final class SleepClickGuiScreen extends Screen {
         SmoothTextRenderer.draw(g, "MODULE", 20, 88, 9f, QUIET, true);
         for (int i = 0; i < CATEGORIES.length; i++) {
             ModuleCategory category = CATEGORIES[i];
-            String icon = switch (category) {
-                case COMBAT -> "⚔";
-                case MOVEMENT -> "➜";
-                case DONUT_SMP -> "⊙";
-                case VISUALS -> "◈";
-                case MISC -> "◇";
-                default -> "•";
+            GuiIconArtwork.Icon icon = switch (category) {
+                case COMBAT -> GuiIconArtwork.Icon.COMBAT;
+                case MOVEMENT -> GuiIconArtwork.Icon.MOVEMENT;
+                case DONUT_SMP -> GuiIconArtwork.Icon.DONUT;
+                case VISUALS -> GuiIconArtwork.Icon.VISUALS;
+                case MISC -> GuiIconArtwork.Icon.MISC;
+                case GUI -> GuiIconArtwork.Icon.GUI;
             };
             renderNavigation(g, icon, category.displayName(), 109 + i * 42,
                     selected == category, mx, my);
         }
         SmoothTextRenderer.draw(g, "ALLGEMEIN", 20, 342, 9f, QUIET, true);
-        renderNavigation(g, "⚙", "GUI", 363, selected == ModuleCategory.GUI, mx, my);
-        renderNavigation(g, "⌁", "Settings", 405, false, mx, my);
+        renderNavigation(g, GuiIconArtwork.Icon.GUI, "GUI", 363, selected == ModuleCategory.GUI, mx, my);
+        renderNavigation(g, GuiIconArtwork.Icon.SETTINGS, "Settings", 405, false, mx, my);
     }
 
-    private void renderNavigation(GuiGraphics g, String icon, String label, int y,
+    private void renderNavigation(GuiGraphics g, GuiIconArtwork.Icon icon, String label, int y,
                                   boolean active, double mx, double my) {
         boolean hover = GuiLayout.inside(mx, my, 12, y, 165, 38);
         if (active) {
@@ -136,8 +138,8 @@ public final class SleepClickGuiScreen extends Screen {
             SmoothShapeRenderer.roundedRect(g, 12, y, 165, 38, 9, 0xFF19111E);
         }
         int color = active ? TEXT : MUTED;
-        SmoothTextRenderer.draw(g, icon, 22, y + 11, 12f, color, false);
-        SmoothTextRenderer.draw(g, label, 37, y + 11, 12f, color, true);
+        GuiIconRenderer.draw(g, icon, 21, y + 11, 15, active ? ThemeConfig.accent : color);
+        SmoothTextRenderer.draw(g, label, 42, y + 11, 12f, color, true);
     }
 
     private void renderHeader(GuiGraphics g) {
