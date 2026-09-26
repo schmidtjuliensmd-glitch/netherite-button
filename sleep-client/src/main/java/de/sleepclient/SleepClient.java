@@ -64,6 +64,10 @@ public final class SleepClient implements ClientModInitializer {
                     EntityVisualRuntime.renderHud(graphics);
                 }
         );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "chunk_analysis_hud"),
+                (graphics, deltaTracker) -> ChunkAnalysisRuntime.renderHud(graphics)
+        );
 
         WorldRenderEvents.AFTER_ENTITIES.register(SusChunkFinder::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(PlayerEsp::renderWorld);
@@ -72,6 +76,7 @@ public final class SleepClient implements ClientModInitializer {
         WorldRenderEvents.AFTER_ENTITIES.register(EntityEspModules::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(DonutUtilityRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(EntityVisualRuntime::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(ChunkAnalysisRuntime::renderWorld);
         LicenseManager.verifySaved().thenAccept(ok -> {
             if (ok) UpdateManager.checkForUpdates();
         });
