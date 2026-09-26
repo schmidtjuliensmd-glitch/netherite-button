@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 
 /** Vector artwork shared by every category; never depends on installed font glyphs. */
 public final class GuiIconArtwork {
-    public enum Icon { MOON, COMBAT, MOVEMENT, DONUT, VISUALS, MISC, GUI, SETTINGS }
+    public enum Icon { MOON, COMBAT, MOVEMENT, BASE_FINDING, VISUALS, MISC, GUI, SETTINGS }
 
     public static BufferedImage render(Icon icon, int pixels) {
         BufferedImage image = new BufferedImage(pixels, pixels, BufferedImage.TYPE_INT_ARGB);
@@ -45,7 +45,7 @@ public final class GuiIconArtwork {
                 line(g, 11, 14, 8, 18, 3, 19);
                 line(g, 2, 6, 7, 6);
             }
-            case DONUT -> {
+            case BASE_FINDING -> {
                 g.draw(new Ellipse2D.Double(3, 3, 18, 18));
                 g.draw(new Ellipse2D.Double(9, 9, 6, 6));
                 line(g, 6, 8, 7, 7);
