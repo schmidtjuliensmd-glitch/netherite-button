@@ -1,8 +1,15 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Minecraft clients at JulienMChub.">
-<title>Sleep Client</title><link rel="icon" type="image/png" href="./assets/sleep-client-icon.png?v=2"><link rel="shortcut icon" type="image/png" href="./assets/sleep-client-icon.png?v=2"><link rel="apple-touch-icon" href="./assets/sleep-client-icon.png?v=2"><link rel="stylesheet" href="./assets/site.css"><link rel="stylesheet" href="./assets/minecraft-profile.css"></head>
+<meta name="description" content="Sleep Client for Minecraft Java 1.21.11.">
+<title>Sleep Client</title>
+<link rel="icon" type="image/png" href="./assets/sleep-client-icon.png?v=2">
+<link rel="shortcut icon" type="image/png" href="./assets/sleep-client-icon.png?v=2">
+<link rel="apple-touch-icon" href="./assets/sleep-client-icon.png?v=2">
+<link rel="stylesheet" href="./assets/site.css">
+<link rel="stylesheet" href="./assets/minecraft-profile.css">
+</head>
 <body data-page="clients"><div class="bg-orb one"></div><div class="bg-orb two"></div><div id="cursor-glow"></div>
+
 <header class="site-header"><div class="site-shell"><nav class="nav">
 <a class="brand" href="./index.html"><span class="brand-mark">SC</span><span>Sleep Client</span></a>
 <button class="mobile-toggle" aria-label="Open menu">☰</button>
@@ -10,15 +17,18 @@
 <a href="./index.html" data-nav="home">Home</a>
 <a href="./mods.html" data-nav="mods">Mods</a>
 <a href="./resourcepacks.html" data-nav="resourcepacks">Resource Packs</a>
-<a class="sleep-client-nav" href="./clients.html" data-nav="clients"><span class="sleep-moon" aria-hidden="true"><svg viewBox="0 0 32 32" role="img"><defs><linearGradient id="moonGrad" x1="6" y1="4" x2="25" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#fffdf2"/><stop offset=".48" stop-color="#f4e5bc"/><stop offset="1" stop-color="#c9a866"/></linearGradient></defs><path d="M21.9 4.1c-5.6 1-9.8 5.8-9.8 11.6 0 6.5 5.2 11.7 11.7 11.7 1.1 0 2.2-.2 3.2-.4-2.1 2.1-5 3.4-8.3 3.4C12 30.4 6.6 25 6.6 18.3c0-6.8 5.4-12.2 12.1-12.2 1.1 0 2.2.1 3.2.4Z" fill="url(#moonGrad)"/><circle cx="11.7" cy="13.2" r="1.15" fill="#b9975b" opacity=".28"/><circle cx="12.9" cy="20.9" r=".9" fill="#b9975b" opacity=".22"/></svg></span><span>Sleep Client</span><span class="nav-mini">1.21.11</span></a>
-<div class="lang-switch" aria-label="Language"><button type="button" class="lang-btn" data-lang="en">EN</button><span>/</span><button type="button" class="lang-btn" data-lang="de">DE</button></div></div></nav></div></header><main class="site-shell sleep-product-page">
+<a class="sleep-client-nav" href="./clients.html" data-nav="clients"><span class="sleep-moon" aria-hidden="true"><svg viewBox="0 0 32 32" role="img"><defs><linearGradient id="moonGrad" x1="6" y1="4" x2="25" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#fffdf2"/><stop offset=".48" stop-color="#f4e5bc"/><stop offset="1" stop-color="#c9a866"/></linearGradient></defs><path d="M21.9 4.1c-5.6 1-9.8 5.8-9.8 11.6 0 6.5 5.2 11.7 11.7 11.7 1.1 0 2.2-.2 3.2-.4-2.1 2.1-5 3.4-8.3 3.4C12 30.4 6.6 25 6.6 18.3c0-6.8 5.4-12.2 12.1-12.2 1.1 0 2.2.1 3.2.4Z" fill="url(#moonGrad)"/></svg></span><span>Sleep Client</span><span class="nav-mini">1.21.11</span></a>
+<div class="lang-switch" aria-label="Language"><button type="button" class="lang-btn" data-lang="en">EN</button><span>/</span><button type="button" class="lang-btn" data-lang="de">DE</button></div>
+</div></nav></div></header>
+
+<main class="site-shell sleep-product-page">
 <section class="sleep-product-hero reveal">
   <div class="sleep-product-copy">
     <div class="eyebrow">Sleep Client · Minecraft 1.21.11</div>
-    <h1><span class="gradient-text">Built for DonutSMP.</span><br>Made to feel clean.</h1>
-    <p class="lead">A configurable Minecraft client with a modern module GUI, smooth animations, DonutSMP tools, combat modules and a complete visual suite.</p>
+    <h1><span class="gradient-text">Built for Minecraft Java.</span><br>Made to feel clean.</h1>
+    <p class="lead">A configurable Minecraft Java client with a modern module GUI, smooth animations, utility tools and a complete visual suite.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="#pricing">Get Sleep Client</a>
+      <a class="btn btn-primary" href="#activation">Activate Sleep Client</a>
       <a class="btn btn-secondary" href="#modules">View Modules</a>
     </div>
     <div class="hero-meta">
@@ -33,26 +43,22 @@
     <div class="sleep-gui-sidebar">
       <div class="sleep-gui-logo"><span class="sleep-gui-logo-mark">☾</span><div><strong>Sleep Client</strong><small>v1.0</small></div></div>
       <span class="sleep-gui-label">MODULES</span>
-      <button class="sleep-demo-tab active" data-demo-category="combat">⚔ Combat</button>
+      <button class="sleep-demo-tab active" data-demo-category="visuals">◈ Visuals</button>
       <button class="sleep-demo-tab" data-demo-category="movement">➜ Movement</button>
-      <button class="sleep-demo-tab" data-demo-category="donut">◉ DonutSMP</button>
-      <button class="sleep-demo-tab" data-demo-category="visuals">◈ Visuals</button>
-      <button class="sleep-demo-tab" data-demo-category="misc">◇ Misc</button>
+      <button class="sleep-demo-tab" data-demo-category="misc">◇ Utility</button>
       <span class="sleep-gui-label general-label">GENERAL</span>
       <button class="sleep-demo-tab" data-demo-category="gui">⚙ GUI</button>
       <button class="sleep-demo-tab" data-demo-category="settings">⌁ Settings</button>
     </div>
     <div class="sleep-gui-main">
-      <div class="sleep-gui-topbar"><strong id="sleep-demo-title">Combat</strong><span class="sleep-demo-time">19:05</span><div class="sleep-demo-search">Search modules…</div></div>
+      <div class="sleep-gui-topbar"><strong id="sleep-demo-title">Visuals</strong><span class="sleep-demo-time">19:05</span><div class="sleep-demo-search">Search modules…</div></div>
       <div class="sleep-gui-modules" id="sleep-demo-modules">
-        <div class="sleep-module-row active"><span>Auto Crystal</span><i></i></div>
-        <div class="sleep-module-row active"><span>Anchor Macro</span><i></i></div>
-        <div class="sleep-module-row"><span>Aim Assist</span><i></i></div>
-        <div class="sleep-module-row active"><span>Auto Totem</span><i></i></div>
-        <div class="sleep-module-row"><span>Reach</span><i></i></div>
-        <div class="sleep-module-row active"><span>Auto Mace</span><i></i></div>
-        <div class="sleep-module-row"><span>Trigger Bot</span><i></i></div>
-        <div class="sleep-module-row active"><span>Auto Refill Hotbar</span><i></i></div>
+        <div class="sleep-module-row active"><span>Fullbright</span><i></i></div>
+        <div class="sleep-module-row"><span>Waypoints</span><i></i></div>
+        <div class="sleep-module-row active"><span>CustomWorld</span><i></i></div>
+        <div class="sleep-module-row"><span>Block Highlight</span><i></i></div>
+        <div class="sleep-module-row active"><span>Show HUD</span><i></i></div>
+        <div class="sleep-module-row"><span>Particles</span><i></i></div>
       </div>
     </div>
   </div>
@@ -60,8 +66,8 @@
 
 <section class="section sleep-highlight-strip reveal">
   <div><strong>Custom GUI</strong><span>Theme, scale, animation speed and layout.</span></div>
-  <div><strong>DonutSMP Tools</strong><span>Sus Chunk Finder, Chunk Finder and schematic workflow.</span></div>
-  <div><strong>Visual Suite</strong><span>ESP, HUD, highlights, waypoints and custom world visuals.</span></div>
+  <div><strong>Utility Tools</strong><span>Profiles, waypoints, configuration and workflow tools.</span></div>
+  <div><strong>Visual Suite</strong><span>HUD, highlights, waypoints and custom world visuals.</span></div>
 </section>
 
 <section class="section reveal" id="modules">
@@ -71,216 +77,24 @@
   </div>
   <div class="sleep-category-tabs" role="tablist">
     <button class="sleep-category-button active" data-module-filter="all">All</button>
-    <button class="sleep-category-button" data-module-filter="combat">Combat</button>
-    <button class="sleep-category-button" data-module-filter="donut">DonutSMP</button>
     <button class="sleep-category-button" data-module-filter="visuals">Visuals</button>
     <button class="sleep-category-button" data-module-filter="movement">Movement</button>
-    <button class="sleep-category-button" data-module-filter="misc">Misc</button>
+    <button class="sleep-category-button" data-module-filter="misc">Utility</button>
     <button class="sleep-category-button" data-module-filter="gui">GUI</button>
   </div>
   <div class="sleep-module-grid">
-    <article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Crystal</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Fast crystal placement and detonation.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Anchor Macro</h3><span class="feature-badge advanced">ADVANCED</span></div>
-      <p>Charge and detonate respawn anchors.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Safe Anchor</h3></div>
-      <p>Anchor logic with safety checks.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Hit Crystal</h3></div>
-      <p>Detonate nearby end crystals on interval.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Crystal Optimizer</h3><span class="feature-badge advanced">ADVANCED</span></div>
-      <p>Client-side crystal cleanup and timing.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Obsidian Optimizer</h3></div>
-      <p>Fast obsidian placement workflow.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>AutoTrap</h3><span class="feature-badge advanced">ADVANCED</span></div>
-      <p>Trap nearby targets with obsidian.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Aim Assist</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Configurable target assist and smoothing.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Silent Aim</h3><span class="feature-badge advanced">ADVANCED</span></div>
-      <p>Targeting logic without camera snap.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Trigger Bot</h3></div>
-      <p>Attack when your crosshair is on a target.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>AutoClicker</h3></div>
-      <p>Configurable clicks per second.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Criticals</h3></div>
-      <p>Critical-hit timing module.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Reach</h3><span class="feature-badge advanced">ADVANCED</span></div>
-      <p>Configurable attack-range module.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Hit Boxes</h3></div>
-      <p>Adjustable target hitbox display and size.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Shield Disabler</h3></div>
-      <p>Axe-based shield disable workflow.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Mace</h3><span class="feature-badge new">NEW</span></div>
-      <p>Mace timing for downward attacks.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Mace Swap</h3></div>
-      <p>Swap to mace for the hit and back.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Perfect Wind Charge</h3><span class="feature-badge new">NEW</span></div>
-      <p>One-key vertical wind-charge launch.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Totem</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Moves a totem to off-hand when needed.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Inventory Totem</h3></div>
-      <p>Keeps a totem ready from inventory.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Refill Hotbar</h3></div>
-      <p>Refills selected hotbar items.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto XP</h3></div>
-      <p>Rapid XP bottle use from hotbar.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Key Pearl</h3></div>
-      <p>One-key pearl swap, throw and swap back.</p>
-    </article><article class="sleep-feature-card" data-module-category="combat">
-      <div class="sleep-feature-head"><h3>Auto Aggro Pearl</h3></div>
-      <p>Pearl reaction helper.</p>
-    </article><article class="sleep-feature-card" data-module-category="donut">
-      <div class="sleep-feature-head"><h3>Sus Chunk Finder</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Highlights chunks with suspicious activity patterns.</p>
-    </article><article class="sleep-feature-card" data-module-category="donut">
-      <div class="sleep-feature-head"><h3>Chunk Finder</h3></div>
-      <p>Chunk analysis tools for DonutSMP.</p>
-    </article><article class="sleep-feature-card" data-module-category="donut">
-      <div class="sleep-feature-head"><h3>Auto Schematic Builder</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Schematic-guided automated building workflow.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Show HUD</h3></div>
-      <p>Draggable HUD widgets.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Spotify HUD</h3><span class="feature-badge new">NEW</span></div>
-      <p>Now-playing widget for your desktop music.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>PlayerESP</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Highlights players through terrain.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>StorageESP</h3></div>
-      <p>Highlights chests, shulkers and storage blocks.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>BlockESP</h3></div>
-      <p>Highlights selected block types.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Hole ESP</h3></div>
-      <p>Highlights holes and mined spaces.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Block Overlay</h3></div>
-      <p>Animated block focus overlay.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Name Tags</h3></div>
-      <p>Enhanced nametags with armor and health.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>No Explosions</h3></div>
-      <p>Reduces explosion visual effects.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>No Flame</h3></div>
-      <p>Hides first-person fire overlay.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>LootESP</h3></div>
-      <p>Highlights dropped items.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Pearl Prediction</h3></div>
-      <p>Shows pearl path and landing position.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Pearl Catch</h3></div>
-      <p>Alerts for nearby incoming pearls.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Heat Color</h3></div>
-      <p>Health-based entity coloring.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Custom Flame</h3></div>
-      <p>Custom first-person fire overlay.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>CustomWorld</h3></div>
-      <p>Sky, light, time, weather and fog controls.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>FireFly</h3></div>
-      <p>Ambient cosmetic fireflies.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Target ESP</h3></div>
-      <p>Marker for your current target.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Waypoints</h3></div>
-      <p>Save and display world positions.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Block Highlight</h3></div>
-      <p>Animated selected-block highlight.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>ShaderFog</h3></div>
-      <p>Custom fog and shader-like effects.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>HandShader</h3></div>
-      <p>Held-item outline and glow effects.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Swing Animation</h3></div>
-      <p>Custom first-person swing styles.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Sword Inspect</h3></div>
-      <p>Weapon inspect animation.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Freelook</h3></div>
-      <p>Look around without rotating your player.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Totem Counter</h3></div>
-      <p>HUD counter for carried totems.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Particles</h3></div>
-      <p>Custom hit and totem particles.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Jump Circles</h3></div>
-      <p>Animated ground ring when jumping.</p>
-    </article><article class="sleep-feature-card" data-module-category="visuals">
-      <div class="sleep-feature-head"><h3>Fullbright</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Maximum client-side brightness.</p>
-    </article><article class="sleep-feature-card" data-module-category="movement">
-      <div class="sleep-feature-head"><h3>Sprint</h3></div>
-      <p>Automatic sprint controls.</p>
-    </article><article class="sleep-feature-card" data-module-category="movement">
-      <div class="sleep-feature-head"><h3>No Slow</h3></div>
-      <p>Configurable slowdown handling.</p>
-    </article><article class="sleep-feature-card" data-module-category="movement">
-      <div class="sleep-feature-head"><h3>Step</h3></div>
-      <p>Configurable step height.</p>
-    </article><article class="sleep-feature-card" data-module-category="movement">
-      <div class="sleep-feature-head"><h3>Velocity</h3></div>
-      <p>Knockback settings.</p>
-    </article><article class="sleep-feature-card" data-module-category="misc">
-      <div class="sleep-feature-head"><h3>Keybind Manager</h3></div>
-      <p>Edit module keybinds in one place.</p>
-    </article><article class="sleep-feature-card" data-module-category="misc">
-      <div class="sleep-feature-head"><h3>Profiles</h3></div>
-      <p>Save and switch module configurations.</p>
-    </article><article class="sleep-feature-card" data-module-category="misc">
-      <div class="sleep-feature-head"><h3>Update Center</h3></div>
-      <p>Shows new Sleep Client versions.</p>
-    </article><article class="sleep-feature-card" data-module-category="gui">
-      <div class="sleep-feature-head"><h3>Theme Editor</h3><span class="feature-badge popular">POPULAR</span></div>
-      <p>Change accent, panel, text and glow colors.</p>
-    </article><article class="sleep-feature-card" data-module-category="gui">
-      <div class="sleep-feature-head"><h3>HUD Editor</h3></div>
-      <p>Drag, scale and align HUD widgets.</p>
-    </article><article class="sleep-feature-card" data-module-category="gui">
-      <div class="sleep-feature-head"><h3>Animation Settings</h3></div>
-      <p>Adjust menu and toggle animation speed.</p>
-    </article><article class="sleep-feature-card" data-module-category="gui">
-      <div class="sleep-feature-head"><h3>GUI Scale</h3></div>
-      <p>Resize the entire ClickGUI.</p>
-    </article>
+    <article class="sleep-feature-card" data-module-category="visuals"><div class="sleep-feature-head"><h3>Fullbright</h3></div><p>Maximum client-side brightness.</p></article>
+    <article class="sleep-feature-card" data-module-category="visuals"><div class="sleep-feature-head"><h3>Waypoints</h3></div><p>Save and display world positions.</p></article>
+    <article class="sleep-feature-card" data-module-category="visuals"><div class="sleep-feature-head"><h3>CustomWorld</h3></div><p>Sky, light, time, weather and fog controls.</p></article>
+    <article class="sleep-feature-card" data-module-category="visuals"><div class="sleep-feature-head"><h3>Particles</h3></div><p>Custom visual particle effects.</p></article>
+    <article class="sleep-feature-card" data-module-category="movement"><div class="sleep-feature-head"><h3>Sprint</h3></div><p>Configurable sprint controls.</p></article>
+    <article class="sleep-feature-card" data-module-category="movement"><div class="sleep-feature-head"><h3>Step</h3></div><p>Configurable step height.</p></article>
+    <article class="sleep-feature-card" data-module-category="misc"><div class="sleep-feature-head"><h3>Profiles</h3></div><p>Save and switch module configurations.</p></article>
+    <article class="sleep-feature-card" data-module-category="misc"><div class="sleep-feature-head"><h3>Keybind Manager</h3></div><p>Edit module keybinds in one place.</p></article>
+    <article class="sleep-feature-card" data-module-category="misc"><div class="sleep-feature-head"><h3>Update Center</h3></div><p>Shows new Sleep Client versions.</p></article>
+    <article class="sleep-feature-card" data-module-category="gui"><div class="sleep-feature-head"><h3>Theme Editor</h3></div><p>Change accent, panel, text and glow colors.</p></article>
+    <article class="sleep-feature-card" data-module-category="gui"><div class="sleep-feature-head"><h3>HUD Editor</h3></div><p>Drag, scale and align HUD widgets.</p></article>
+    <article class="sleep-feature-card" data-module-category="gui"><div class="sleep-feature-head"><h3>GUI Scale</h3></div><p>Resize the entire ClickGUI.</p></article>
   </div>
 </section>
 
@@ -299,87 +113,13 @@
 
 <section class="section reveal" id="how-it-works">
   <div class="section-head">
-    <div>
-      <div class="eyebrow">How it works</div>
-      <h2 class="section-title">From payment to access.</h2>
-    </div>
-    <p class="section-copy">The download can be shared, but Sleep Client only works with a valid product key linked to the buyer's Minecraft account.</p>
+    <div><div class="eyebrow">How it works</div><h2 class="section-title">From activation to download.</h2></div>
+    <p class="section-copy">Use an existing product key to activate Sleep Client for your Minecraft account and access the current build.</p>
   </div>
-
   <div class="sleep-flow-grid">
-    <article class="sleep-flow-card">
-      <span class="sleep-flow-number">01</span>
-      <h3>Pay with DonutSMP money</h3>
-      <p>Choose Monthly for 10M or Lifetime for 25M and send the amount in DonutSMP.</p>
-    </article>
-
-    <article class="sleep-flow-card">
-      <span class="sleep-flow-number">02</span>
-      <h3>Payment gets verified</h3>
-      <p>After the payment is confirmed, a product key is created for your Minecraft username. Payment verification may take up to 24 hours and, in exceptional cases, longer.</p>
-    </article>
-
-    <article class="sleep-flow-card">
-      <span class="sleep-flow-number">03</span>
-      <h3>Download Sleep Client</h3>
-      <p>You receive access to the Sleep Client download. Sharing the download alone does not unlock the client.</p>
-    </article>
-
-    <article class="sleep-flow-card">
-      <span class="sleep-flow-number">04</span>
-      <h3>Activate with your key</h3>
-      <p>Enter your Minecraft username and product key. The license server checks that the key is valid and belongs to you.</p>
-    </article>
-
-    <article class="sleep-flow-card">
-      <span class="sleep-flow-number">05</span>
-      <h3>Use Sleep Client</h3>
-      <p>After successful activation, the client is unlocked for your account. Monthly access expires after 30 days, Lifetime does not expire.</p>
-    </article>
-
-    <article class="sleep-flow-card sleep-flow-secure">
-      <span class="sleep-flow-number">✓</span>
-      <h3>Protected access</h3>
-      <p>One key is tied to one Minecraft account. A copied download file does not give another player a valid license.</p>
-    </article>
-  </div>
-</section>
-
-<section class="section reveal" id="pricing">
-  <div class="section-head pricing-heading">
-    <div><div class="eyebrow">Simple Pricing</div><h2 class="section-title">Choose your access.</h2></div>
-    <p class="section-copy">Payment is planned through DonutSMP money. After payment verification you receive a product key for Sleep Client.</p>
-  </div>
-  <div class="sleep-purchase-notice">
-  <strong>Please note:</strong>
-  <span>Payment verification and product key delivery may take up to 24 hours and, in exceptional cases, longer.</span>
-</div>
-<div class="sleep-pricing-grid">
-    <article class="sleep-price-card">
-      <div><span class="price-kicker">Monthly</span><p>Full Sleep Client access, billed monthly.</p></div>
-      <div class="sleep-price"><strong>10M</strong><span>/ month</span></div>
-      <button class="btn btn-primary sleep-buy-btn" type="button" data-plan="monthly">Get Monthly Access</button>
-      <ul>
-        <li>Full access to all modules</li>
-        <li>Regular client updates</li>
-        <li>DonutSMP configs</li>
-        <li>Key activation</li>
-        <li>30-day access</li>
-      </ul>
-    </article>
-    <article class="sleep-price-card featured-price">
-      <span class="popular-ribbon">VERY POPULAR</span>
-      <div><span class="price-kicker">Lifetime</span><p>One payment. Keep access to future Sleep Client versions.</p></div>
-      <div class="sleep-price"><strong>25M</strong><span>one time</span></div>
-      <button class="btn btn-primary sleep-buy-btn" type="button" data-plan="lifetime">Get Lifetime Access</button>
-      <ul>
-        <li>Full access to all modules</li>
-        <li>Regular client updates</li>
-        <li>DonutSMP configs</li>
-        <li>Priority access to new features</li>
-        <li>No recurring payment</li>
-      </ul>
-    </article>
+    <article class="sleep-flow-card"><span class="sleep-flow-number">01</span><h3>Activate your account</h3><p>Enter your Minecraft username and product key.</p></article>
+    <article class="sleep-flow-card"><span class="sleep-flow-number">02</span><h3>Download Sleep Client</h3><p>After successful activation, the current Fabric build becomes available.</p></article>
+    <article class="sleep-flow-card"><span class="sleep-flow-number">03</span><h3>Use responsibly</h3><p>Only use client features where they are permitted by the rules of the server or environment you are playing on.</p></article>
   </div>
 </section>
 
@@ -388,34 +128,29 @@
     <div>
       <div class="eyebrow">Product Key</div>
       <h2 class="section-title">Activate Sleep Client.</h2>
-      <p class="section-copy">Enter your product key and Minecraft username. The final account verification backend will bind the license to your Minecraft account.</p>
+      <p class="section-copy">Enter your product key and Minecraft username. The license server checks that the key belongs to your account.</p>
     </div>
     <form class="sleep-key-form" id="sleep-key-form">
       <label>Minecraft Username<input id="sleep-mc-name" type="text" placeholder="Your Minecraft name" autocomplete="off"></label>
       <label>Product Key<input id="sleep-product-key" type="text" placeholder="SLEEP-XXXX-XXXX-XXXX" autocomplete="off"></label>
       <button class="btn btn-primary" type="submit">Verify & Activate</button>
-      <p class="sleep-form-status" id="sleep-form-status">Key backend is being prepared. No key is activated until server-side verification is connected.</p>
+      <p class="sleep-form-status" id="sleep-form-status">Enter your Minecraft username and product key.</p>
     </form>
 
     <div class="sleep-update-notice" id="sleep-update-notice" hidden>
-      <div>
-        <span class="eyebrow">UPDATE</span>
-        <h3 id="sleep-update-title">A new Sleep Client version is available.</h3>
-        <p id="sleep-update-text">Download the latest version to get the newest improvements and fixes.</p>
-      </div>
+      <div><span class="eyebrow">UPDATE</span><h3 id="sleep-update-title">A new Sleep Client version is available.</h3><p id="sleep-update-text">Download the latest version to get the newest improvements and fixes.</p></div>
       <a class="btn btn-primary" id="sleep-update-download" href="./downloads/Sleep-Client-1.21.11.jar" download>Download latest version</a>
     </div>
 
     <div class="sleep-download-panel" id="sleep-download-panel" hidden>
-      <div>
-        <span class="eyebrow">DOWNLOAD</span>
-        <h3>Your Sleep Client is ready.</h3>
-        <p>Your license is valid. Download the Fabric mod for Minecraft Java 1.21.11 and place the JAR file in your mods folder.</p>
-      </div>
+      <div><span class="eyebrow">DOWNLOAD</span><h3>Your Sleep Client is ready.</h3><p>Your license is valid. Download the Fabric mod for Minecraft Java 1.21.11 and place the JAR file in your mods folder.</p></div>
       <a class="btn btn-primary sleep-download-btn" id="sleep-download-btn" href="./downloads/Sleep-Client-1.21.11.jar" download>Download Sleep Client 1.21.11</a>
     </div>
   </div>
 </section>
-</main><footer class="footer"><div class="site-shell footer-row"><span>JulienMChub · Minecraft Java</span><span>Unofficial fan project. Not affiliated with Mojang Studios or Microsoft.</span></div></footer>
+</main>
+
+<footer class="footer"><div class="site-shell footer-row"><span>JulienMChub · Minecraft Java</span><span>Unofficial fan project. Not affiliated with Mojang Studios or Microsoft.</span></div></footer>
 <div class="lightbox"><button class="lightbox-close">×</button><img alt=""></div>
-<script src="./assets/site.js"></script><script src="./assets/minecraft-profile.js"></script><script src="./assets/live-chat.js"></script><script src="./assets/terms-gate.js"></script></body></html>
+<script src="./assets/site.js"></script><script src="./assets/minecraft-profile.js"></script><script src="./assets/live-chat.js"></script><script src="./assets/terms-gate.js"></script>
+</body></html>
