@@ -18,10 +18,20 @@ public final class SleepConfigScreen extends Screen {
     private static final int SIDEBAR = 154;
 
     private static final Set<String> FUNCTIONAL = Set.of(
-            "PlayerESP", "StorageESP", "BlockESP", "ChunkFinder", "Sus Chunk Finder",
-            "Netherite Finder", "LootESP", "TraderFinder", "Totem Counter",
-            "Staff List", "RTP Base Alert", "Deep Player Finder", "RegionMap", "SeedAnalyzer",
-            "Auto Elytra Finder", "SpawnerProtect", "FakeStats", "Fullbright", "Sprint"
+            "PlayerESP","StorageESP","BlockESP","ChunkFinder","Sus Chunk Finder",
+            "Netherite Finder","LootESP","TraderFinder","Totem Counter",
+            "Staff List","RTP Base Alert","Deep Player Finder","RegionMap","SeedAnalyzer",
+            "Auto Elytra Finder","SpawnerProtect","FakeStats","Fullbright","Sprint",
+            "BaseFinder","StashFinder","ChunkFinderV2","SusChunkFinderV2","SpawnerFinder",
+            "Beacon Finder","Shulker Finder","ChestCounter","ChunkActivity",
+            "Watermark","Module List","FPS Counter","Coordinates HUD","Direction HUD",
+            "CPS Counter","Armor HUD","Session Info","Low Health Alert","Durability Alert",
+            "Crosshair","EntityESP","MobESP","ProjectileESP","Tracers","Target ESP",
+            "Heat Color","Health Bars","Block Overlay","Block Highlight","Zoom","FOV Changer",
+            "Auto Walk","Sneak","Bunny Hop","High Jump","Fast Fall","Speed","Flight",
+            "Elytra Boost","Long Jump","Anti Void","Aim Assist","Bow Aim","KillAura",
+            "Trigger Bot","AutoClicker","Criticals","Anti AFK","Auto Tool","Auto Eat",
+            "Auto Gap","Auto XP","Auto Leave"
     );
 
     private Page page = Page.MODULES;
