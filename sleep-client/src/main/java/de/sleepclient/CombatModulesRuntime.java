@@ -18,7 +18,7 @@ public final class CombatModulesRuntime {
     private static boolean lastAttackHeld;
 
     public static void tick(Minecraft client) {
-        if (!LicenseManager.verified() || client.player == null || client.level == null || client.gameMode == null) return;
+        if (client.player == null || client.level == null || client.gameMode == null) return;
 
         if (auraCooldown > 0) auraCooldown--;
         if (clickCooldown > 0) clickCooldown--;
