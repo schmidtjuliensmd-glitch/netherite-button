@@ -18,9 +18,10 @@ public final class SleepConfigScreen extends Screen {
     private static final int SIDEBAR = 154;
 
     private static final Set<String> FUNCTIONAL = Set.of(
-            "PlayerESP", "StorageESP", "BlockESP", "Chunk Finder", "Sus Chunk Finder",
+            "PlayerESP", "StorageESP", "BlockESP", "ChunkFinder", "Sus Chunk Finder",
             "Netherite Finder", "LootESP", "TraderFinder", "Totem Counter",
-            "Fullbright", "Sprint"
+            "Staff List", "RTP Base Alert", "Deep Player Finder", "RegionMap", "SeedAnalyzer",
+            "Auto Elytra Finder", "SpawnerProtect", "FakeStats", "Fullbright", "Sprint"
     );
 
     private Page page = Page.MODULES;
