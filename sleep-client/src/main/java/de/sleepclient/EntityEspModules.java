@@ -9,7 +9,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 
 public final class EntityEspModules {
     public static void renderWorld(WorldRenderContext context) {
-        if (!LicenseManager.verified()) return;
+        
 
         Minecraft client = Minecraft.getInstance();
         if (client.level == null || client.player == null) return;
@@ -49,7 +49,7 @@ public final class EntityEspModules {
 
     public static void renderHud(GuiGraphics g) {
         if (!enabled("TraderFinder")
-                || !LicenseManager.verified()
+               
                 || !ConfigManager.boolOption("TraderFinder", "hud", true)) return;
 
         Minecraft client = Minecraft.getInstance();
