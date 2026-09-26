@@ -40,6 +40,7 @@ public final class PaymentTracker {
     private static volatile String secret = "";
     private static volatile String lastFingerprint = "";
     private static volatile long lastFingerprintAt;
+    private static volatile String lastStatus = "waiting";
 
     private PaymentTracker() {}
 
@@ -85,6 +86,7 @@ public final class PaymentTracker {
         String message = component.getString();
         if (message == null || message.isBlank()) return;
 
+        message = normalizeMessage(message);
         Payment payment = parse(message);
         if (payment == null || payment.amount() <= 0) return;
 
@@ -95,6 +97,8 @@ public final class PaymentTracker {
         lastFingerprintAt = now;
 
         String receiver = Minecraft.getInstance().getUser().getName();
+        lastStatus = "detected " + payment.payer() + " $" + payment.amount();
+        feedback("Sleep Client: payment detected: " + payment.payer() + " -> $" + payment.amount());
         report(new PaymentEvent(
                 UUID.randomUUID().toString(),
                 payment.payer(),
@@ -104,6 +108,31 @@ public final class PaymentTracker {
                 message,
                 now
         ));
+    }
+
+    public static String lastStatus() {
+        return lastStatus;
+    }
+
+    private static String normalizeMessage(String value) {
+        return value
+                .replace('\u00A0', ' ')
+                .replace('\u202F', ' ')
+                .replace("\u200B", "")
+                .replace("\u200C", "")
+                .replace("\u200D", "")
+                .replace("\uFEFF", "")
+                .replaceAll("\\s+", " ")
+                .trim();
+    }
+
+    private static void feedback(String text) {
+        Minecraft client = Minecraft.getInstance();
+        client.execute(() -> {
+            if (client.player != null) {
+                client.player.displayClientMessage(Component.literal(text), false);
+            }
+        });
     }
 
     private static Payment parse(String message) {
@@ -168,8 +197,21 @@ public final class PaymentTracker {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
-        HTTP.sendAsync(request, HttpResponse.BodyHandlers.discarding())
-                .exceptionally(error -> null);
+        HTTP.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(response -> {
+                    if (response.statusCode() >= 200 && response.statusCode() < 300) {
+                        lastStatus = "synced HTTP " + response.statusCode();
+                        feedback("Sleep Client: payment synced to admin page.");
+                    } else {
+                        lastStatus = "failed HTTP " + response.statusCode();
+                        feedback("Sleep Client: payment sync failed (HTTP " + response.statusCode() + ").");
+                    }
+                })
+                .exceptionally(error -> {
+                    lastStatus = "network error";
+                    feedback("Sleep Client: payment sync failed (network error).");
+                    return null;
+                });
     }
 
     private static String json(String value) {
