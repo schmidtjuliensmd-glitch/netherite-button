@@ -22,6 +22,7 @@ public final class ModuleRuntime {
         DonutUtilityRuntime.tick(client);
         ChunkAnalysisRuntime.tick(client);
         CombatModulesRuntime.tick(client);
+        CombatExtrasRuntime.tick(client);
         MiscAutomationRuntime.tick(client);
         InventoryModulesRuntime.tick(client);
         ViewVisualRuntime.tick(client);
