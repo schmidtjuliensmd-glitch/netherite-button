@@ -1,4 +1,14 @@
 const enToDe={
+"Base Finding Tools":"Base Finding Tools",
+"Chunk scanners, stash clues and structure-finding utilities.":"Chunk-Scanner, Stash-Hinweise und Werkzeuge zum Finden von Strukturen.",
+"Scans loaded chunks for common base clues.":"Durchsucht geladene Chunks nach typischen Hinweisen auf Basen.",
+"Finds high concentrations of storage blocks in loaded chunks.":"Findet hohe Konzentrationen von Lagerblöcken in geladenen Chunks.",
+"Marks loaded chunks that match configurable detection rules.":"Markiert geladene Chunks, die zu einstellbaren Erkennungsregeln passen.",
+"Highlights loaded chunks with suspicious activity clues.":"Hebt geladene Chunks mit auffälligen Aktivitätshinweisen hervor.",
+"Highlights spawners found in loaded chunks.":"Hebt Spawner in geladenen Chunks hervor.",
+"Highlights portal blocks found in loaded chunks.":"Hebt Portalblöcke in geladenen Chunks hervor.",
+"Counts storage blocks in loaded chunks.":"Zählt Lagerblöcke in geladenen Chunks.",
+"Saves useful discovered coordinates locally.":"Speichert gefundene nützliche Koordinaten lokal.",
 "available":"verfügbar",
 "New version":"Neue Version",
 "Download latest version":"Neueste Version herunterladen",
@@ -473,7 +483,7 @@ if(lightbox){
 const sleepDemoData={
   combat:["Auto Crystal","Anchor Macro","Aim Assist","Auto Totem","Reach","Auto Mace","Trigger Bot","Auto Refill Hotbar"],
   movement:["Sprint","No Slow","Step","Velocity","Freelook","Fast Place","Inventory Move","Safe Walk"],
-  utility:["Sus Chunk Finder","Chunk Finder","Auto Schematic Builder","Waypoints","StorageESP","BlockESP","Pearl Catch","Utility Config"],
+  basefinding:["BaseFinder","StashFinder","ChunkFinder","Sus Chunk Finder","SpawnerFinder","PortalFinder","ChestCounter","Coordinate Logger"],
   visuals:["PlayerESP","StorageESP","BlockESP","Hole ESP","Name Tags","LootESP","Target ESP","Fullbright"],
   misc:["Keybind Manager","Profiles","Update Center","Auto XP","Key Pearl","Notifications","Friends","Config Sync"],
   gui:["Theme Editor","HUD Editor","GUI Scale","Animation Settings","Accent Color","Panel Opacity","Compact Layout","Search"],
