@@ -4,12 +4,44 @@
 <title>Sleep Client Admin</title>
 <link rel="icon" type="image/png" href="./assets/sleep-client-icon.png?v=2">
 <link rel="stylesheet" href="./assets/site.css">
+<style>
+.admin-payment-feed{position:fixed;top:88px;right:18px;z-index:80;width:min(370px,calc(100vw - 36px));max-height:calc(100vh - 110px);display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.10);border-radius:20px;background:rgba(10,11,18,.91);box-shadow:0 22px 70px rgba(0,0,0,.42);backdrop-filter:blur(18px);overflow:hidden}
+.admin-payment-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.admin-payment-head strong{font-size:14px}.admin-payment-head span{font-size:11px;color:#969bad}
+.admin-payment-refresh{border:1px solid rgba(255,255,255,.10);border-radius:9px;padding:7px 9px;background:rgba(255,255,255,.05);color:#fff;cursor:pointer}
+.admin-payment-status{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.06);font-size:11px;color:#949aad}
+.admin-payment-status.warn{color:#f0c77a}
+.admin-payment-list{overflow:auto;padding:9px}
+.admin-payment-empty{padding:22px 12px;text-align:center;color:#8f95a8;font-size:12px}
+.admin-payment-item{display:grid;gap:9px;padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.075);border-radius:14px;background:rgba(255,255,255,.035)}
+.admin-payment-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.admin-payment-player{display:flex;align-items:center;gap:8px;min-width:0}
+.admin-payment-dot{width:8px;height:8px;border-radius:50%;background:#67e8a5;box-shadow:0 0 14px rgba(103,232,165,.5)}
+.admin-payment-player strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-payment-amount{font-size:14px;font-weight:800;color:#fff}
+.admin-payment-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#858b9d;font-size:10px}
+.admin-payment-plan{padding:3px 7px;border-radius:999px;background:rgba(155,106,255,.12);color:#c8b5ff;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.admin-payment-use{width:100%;border:1px solid rgba(164,121,255,.24);border-radius:10px;padding:8px 10px;background:rgba(142,84,255,.08);color:#ddd1ff;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+.admin-payment-use:hover{background:rgba(142,84,255,.15)}
+@media(max-width:1180px){.admin-payment-feed{position:relative;top:auto;right:auto;width:100%;max-height:500px;margin:18px auto 0}.admin-payment-wrap{max-width:1200px;margin:0 auto;padding:0 20px}}
+</style>
 </head><body>
 <div class="bg-orb one"></div><div class="bg-orb two"></div>
 <header class="site-header"><div class="site-shell"><nav class="nav">
 <a class="brand" href="./index.html"><span class="brand-mark">SC</span><span>Sleep Client</span></a>
 <div class="nav-links"><a href="./clients.html">Back to Sleep Client</a></div>
 </nav></div></header>
+
+<div class="admin-payment-wrap">
+<aside class="admin-payment-feed" aria-label="Incoming DonutSMP payments">
+  <div class="admin-payment-head">
+    <div><strong>Incoming Payments</strong><br><span id="payment-count">0 payments</span></div>
+    <button class="admin-payment-refresh" id="payment-refresh" type="button">↻</button>
+  </div>
+  <div class="admin-payment-status" id="payment-feed-status">Enter your Admin Secret to load payments.</div>
+  <div class="admin-payment-list" id="payment-feed-list"><div class="admin-payment-empty">No payments loaded.</div></div>
+</aside>
+</div>
 
 <main class="site-shell">
 <section class="page-hero reveal visible">
@@ -49,9 +81,129 @@
 const form=document.getElementById('admin-license-form');
 const status=document.getElementById('admin-status');
 const output=document.getElementById('admin-key-output');
+const secretInput=document.getElementById('admin-secret');
+const feedList=document.getElementById('payment-feed-list');
+const feedStatus=document.getElementById('payment-feed-status');
+const paymentCount=document.getElementById('payment-count');
+let lastPayments=[];
+
+secretInput.value=sessionStorage.getItem('sleep-admin-secret')||'';
+secretInput.addEventListener('input',()=>{
+  sessionStorage.setItem('sleep-admin-secret',secretInput.value);
+});
+
+const formatMoney=value=>{
+  const n=Number(value)||0;
+  if(n>=1_000_000_000_000&&n%1_000_000_000_000===0)return (n/1_000_000_000_000)+'T';
+  if(n>=1_000_000_000&&n%1_000_000_000===0)return (n/1_000_000_000)+'B';
+  if(n>=1_000_000&&n%1_000_000===0)return (n/1_000_000)+'M';
+  if(n>=1_000&&n%1_000===0)return (n/1_000)+'K';
+  return new Intl.NumberFormat().format(n);
+};
+
+const renderPayments=(payments,storage)=>{
+  lastPayments=payments;
+  paymentCount.textContent=payments.length+' payment'+(payments.length===1?'':'s');
+  feedList.innerHTML='';
+
+  if(storage==='memory'){
+    feedStatus.textContent='Live, but temporary storage. Connect Upstash Redis in Vercel for permanent history.';
+    feedStatus.classList.add('warn');
+  }else{
+    feedStatus.textContent='Live · persistent Redis storage';
+    feedStatus.classList.remove('warn');
+  }
+
+  if(!payments.length){
+    feedList.innerHTML='<div class="admin-payment-empty">No incoming payments yet.</div>';
+    return;
+  }
+
+  payments.forEach((payment,index)=>{
+    const item=document.createElement('article');
+    item.className='admin-payment-item';
+
+    const top=document.createElement('div');
+    top.className='admin-payment-top';
+
+    const player=document.createElement('div');
+    player.className='admin-payment-player';
+    const dot=document.createElement('span');
+    dot.className='admin-payment-dot';
+    const name=document.createElement('strong');
+    name.textContent=payment.payer||'Unknown';
+    player.append(dot,name);
+
+    const amount=document.createElement('span');
+    amount.className='admin-payment-amount';
+    amount.textContent=formatMoney(payment.amount);
+
+    top.append(player,amount);
+
+    const meta=document.createElement('div');
+    meta.className='admin-payment-meta';
+    const plan=document.createElement('span');
+    plan.className='admin-payment-plan';
+    plan.textContent=payment.plan==='monthly'?'Monthly':payment.plan==='lifetime'?'Lifetime':'Other';
+    const time=document.createElement('span');
+    time.textContent=new Date(payment.receivedAt||payment.recordedAt||Date.now()).toLocaleString();
+    meta.append(plan,time);
+
+    item.append(top,meta);
+
+    if(payment.plan){
+      const use=document.createElement('button');
+      use.type='button';
+      use.className='admin-payment-use';
+      use.textContent='Use for key';
+      use.addEventListener('click',()=>{
+        document.getElementById('admin-mc-name').value=payment.payer||'';
+        document.getElementById('admin-plan').value=payment.plan;
+        document.getElementById('admin-result').scrollIntoView({behavior:'smooth',block:'center'});
+        status.textContent='Payment selected: '+payment.payer+' · '+formatMoney(payment.amount)+'. Generate the key when ready.';
+      });
+      item.append(use);
+    }
+
+    feedList.appendChild(item);
+  });
+};
+
+async function loadPayments(){
+  const secret=secretInput.value.trim();
+  if(!secret){
+    feedStatus.textContent='Enter your Admin Secret to load payments.';
+    feedStatus.classList.remove('warn');
+    return;
+  }
+
+  try{
+    const r=await fetch('/api/payments/list?ts='+Date.now(),{
+      headers:{'Authorization':'Bearer '+secret},
+      cache:'no-store'
+    });
+    const data=await r.json();
+    if(!r.ok||!data.ok){
+      feedStatus.textContent=data.error==='unauthorized'?'Wrong Admin Secret.':'Could not load payments: '+(data.error||'unknown_error');
+      feedStatus.classList.add('warn');
+      return;
+    }
+    renderPayments(Array.isArray(data.payments)?data.payments:[],data.storage);
+  }catch{
+    feedStatus.textContent='Could not reach the payment server.';
+    feedStatus.classList.add('warn');
+  }
+}
+
+document.getElementById('payment-refresh').addEventListener('click',loadPayments);
+secretInput.addEventListener('change',loadPayments);
+setInterval(loadPayments,4000);
+if(secretInput.value)loadPayments();
+
 form.addEventListener('submit',async e=>{
   e.preventDefault();
-  const secret=document.getElementById('admin-secret').value;
+  const secret=secretInput.value;
+  sessionStorage.setItem('sleep-admin-secret',secret);
   const username=document.getElementById('admin-mc-name').value.trim();
   const plan=document.getElementById('admin-plan').value;
   output.value='';

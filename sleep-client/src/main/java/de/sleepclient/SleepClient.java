@@ -31,6 +31,7 @@ public final class SleepClient implements ClientModInitializer {
         ConfigManager.load();
         WaypointManager.load();
         FriendManager.load();
+        PaymentTracker.init();
 
         HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath("sleepclient", "sus_chunk_hud"),
@@ -199,6 +200,33 @@ public final class SleepClient implements ClientModInitializer {
                                 context.getSource().sendFeedback(Component.literal("Sleep Client friends: " + names));
                                 return 1;
                             })));
+
+            dispatcher.register(ClientCommandManager.literal("sleeppaymentsecret")
+                    .then(ClientCommandManager.argument("secret", StringArgumentType.greedyString())
+                            .executes(context -> {
+                                String secret = StringArgumentType.getString(context, "secret").trim();
+                                if (secret.isEmpty()) {
+                                    context.getSource().sendFeedback(Component.literal("Sleep Client: payment tracker secret cannot be empty."));
+                                    return 1;
+                                }
+                                boolean saved = PaymentTracker.setSecret(secret);
+                                context.getSource().sendFeedback(Component.literal(
+                                        saved
+                                                ? "Sleep Client: payment tracker enabled. Incoming DonutSMP payments will be sent to your admin page."
+                                                : "Sleep Client: could not save the payment tracker secret."
+                                ));
+                                return 1;
+                            })));
+
+            dispatcher.register(ClientCommandManager.literal("sleeppaymentstatus")
+                    .executes(context -> {
+                        context.getSource().sendFeedback(Component.literal(
+                                PaymentTracker.configured()
+                                        ? "Sleep Client: payment tracker is enabled."
+                                        : "Sleep Client: payment tracker is disabled. Use /sleeppaymentsecret <your admin secret>."
+                        ));
+                        return 1;
+                    }));
 
             dispatcher.register(ClientCommandManager.literal("sleepaccount")
                     .executes(context -> {
