@@ -32,3 +32,33 @@ body.mc-profile-gate-open{overflow:hidden}
 .mc-profile-card-change{color:#8f95a8;font-size:16px;transition:transform .2s ease,color .2s ease}
 .mc-profile-card:hover .mc-profile-card-change{color:#c7afff;transform:rotate(-22deg)}
 @media(max-width:640px){.mc-profile-modal{padding:26px 20px 22px;border-radius:20px}.mc-profile-actions{flex-direction:column-reverse}.mc-profile-actions .btn{width:100%}.mc-profile-card{left:12px;bottom:12px;min-width:0;max-width:calc(100vw - 24px)}}
+
+
+/* Sleep Client DonutSMP payment command */
+body.sleep-payment-open{overflow:hidden}
+.sleep-payment-modal{position:fixed;inset:0;z-index:11000;display:grid;place-items:center;padding:22px;opacity:0;visibility:hidden;transition:opacity .18s ease,visibility .18s ease}
+.sleep-payment-modal[hidden]{display:none}
+.sleep-payment-modal.is-open{opacity:1;visibility:visible}
+.sleep-payment-backdrop{position:absolute;inset:0;background:rgba(4,5,10,.84);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.sleep-payment-dialog{position:relative;width:min(520px,100%);padding:30px;border:1px solid rgba(255,255,255,.11);border-radius:24px;background:linear-gradient(155deg,rgba(24,25,38,.99),rgba(10,11,18,.99));box-shadow:0 30px 90px rgba(0,0,0,.58),0 0 70px rgba(126,76,255,.12);transform:translateY(14px) scale(.98);transition:transform .28s var(--motion-ease,cubic-bezier(.2,.8,.2,1))}
+.sleep-payment-modal.is-open .sleep-payment-dialog{transform:none}
+.sleep-payment-x{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:20px;cursor:pointer}
+.sleep-payment-eyebrow{margin-bottom:8px;color:#bca8ff;font-size:11px;font-weight:800;letter-spacing:.15em}
+.sleep-payment-dialog h2{margin:0 0 20px;font-size:clamp(26px,5vw,34px);line-height:1.08}
+.sleep-payment-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+.sleep-payment-info>div{display:grid;gap:5px;padding:13px 14px;border:1px solid rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.04)}
+.sleep-payment-info span{color:#8f95a8;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.sleep-payment-info strong{font-size:15px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sleep-payment-instruction{margin:0 0 10px;color:#c8ccda;line-height:1.5}
+.sleep-payment-command-row{display:flex;align-items:stretch;gap:8px}
+.sleep-payment-command-row code{display:flex;align-items:center;flex:1;min-width:0;padding:15px 16px;border:1px solid rgba(174,137,255,.26);border-radius:14px;background:rgba(135,84,255,.08);color:#f1ebff;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:15px;white-space:nowrap;overflow:auto}
+.sleep-payment-copy{flex:0 0 auto;border:1px solid rgba(174,137,255,.35);border-radius:14px;padding:0 16px;background:linear-gradient(135deg,rgba(151,91,255,.24),rgba(255,79,159,.12));color:#fff;font:inherit;font-weight:800;cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.sleep-payment-copy:hover{transform:translateY(-1px);border-color:rgba(194,165,255,.58);background:linear-gradient(135deg,rgba(151,91,255,.33),rgba(255,79,159,.16))}
+.sleep-payment-note{margin:14px 0 20px;color:#9298aa;font-size:12px;line-height:1.55}
+.sleep-payment-close-btn{width:100%}
+@media(max-width:600px){
+  .sleep-payment-dialog{padding:26px 20px 22px}
+  .sleep-payment-info{grid-template-columns:1fr}
+  .sleep-payment-command-row{display:grid}
+  .sleep-payment-copy{min-height:46px}
+}
