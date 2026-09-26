@@ -1,8 +1,10 @@
 package de.sleepclient;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
+import org.lwjgl.glfw.GLFW;
 
 public final class MovementModulesRuntime {
     private static boolean forcedForward;
@@ -18,6 +20,7 @@ public final class MovementModulesRuntime {
             return;
         }
 
+        tickInventoryMove(client);
         tickAutoWalk(client);
         tickSneak(client);
         tickBunnyHop(client);
@@ -25,15 +28,39 @@ public final class MovementModulesRuntime {
         tickFastFall(client);
         tickSpeed(client);
         tickFlight(client);
+        tickElytraFly(client);
         tickElytraBoost(client);
         tickLongJump(client);
+        tickSpider(client);
+        tickJesus(client);
+        tickParkour(client);
+        tickSafeWalk(client);
+        tickStrafe(client);
         tickAntiVoid(client);
+    }
+
+    private static void tickInventoryMove(Minecraft client) {
+        if (!enabled("Inventory Move") || client.screen == null) return;
+
+        long window = client.getWindow().handle();
+        client.options.keyUp.setDown(GLFW.glfwGetKey(window, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS);
+        client.options.keyDown.setDown(GLFW.glfwGetKey(window, GLFW.GLFW_KEY_S) == GLFW.GLFW_PRESS);
+        client.options.keyLeft.setDown(GLFW.glfwGetKey(window, GLFW.GLFW_KEY_A) == GLFW.GLFW_PRESS);
+        client.options.keyRight.setDown(GLFW.glfwGetKey(window, GLFW.GLFW_KEY_D) == GLFW.GLFW_PRESS);
+
+        if (ConfigManager.boolOption("Inventory Move","jump",true)) {
+            client.options.keyJump.setDown(GLFW.glfwGetKey(window, GLFW.GLFW_KEY_SPACE) == GLFW.GLFW_PRESS);
+        }
+        if (ConfigManager.boolOption("Inventory Move","sprint",true)) {
+            client.options.keySprint.setDown(GLFW.glfwGetKey(window, GLFW.GLFW_KEY_LEFT_CONTROL) == GLFW.GLFW_PRESS);
+        }
     }
 
     private static void tickAutoWalk(Minecraft client) {
         if (enabled("Auto Walk")) {
             client.options.keyUp.setDown(true);
             forcedForward = true;
+            if (ConfigManager.boolOption("Auto Walk","sprint",true)) client.player.setSprinting(true);
         } else if (forcedForward) {
             client.options.keyUp.setDown(false);
             forcedForward = false;
@@ -53,7 +80,8 @@ public final class MovementModulesRuntime {
     private static void tickBunnyHop(Minecraft client) {
         boolean should = enabled("Bunny Hop")
                 && client.options.keyUp.isDown()
-                && client.player.onGround();
+                && client.player.onGround()
+                && ConfigManager.boolOption("Bunny Hop","autoJump",true);
 
         if (should) {
             client.options.keyJump.setDown(true);
@@ -120,6 +148,27 @@ public final class MovementModulesRuntime {
         }
     }
 
+    private static void tickElytraFly(Minecraft client) {
+        if (!enabled("Elytra Fly") || !client.player.isFallFlying()) return;
+
+        float speed = ConfigManager.floatOption("Elytra Fly","speed",1.5f);
+        Vec3 look = client.player.getLookAngle();
+        Vec3 desired = new Vec3(look.x, 0.0, look.z);
+        if (desired.lengthSqr() > 0.0001) desired = desired.normalize().scale(0.45D * speed);
+
+        double vertical = client.player.getDeltaMovement().y;
+        if (ConfigManager.boolOption("Elytra Fly","pitchControl",true)) vertical = look.y * 0.35D * speed;
+        if (client.options.keyJump.isDown()) vertical = Math.max(vertical, 0.35D * speed);
+        if (client.options.keyShift.isDown()) vertical = Math.min(vertical, -0.35D * speed);
+
+        if (client.options.keyUp.isDown()) {
+            client.player.setDeltaMovement(desired.x, vertical, desired.z);
+        } else {
+            Vec3 current = client.player.getDeltaMovement();
+            client.player.setDeltaMovement(current.x, vertical, current.z);
+        }
+    }
+
     private static void tickElytraBoost(Minecraft client) {
         if (!enabled("Elytra Boost") || !client.player.isFallFlying()) return;
         if (!client.options.keyUp.isDown()) return;
@@ -147,6 +196,89 @@ public final class MovementModulesRuntime {
 
         horizontal = horizontal.normalize().scale(0.32D * power);
         client.player.setDeltaMovement(horizontal.x, 0.42D + height * 0.22D, horizontal.z);
+    }
+
+    private static void tickSpider(Minecraft client) {
+        if (!enabled("Spider") || !client.player.horizontalCollision || !client.options.keyUp.isDown()) return;
+
+        float speed = ConfigManager.floatOption("Spider","speed",0.5f);
+        Vec3 motion = client.player.getDeltaMovement();
+        client.player.setDeltaMovement(motion.x, Math.max(0.12D, speed * 0.28D), motion.z);
+    }
+
+    private static void tickJesus(Minecraft client) {
+        if (!enabled("Jesus") || !client.player.isInWater()) return;
+
+        Vec3 motion = client.player.getDeltaMovement();
+        String mode = ConfigManager.stringOption("Jesus","mode","Solid");
+        double y = switch (mode) {
+            case "Bounce" -> Math.max(motion.y, 0.22D);
+            case "Dolphin" -> Math.max(motion.y, 0.10D);
+            default -> Math.max(motion.y, 0.04D);
+        };
+        client.player.setDeltaMovement(motion.x, y, motion.z);
+    }
+
+    private static void tickParkour(Minecraft client) {
+        if (!enabled("Parkour") || !client.player.onGround() || !client.options.keyUp.isDown()) return;
+        if (!ConfigManager.boolOption("Parkour","edgeJump",true)) return;
+
+        Vec3 look = client.player.getLookAngle();
+        Vec3 flat = new Vec3(look.x,0.0,look.z);
+        if (flat.lengthSqr() < 0.001) return;
+        flat = flat.normalize().scale(0.65D);
+
+        BlockPos ahead = BlockPos.containing(
+                client.player.getX() + flat.x,
+                client.player.getY() - 0.05,
+                client.player.getZ() + flat.z
+        );
+
+        if (client.level.getBlockState(ahead.below()).isAir()) {
+            Vec3 motion = client.player.getDeltaMovement();
+            client.player.setDeltaMovement(motion.x, 0.42D, motion.z);
+        }
+    }
+
+    private static void tickSafeWalk(Minecraft client) {
+        if (!enabled("Safe Walk") || !client.player.onGround()) return;
+
+        Vec3 motion = client.player.getDeltaMovement();
+        Vec3 flat = new Vec3(motion.x,0.0,motion.z);
+        if (flat.lengthSqr() < 0.0005) return;
+
+        Vec3 step = flat.normalize().scale(0.55D);
+        BlockPos ahead = BlockPos.containing(
+                client.player.getX() + step.x,
+                client.player.getY() - 0.15,
+                client.player.getZ() + step.z
+        );
+
+        if (client.level.getBlockState(ahead.below()).isAir()) {
+            client.player.setDeltaMovement(0.0D, motion.y, 0.0D);
+        }
+    }
+
+    private static void tickStrafe(Minecraft client) {
+        if (!enabled("Strafe") || client.player.onGround()) return;
+
+        int forward = (client.options.keyUp.isDown() ? 1 : 0) - (client.options.keyDown.isDown() ? 1 : 0);
+        int side = (client.options.keyLeft.isDown() ? 1 : 0) - (client.options.keyRight.isDown() ? 1 : 0);
+        if (forward == 0 && side == 0) return;
+
+        float control = ConfigManager.floatOption("Strafe","airControl",0.7f);
+        double yaw = Math.toRadians(client.player.getYRot());
+        double sin = Math.sin(yaw);
+        double cos = Math.cos(yaw);
+
+        double dx = -sin * forward + cos * side;
+        double dz = cos * forward + sin * side;
+        double len = Math.sqrt(dx*dx+dz*dz);
+        if (len < 0.001) return;
+
+        double speed = 0.12D + 0.16D * control;
+        Vec3 motion = client.player.getDeltaMovement();
+        client.player.setDeltaMovement(dx/len*speed,motion.y,dz/len*speed);
     }
 
     private static void tickAntiVoid(Minecraft client) {
