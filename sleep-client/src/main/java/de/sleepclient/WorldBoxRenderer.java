@@ -44,6 +44,24 @@ public final class WorldBoxRenderer {
         line(pose, lines, x1,y1,z2, x1,y2,z2, r,g,b,alpha,lineWidth);
     }
 
+    public static void line(WorldRenderContext context, Vec3 from, Vec3 to, int color, float alpha, float width) {
+        Minecraft client = Minecraft.getInstance();
+        Vec3 cam = client.gameRenderer.getMainCamera().position();
+        PoseStack.Pose pose = context.matrices().last();
+        VertexConsumer lines = context.consumers().getBuffer(RenderTypes.linesTranslucent());
+
+        float r = ((color >> 16) & 0xFF) / 255.0f;
+        float g = ((color >> 8) & 0xFF) / 255.0f;
+        float b = (color & 0xFF) / 255.0f;
+
+        line(
+                pose, lines,
+                from.x - cam.x, from.y - cam.y, from.z - cam.z,
+                to.x - cam.x, to.y - cam.y, to.z - cam.z,
+                r, g, b, alpha, width
+        );
+    }
+
     private static void line(
             PoseStack.Pose pose, VertexConsumer consumer,
             double x1,double y1,double z1,double x2,double y2,double z2,
