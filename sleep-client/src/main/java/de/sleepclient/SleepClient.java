@@ -21,6 +21,7 @@ public final class SleepClient implements ClientModInitializer {
             Identifier.fromNamespaceAndPath("sleepclient", "main")
     );
     private static KeyMapping openGui;
+    private static KeyMapping keyPearl;
     private static boolean licenseWarningShown;
     private static boolean activationPromptShown;
 
@@ -62,6 +63,7 @@ public final class SleepClient implements ClientModInitializer {
                 (graphics, deltaTracker) -> {
                     HudModulesRuntime.render(graphics);
                     EntityVisualRuntime.renderHud(graphics);
+                    ExtraHudRuntime.render(graphics);
                 }
         );
         HudElementRegistry.addLast(
@@ -86,6 +88,12 @@ public final class SleepClient implements ClientModInitializer {
                 "key.sleepclient.open_gui",
                 InputConstants.Type.KEYSYM,
                 GLFW.GLFW_KEY_RIGHT_SHIFT,
+                CATEGORY
+        ));
+        keyPearl = KeyBindingHelper.registerKeyBinding(new KeyMapping(
+                "key.sleepclient.key_pearl",
+                InputConstants.Type.KEYSYM,
+                GLFW.GLFW_KEY_G,
                 CATEGORY
         ));
 
@@ -137,6 +145,7 @@ public final class SleepClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             LicenseManager.tick();
+            LifecycleModulesRuntime.tick(client);
 
             if (!LicenseManager.verified()) {
                 if (client.player != null && !licenseWarningShown && "license_expired".equals(LicenseManager.message())) {
@@ -166,6 +175,11 @@ public final class SleepClient implements ClientModInitializer {
                     client.setScreen(new SleepActivationScreen());
                 }
             }
+
+            while (keyPearl.consumeClick()) {
+                InventoryModulesRuntime.triggerKeyPearl(client);
+            }
+
             ModuleRuntime.tick(client);
             UpdateManager.tick(client);
         });
