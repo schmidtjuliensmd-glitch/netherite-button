@@ -57,6 +57,13 @@ public final class SleepClient implements ClientModInitializer {
                 Identifier.fromNamespaceAndPath("sleepclient", "donut_utility_hud"),
                 (graphics, deltaTracker) -> DonutUtilityRuntime.renderHud(graphics)
         );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "expanded_hud"),
+                (graphics, deltaTracker) -> {
+                    HudModulesRuntime.render(graphics);
+                    EntityVisualRuntime.renderHud(graphics);
+                }
+        );
 
         WorldRenderEvents.AFTER_ENTITIES.register(SusChunkFinder::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(PlayerEsp::renderWorld);
@@ -64,6 +71,7 @@ public final class SleepClient implements ClientModInitializer {
         WorldRenderEvents.AFTER_ENTITIES.register(BlockSearchRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(EntityEspModules::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(DonutUtilityRuntime::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(EntityVisualRuntime::renderWorld);
         LicenseManager.verifySaved().thenAccept(ok -> {
             if (ok) UpdateManager.checkForUpdates();
         });
