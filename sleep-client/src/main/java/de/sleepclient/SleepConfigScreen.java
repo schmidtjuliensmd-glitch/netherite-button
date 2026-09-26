@@ -31,7 +31,7 @@ public final class SleepConfigScreen extends Screen {
             "Auto Walk","Sneak","Bunny Hop","High Jump","Fast Fall","Speed","Flight",
             "Elytra Boost","Long Jump","Anti Void","Aim Assist","Bow Aim","KillAura",
             "Trigger Bot","AutoClicker","Criticals","Anti AFK","Auto Tool","Auto Eat",
-            "Auto Gap","Auto XP","Auto Leave","Auto Totem","Auto Inventory Totem","Auto Refill Hotbar","Auto Weapon","Auto Armor","Mace Swap","Key Pearl","Auto Respawn","Auto Reconnect","No Weather","Time Changer","No Hurt Cam","Potion HUD","Keystrokes","Pearl Cooldown","Auto Shield Disabler","Shield Breaker","Auto Rod","Bow Spam","Auto Bow Release","Auto Mace","No Flame","No Explosions","Radar","MiniMap","Waypoints","No Slow","Step","Elytra Fly","Spider","Jesus","Inventory Move","Parkour","Safe Walk","Strafe","Show HUD"
+            "Auto Gap","Auto XP","Auto Leave","Auto Totem","Auto Inventory Totem","Auto Refill Hotbar","Auto Weapon","Auto Armor","Mace Swap","Key Pearl","Auto Respawn","Auto Reconnect","No Weather","Time Changer","No Hurt Cam","Potion HUD","Keystrokes","Pearl Cooldown","Auto Shield Disabler","Shield Breaker","Auto Rod","Bow Spam","Auto Bow Release","Auto Mace","No Flame","No Explosions","Radar","MiniMap","Waypoints","No Slow","Step","Elytra Fly","Spider","Jesus","Inventory Move","Parkour","Safe Walk","Strafe","Show HUD","Friends","Middle Click Friend","Teams","Anti Bot","Target Selector","WTap","STap"
     );
 
     private Page page = Page.MODULES;
