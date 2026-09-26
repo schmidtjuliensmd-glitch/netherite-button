@@ -1,12 +1,39 @@
 <!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Sleep Client Admin</title><link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
+<title>Sleep Client Admin</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3">
 <link rel="icon" type="image/png" href="/assets/sleep-client-icon.png?v=3">
 <link rel="shortcut icon" href="/favicon.svg?v=3">
 <link rel="apple-touch-icon" href="/assets/sleep-client-icon.png?v=3">
-
 <link rel="stylesheet" href="./assets/site.css">
+<style>
+.admin-grid{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:22px;align-items:start}
+.admin-payment-panel{border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(14,11,18,.86);box-shadow:0 20px 60px rgba(0,0,0,.28);overflow:hidden}
+.admin-payment-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.admin-payment-head strong{font-size:14px}.admin-payment-head small{color:#8f95a8}
+.admin-payment-refresh{border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:7px 9px;background:rgba(255,255,255,.05);color:#fff;cursor:pointer}
+.admin-payment-status{padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.06);font-size:11px;color:#949aad}
+.admin-payment-status.warn{color:#f0c77a}
+.admin-payment-list{max-height:430px;overflow:auto;padding:9px}
+.admin-payment-empty{padding:22px 12px;text-align:center;color:#8f95a8;font-size:12px}
+.admin-payment-item{display:grid;gap:8px;padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.075);border-radius:14px;background:rgba(255,255,255,.035)}
+.admin-payment-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.admin-payment-player{display:flex;align-items:center;gap:8px;min-width:0}
+.admin-payment-dot{width:8px;height:8px;border-radius:50%;background:#67e8a5;box-shadow:0 0 14px rgba(103,232,165,.5)}
+.admin-payment-player strong{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-payment-amount{font-size:14px;font-weight:800;color:#fff}
+.admin-payment-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:#858b9d;font-size:10px}
+.admin-payment-plan{padding:3px 7px;border-radius:999px;background:rgba(155,106,255,.12);color:#c8b5ff;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.admin-payment-use{width:100%;border:1px solid rgba(164,121,255,.24);border-radius:10px;padding:8px 10px;background:rgba(142,84,255,.08);color:#ddd1ff;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+.admin-payment-use:hover{background:rgba(142,84,255,.15)}
+.admin-manual-payment{display:grid;gap:10px;padding:14px 16px;border-top:1px solid rgba(255,255,255,.07)}
+.admin-manual-payment h3{margin:0;font-size:13px}
+.admin-manual-payment label{display:grid;gap:6px;font-size:11px;color:#a9adbb}
+.admin-manual-payment input,.admin-manual-payment select{width:100%;box-sizing:border-box;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);color:#fff;padding:9px 10px}
+.admin-manual-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:980px){.admin-grid{grid-template-columns:1fr}}
+</style>
 </head><body>
 <div class="bg-orb one"></div><div class="bg-orb two"></div>
 <header class="site-header"><div class="site-shell"><nav class="nav">
@@ -17,11 +44,11 @@
 <main class="site-shell">
 <section class="page-hero reveal visible">
 <div class="eyebrow">Owner Tools</div>
-<h1><span class="gradient-text">License Admin</span></h1>
-<p class="lead">Create and manage Sleep Client product keys for development and account access.</p>
+<h1><span class="gradient-text">Sleep Client Admin</span></h1>
+<p class="lead">Track payments and create product keys for paid access.</p>
 </section>
 
-<section class="section">
+<section class="section admin-grid">
 <div class="sleep-activation-panel">
 <div>
 <div class="eyebrow">Issue Product Key</div>
@@ -44,6 +71,30 @@
 </div>
 </form>
 </div>
+
+<aside class="admin-payment-panel" aria-label="Incoming payments">
+  <div class="admin-payment-head">
+    <div><strong>Incoming Payments</strong><br><small id="payment-count">0 payments</small></div>
+    <button class="admin-payment-refresh" id="payment-refresh" type="button">↻</button>
+  </div>
+  <div class="admin-payment-status" id="payment-feed-status">Enter your Admin Secret to load payments.</div>
+  <div class="admin-payment-list" id="payment-feed-list"><div class="admin-payment-empty">No payments loaded.</div></div>
+
+  <form class="admin-manual-payment" id="manual-payment-form">
+    <h3>Record payment manually</h3>
+    <label>Minecraft Username<input id="payment-username" type="text" maxlength="16" autocomplete="off" placeholder="Minecraft username"></label>
+    <div class="admin-manual-row">
+      <label>Plan<select id="payment-plan"><option value="monthly">Monthly</option><option value="lifetime">Lifetime</option></select></label>
+      <label>Provider<input id="payment-provider" type="text" value="manual" maxlength="40"></label>
+    </div>
+    <div class="admin-manual-row">
+      <label>Amount<input id="payment-amount" type="number" min="0.01" step="0.01" placeholder="9.99"></label>
+      <label>Currency<input id="payment-currency" type="text" maxlength="3" value="EUR"></label>
+    </div>
+    <button class="btn btn-secondary" type="submit">Record Paid Order</button>
+    <p class="sleep-form-status" id="manual-payment-status"></p>
+  </form>
+</aside>
 </section>
 </main>
 
@@ -53,10 +104,138 @@ const form=document.getElementById('admin-license-form');
 const status=document.getElementById('admin-status');
 const output=document.getElementById('admin-key-output');
 const secretInput=document.getElementById('admin-secret');
+const feedList=document.getElementById('payment-feed-list');
+const feedStatus=document.getElementById('payment-feed-status');
+const paymentCount=document.getElementById('payment-count');
 
 secretInput.value=sessionStorage.getItem('sleep-admin-secret')||'';
 secretInput.addEventListener('input',()=>{
   sessionStorage.setItem('sleep-admin-secret',secretInput.value);
+});
+
+const money=(amount,currency)=>{
+  try{return new Intl.NumberFormat(undefined,{style:'currency',currency:currency||'EUR'}).format(Number(amount)||0);}
+  catch{return (Number(amount)||0).toFixed(2)+' '+(currency||'EUR');}
+};
+
+const renderPayments=(payments,storage)=>{
+  paymentCount.textContent=payments.length+' payment'+(payments.length===1?'':'s');
+  feedList.innerHTML='';
+  feedStatus.textContent=storage==='redis'?'Live · persistent Redis storage':'Live · temporary memory storage';
+  feedStatus.classList.toggle('warn',storage!=='redis');
+
+  if(!payments.length){
+    feedList.innerHTML='<div class="admin-payment-empty">No incoming payments yet.</div>';
+    return;
+  }
+
+  payments.forEach(payment=>{
+    const item=document.createElement('article');
+    item.className='admin-payment-item';
+
+    const top=document.createElement('div');
+    top.className='admin-payment-top';
+
+    const player=document.createElement('div');
+    player.className='admin-payment-player';
+    const dot=document.createElement('span');
+    dot.className='admin-payment-dot';
+    const name=document.createElement('strong');
+    name.textContent=payment.username||payment.payer||'Unknown';
+    player.append(dot,name);
+
+    const amount=document.createElement('span');
+    amount.className='admin-payment-amount';
+    amount.textContent=money(payment.amount,payment.currency||'EUR');
+    top.append(player,amount);
+
+    const meta=document.createElement('div');
+    meta.className='admin-payment-meta';
+    const plan=document.createElement('span');
+    plan.className='admin-payment-plan';
+    plan.textContent=payment.plan||'Other';
+    const info=document.createElement('span');
+    info.textContent=(payment.provider||'unknown')+' · '+new Date(payment.receivedAt||payment.recordedAt||Date.now()).toLocaleString();
+    meta.append(plan,info);
+    item.append(top,meta);
+
+    if(payment.plan==='monthly'||payment.plan==='lifetime'){
+      const use=document.createElement('button');
+      use.type='button';
+      use.className='admin-payment-use';
+      use.textContent='Use for key';
+      use.addEventListener('click',()=>{
+        document.getElementById('admin-mc-name').value=payment.username||payment.payer||'';
+        document.getElementById('admin-plan').value=payment.plan;
+        status.textContent='Payment selected. Generate the key when ready.';
+        form.scrollIntoView({behavior:'smooth',block:'center'});
+      });
+      item.append(use);
+    }
+
+    feedList.appendChild(item);
+  });
+};
+
+async function loadPayments(){
+  const secret=secretInput.value.trim();
+  if(!secret){
+    feedStatus.textContent='Enter your Admin Secret to load payments.';
+    feedStatus.classList.remove('warn');
+    return;
+  }
+  try{
+    const r=await fetch('/api/payments/list?ts='+Date.now(),{
+      headers:{Authorization:'Bearer '+secret},
+      cache:'no-store'
+    });
+    const data=await r.json();
+    if(!r.ok||!data.ok){
+      feedStatus.textContent=data.error==='unauthorized'?'Wrong Admin Secret.':'Could not load payments.';
+      feedStatus.classList.add('warn');
+      return;
+    }
+    renderPayments(Array.isArray(data.payments)?data.payments:[],data.storage);
+  }catch{
+    feedStatus.textContent='Could not reach the payment server.';
+    feedStatus.classList.add('warn');
+  }
+}
+
+document.getElementById('payment-refresh').addEventListener('click',loadPayments);
+secretInput.addEventListener('change',loadPayments);
+setInterval(loadPayments,5000);
+if(secretInput.value)loadPayments();
+
+document.getElementById('manual-payment-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const out=document.getElementById('manual-payment-status');
+  const secret=secretInput.value.trim();
+  if(!secret){out.textContent='Enter the Admin Secret first.';return;}
+  const body={
+    username:document.getElementById('payment-username').value.trim(),
+    plan:document.getElementById('payment-plan').value,
+    provider:document.getElementById('payment-provider').value.trim()||'manual',
+    amount:Number(document.getElementById('payment-amount').value),
+    currency:document.getElementById('payment-currency').value.trim().toUpperCase()||'EUR',
+    eventId:'manual-'+Date.now()+'-'+Math.random().toString(36).slice(2,10)
+  };
+  out.textContent='Recording payment…';
+  try{
+    const r=await fetch('/api/payments/report',{
+      method:'POST',
+      headers:{'Content-Type':'application/json',Authorization:'Bearer '+secret},
+      body:JSON.stringify(body)
+    });
+    const data=await r.json();
+    if(!r.ok||!data.ok){out.textContent='Could not record payment: '+(data.error||'unknown_error');return;}
+    out.textContent='Payment recorded.';
+    document.getElementById('admin-mc-name').value=body.username;
+    document.getElementById('admin-plan').value=body.plan;
+    await loadPayments();
+  }catch{
+    out.textContent='Could not reach the payment server.';
+  }
 });
 
 form.addEventListener('submit',async e=>{
