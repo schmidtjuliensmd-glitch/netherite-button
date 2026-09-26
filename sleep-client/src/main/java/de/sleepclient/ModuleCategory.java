@@ -3,7 +3,7 @@ package de.sleepclient;
 public enum ModuleCategory {
     COMBAT("Combat"),
     MOVEMENT("Movement"),
-    DONUT_SMP("DonutSMP"),
+    DONUT_SMP("Base Finding Tools"),
     VISUALS("Visuals"),
     MISC("Misc"),
     GUI("GUI");
