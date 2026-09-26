@@ -20,6 +20,9 @@ public final class ModuleRuntime {
         StorageEsp.tick(client);
         BlockSearchRuntime.tick(client);
         DonutUtilityRuntime.tick(client);
+        CombatModulesRuntime.tick(client);
+        MovementModulesRuntime.tick(client);
+        HudModulesRuntime.tick(client);
 
         Module fullbright = ModuleRegistry.find("Fullbright");
         if (fullbright != null && fullbright.enabled()) {
