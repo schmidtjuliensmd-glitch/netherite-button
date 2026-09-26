@@ -53,6 +53,24 @@ const enToDe={
 "Monthly":"Monatlich",
 "Choose your access.":"Wähle deinen Zugang.",
 "Simple Pricing":"Einfache Preise",
+"Access Plans":"Zugangsmodelle",
+"Choose Monthly for 30-day access or Lifetime for permanent access to Sleep Client under the selected license.":"Wähle Monthly für 30 Tage Zugang oder Lifetime für dauerhaften Zugang zu Sleep Client mit der gewählten Lizenz.",
+"Full Sleep Client access for 30 days.":"Voller Sleep-Client-Zugang für 30 Tage.",
+"30 days":"30 Tage",
+"monthly access":"monatlicher Zugang",
+"Choose Monthly":"Monthly wählen",
+"30-day license":"30-Tage-Lizenz",
+"One purchase for permanent Sleep Client access.":"Ein Kauf für dauerhaften Sleep-Client-Zugang.",
+"one-time access":"einmaliger Zugang",
+"Choose Lifetime":"Lifetime wählen",
+"Product key activation":"Product-Key-Aktivierung",
+"No recurring renewal":"Keine wiederkehrende Verlängerung",
+"POPULAR":"BELIEBT",
+"No plan selected":"Kein Modell ausgewählt",
+"Choose Monthly or Lifetime. The actual checkout will be connected to the payment provider separately.":"Wähle Monthly oder Lifetime. Der eigentliche Bezahlvorgang wird separat mit dem Zahlungsanbieter verbunden.",
+"Monthly selected":"Monthly ausgewählt",
+"Lifetime selected":"Lifetime ausgewählt",
+"Your selected plan will be used for checkout and product-key creation.":"Dein ausgewähltes Modell wird später für Bezahlung und Product-Key-Erstellung verwendet.",
 "Compact ▾":"Kompakt ▾",
 "Layout":"Layout",
 "Animation Speed":"Animationsgeschwindigkeit",
@@ -522,6 +540,29 @@ document.querySelectorAll('.sleep-category-button').forEach(btn=>{
     animateVisibleItems(document.querySelectorAll('.sleep-feature-card'));
   });
 });
+const savedPlan=localStorage.getItem('sleep-selected-plan')||'';
+const updatePlanSelection=plan=>{
+  const title=document.getElementById('sleep-plan-title');
+  const status=document.getElementById('sleep-plan-status');
+  document.querySelectorAll('.sleep-buy-btn').forEach(btn=>btn.classList.toggle('selected',btn.dataset.plan===plan));
+  if(!plan){
+    if(title)title.textContent=siteLanguage==='de'?(enToDe['No plan selected']||'Kein Modell ausgewählt'):'No plan selected';
+    return;
+  }
+  localStorage.setItem('sleep-selected-plan',plan);
+  const rawTitle=plan==='lifetime'?'Lifetime selected':'Monthly selected';
+  if(title)title.textContent=siteLanguage==='de'?(enToDe[rawTitle]||rawTitle):rawTitle;
+  const rawStatus='Your selected plan will be used for checkout and product-key creation.';
+  if(status)status.textContent=siteLanguage==='de'?(enToDe[rawStatus]||rawStatus):rawStatus;
+};
+document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    updatePlanSelection(btn.dataset.plan==='lifetime'?'lifetime':'monthly');
+    document.getElementById('sleep-plan-status')?.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'center'});
+  });
+});
+if(savedPlan==='monthly'||savedPlan==='lifetime')updatePlanSelection(savedPlan);
+
 function refreshSleepDownload(account){
   const panel=document.getElementById('sleep-download-panel');
   if(!panel)return;
