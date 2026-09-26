@@ -21,7 +21,7 @@
       checkbox:'Ich habe die Nutzungsbedingungen gelesen und akzeptiere sie.',
       open:'Nutzungsbedingungen öffnen',
       accept:'Akzeptieren und fortfahren',
-      note:'Die Zustimmung zu diesen Bedingungen ersetzt keine Regeln von Minecraft, Mojang, Microsoft, DonutSMP oder anderen Servern und Plattformen.'
+      note:'Die Zustimmung zu diesen Bedingungen ersetzt keine Regeln von Minecraft, Mojang, Microsoft oder anderen Servern und Plattformen.'
     },
     en:{
       eyebrow:'TERMS OF USE',
@@ -30,7 +30,7 @@
       checkbox:'I have read and accept the terms of use.',
       open:'Open terms of use',
       accept:'Accept and continue',
-      note:'Accepting these terms does not replace the rules of Minecraft, Mojang, Microsoft, DonutSMP or any other server or platform.'
+      note:'Accepting these terms does not replace the rules of Minecraft, Mojang, Microsoft or any other server or platform.'
     }
   };
 
