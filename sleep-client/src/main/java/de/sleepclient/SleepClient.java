@@ -29,6 +29,7 @@ public final class SleepClient implements ClientModInitializer {
     public void onInitializeClient() {
         ModuleRegistry.init();
         ConfigManager.load();
+        WaypointManager.load();
 
         HudElementRegistry.addLast(
                 Identifier.fromNamespaceAndPath("sleepclient", "sus_chunk_hud"),
@@ -70,6 +71,10 @@ public final class SleepClient implements ClientModInitializer {
                 Identifier.fromNamespaceAndPath("sleepclient", "chunk_analysis_hud"),
                 (graphics, deltaTracker) -> ChunkAnalysisRuntime.renderHud(graphics)
         );
+        HudElementRegistry.addLast(
+                Identifier.fromNamespaceAndPath("sleepclient", "navigation_hud"),
+                (graphics, deltaTracker) -> NavigationVisualRuntime.renderHud(graphics)
+        );
 
         WorldRenderEvents.AFTER_ENTITIES.register(SusChunkFinder::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(PlayerEsp::renderWorld);
@@ -80,6 +85,7 @@ public final class SleepClient implements ClientModInitializer {
         WorldRenderEvents.AFTER_ENTITIES.register(EntityVisualRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(ChunkAnalysisRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(ViewVisualRuntime::renderWorld);
+        WorldRenderEvents.AFTER_ENTITIES.register(NavigationVisualRuntime::renderWorld);
         LicenseManager.verifySaved().thenAccept(ok -> {
             if (ok) UpdateManager.checkForUpdates();
         });
@@ -132,6 +138,41 @@ public final class SleepClient implements ClientModInitializer {
                         }));
                         return 1;
                     }));
+
+            dispatcher.register(ClientCommandManager.literal("sleepwaypoint")
+                    .then(ClientCommandManager.literal("add")
+                            .then(ClientCommandManager.argument("name", StringArgumentType.greedyString())
+                                    .executes(context -> {
+                                        String name = StringArgumentType.getString(context, "name");
+                                        WaypointManager.addCurrent(name);
+                                        context.getSource().sendFeedback(Component.literal("Sleep Client: waypoint added: " + name));
+                                        return 1;
+                                    })))
+                    .then(ClientCommandManager.literal("remove")
+                            .then(ClientCommandManager.argument("name", StringArgumentType.greedyString())
+                                    .executes(context -> {
+                                        String name = StringArgumentType.getString(context, "name");
+                                        boolean removed = WaypointManager.remove(name);
+                                        context.getSource().sendFeedback(Component.literal(
+                                                removed ? "Sleep Client: waypoint removed: " + name
+                                                        : "Sleep Client: waypoint not found: " + name
+                                        ));
+                                        return 1;
+                                    })))
+                    .then(ClientCommandManager.literal("list")
+                            .executes(context -> {
+                                String names = WaypointManager.all().isEmpty()
+                                        ? "none"
+                                        : WaypointManager.all().stream().map(WaypointManager.Waypoint::name).reduce((a,b) -> a + ", " + b).orElse("none");
+                                context.getSource().sendFeedback(Component.literal("Sleep Client waypoints: " + names));
+                                return 1;
+                            }))
+                    .then(ClientCommandManager.literal("clear")
+                            .executes(context -> {
+                                WaypointManager.clear();
+                                context.getSource().sendFeedback(Component.literal("Sleep Client: all waypoints cleared."));
+                                return 1;
+                            })));
 
             dispatcher.register(ClientCommandManager.literal("sleepaccount")
                     .executes(context -> {
