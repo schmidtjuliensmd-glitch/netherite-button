@@ -139,29 +139,16 @@ public final class SleepClickGuiScreen extends Screen {
         SmoothShapeRenderer.roundedRect(g, x, y, w, h, 9, 0xFF151019);
         SmoothShapeRenderer.roundedOutline(g, x, y, w, h, 9, 0xFF2E2433);
 
-        if (LicenseManager.verified()) {
-            if (minecraft != null && minecraft.player != null) {
-                PlayerFaceRenderer.draw(g, minecraft.player.getSkin(), x + 7, y + 5, 24, 0xFFFFFFFF);
-            } else {
-                SmoothShapeRenderer.roundedGradient(g, x + 7, y + 5, 24, 24, 7,
-                        ThemeConfig.accent, ThemeConfig.accentSecondary, true);
-                GuiIconRenderer.draw(g, GuiIconArtwork.Icon.MOON, x + 11, y + 9, 16, 0xFFFFFFFF);
-            }
-
-            String username = SmoothTextRenderer.fit(LicenseManager.username(), 10.5f, true, 112);
+        if (minecraft != null && minecraft.player != null) {
+            PlayerFaceRenderer.draw(g, minecraft.player.getSkin(), x + 7, y + 5, 24, 0xFFFFFFFF);
+            String username = SmoothTextRenderer.fit(minecraft.getUser().getName(), 10.5f, true, 112);
             SmoothTextRenderer.draw(g, username, x + 39, y + 6, 10.5f, TEXT, true);
-
-            String plan = switch (LicenseManager.plan().toLowerCase(Locale.ROOT)) {
-                case "monthly" -> "Monthly";
-                case "lifetime" -> "Lifetime";
-                default -> "Angemeldet";
-            };
-            SmoothTextRenderer.draw(g, plan, x + 39, y + 20, 8f, MUTED, false);
+            SmoothTextRenderer.draw(g, "Minecraft Java", x + 39, y + 20, 8f, MUTED, false);
         } else {
             SmoothShapeRenderer.roundedGradient(g, x + 7, y + 5, 24, 24, 7,
-                    0xFF302638, 0xFF211925, true);
-            GuiIconRenderer.draw(g, GuiIconArtwork.Icon.MOON, x + 11, y + 9, 16, MUTED);
-            SmoothTextRenderer.draw(g, "Nicht angemeldet", x + 39, y + 11, 9.5f, MUTED, true);
+                    ThemeConfig.accent, ThemeConfig.accentSecondary, true);
+            GuiIconRenderer.draw(g, GuiIconArtwork.Icon.MOON, x + 11, y + 9, 16, 0xFFFFFFFF);
+            SmoothTextRenderer.draw(g, "Minecraft Java", x + 39, y + 11, 9.5f, MUTED, true);
         }
     }
 
