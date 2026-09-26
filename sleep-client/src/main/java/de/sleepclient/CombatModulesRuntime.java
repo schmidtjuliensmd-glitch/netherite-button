@@ -110,28 +110,57 @@ public final class CombatModulesRuntime {
     }
 
     private static AbstractClientPlayer findTarget(Minecraft client, float range, int fov) {
+        if (enabled("Target Selector")) {
+            range = Math.min(range, ConfigManager.floatOption("Target Selector", "range", 6.0f));
+            fov = Math.min(fov, ConfigManager.intOption("Target Selector", "fov", 180));
+        }
+
+        final float maxRange = range;
+        final int maxFov = fov;
+
         List<AbstractClientPlayer> players = client.level.players().stream()
                 .filter(p -> p != client.player)
                 .filter(p -> !p.isRemoved() && p.isAlive())
                 .filter(p -> !p.isSpectator())
-                .filter(p -> client.player.distanceToSqr(p) <= range * (double)range)
+                .filter(p -> !enabled("Friends") || !FriendManager.isFriend(p.getName().getString()))
+                .filter(p -> !enabled("Teams") || !client.player.isAlliedTo(p))
+                .filter(p -> !enabled("Anti Bot") || passesAntiBot(client, p))
+                .filter(p -> client.player.distanceToSqr(p) <= maxRange * (double)maxRange)
                 .filter(p -> yawDistance(client.player.getYRot(),
-                        rotationTo(client.player.getEyePosition(), p.getEyePosition()).yaw()) <= fov * 0.5f)
+                        rotationTo(client.player.getEyePosition(), p.getEyePosition()).yaw()) <= maxFov * 0.5f)
                 .toList();
 
         if (players.isEmpty()) return null;
 
-        String priority = ConfigManager.stringOption("Target Selector", "priority",
-                ConfigManager.stringOption("KillAura", "priority", "Distance"));
+        String priority = enabled("Target Selector")
+                ? ConfigManager.stringOption("Target Selector", "priority", "Distance")
+                : ConfigManager.stringOption("KillAura", "priority", "Distance");
 
         Comparator<AbstractClientPlayer> comparator = switch (priority) {
             case "Health" -> Comparator.comparingDouble(AbstractClientPlayer::getHealth);
             case "Angle" -> Comparator.comparingDouble(p ->
                     yawDistance(client.player.getYRot(), rotationTo(client.player.getEyePosition(), p.getEyePosition()).yaw()));
+            case "Armor" -> Comparator.comparingInt(CombatModulesRuntime::armorValue);
             default -> Comparator.comparingDouble(client.player::distanceToSqr);
         };
 
         return players.stream().min(comparator).orElse(null);
+    }
+
+    private static boolean passesAntiBot(Minecraft client, AbstractClientPlayer player) {
+        if (ConfigManager.boolOption("Anti Bot", "tabCheck", true)) {
+            if (client.getConnection() == null || client.getConnection().getPlayerInfo(player.getUUID()) == null) return false;
+        }
+        if (ConfigManager.boolOption("Anti Bot", "invisibleCheck", false) && player.isInvisible()) return false;
+        return true;
+    }
+
+    private static int armorValue(AbstractClientPlayer player) {
+        int value = 0;
+        for (var stack : player.getArmorSlots()) {
+            if (!stack.isEmpty()) value += stack.getMaxDamage() > 0 ? 1 : 0;
+        }
+        return value;
     }
 
     private static Rotation rotationTo(Vec3 from, Vec3 to) {
