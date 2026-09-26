@@ -19,6 +19,7 @@ public final class ModuleRuntime {
         SusChunkFinder.tick(client);
         StorageEsp.tick(client);
         BlockSearchRuntime.tick(client);
+        DonutUtilityRuntime.tick(client);
 
         Module fullbright = ModuleRegistry.find("Fullbright");
         if (fullbright != null && fullbright.enabled()) {
