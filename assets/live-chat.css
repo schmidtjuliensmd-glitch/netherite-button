@@ -1,0 +1,36 @@
+.sleep-live-chat{position:fixed;right:22px;bottom:22px;z-index:1200;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.slc-launcher{display:flex;align-items:center;gap:10px;min-width:142px;padding:10px 13px;border:1px solid rgba(126,87,136,.42);border-radius:15px;background:rgba(17,10,21,.94);color:#f8f4f8;box-shadow:0 14px 40px rgba(0,0,0,.34),0 0 24px rgba(92,255,209,.06);backdrop-filter:blur(18px);cursor:pointer;transition:.18s ease}
+.slc-launcher:hover{transform:translateY(-2px);border-color:rgba(92,255,209,.42)}
+.slc-launcher-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#5cffd1,#55bff5);color:#091014;font-size:22px;font-weight:900}
+.slc-launcher-copy{display:flex;flex-direction:column;align-items:flex-start;line-height:1.05}
+.slc-launcher-copy strong{font-size:13px}
+.slc-launcher-copy small{display:flex;align-items:center;gap:4px;margin-top:5px;color:#9e91a2;font-size:10px}
+.slc-launcher-copy i,.slc-header span i{width:7px;height:7px;border-radius:50%;background:#5cffb7;box-shadow:0 0 10px rgba(92,255,183,.8)}
+.slc-launcher-copy b,.slc-header b{color:#cfc4d1;font-weight:700}
+.slc-panel{position:absolute;right:0;bottom:58px;width:min(370px,calc(100vw - 28px));height:min(520px,calc(100vh - 110px));border:1px solid rgba(126,87,136,.38);border-radius:20px;overflow:hidden;background:rgba(12,8,15,.97);box-shadow:0 24px 70px rgba(0,0,0,.5);backdrop-filter:blur(22px)}
+.slc-panel[hidden]{display:none}
+.slc-header{height:66px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(126,87,136,.2);background:linear-gradient(135deg,rgba(43,20,48,.82),rgba(17,11,22,.8))}
+.slc-header>div{display:flex;flex-direction:column;gap:5px}
+.slc-header strong{font-size:15px;color:#faf6fb}
+.slc-header span{display:flex;align-items:center;gap:5px;color:#97899b;font-size:11px}
+.slc-header em{font-style:normal}
+.slc-header button{width:32px;height:32px;border:0;border-radius:9px;background:transparent;color:#a797ac;font-size:24px;line-height:1;cursor:pointer}
+.slc-header button:hover{background:rgba(255,255,255,.06);color:#fff}
+.slc-messages{height:calc(100% - 132px);overflow:auto;padding:12px 12px 8px;scrollbar-width:thin;scrollbar-color:#3b2b40 transparent}
+.slc-message{display:grid;grid-template-columns:34px 1fr;gap:9px;padding:9px;border-radius:12px}
+.slc-message:hover{background:rgba(255,255,255,.025)}
+.slc-message img{width:34px;height:34px;border-radius:8px;image-rendering:auto;background:#211727}
+.slc-message>div{min-width:0}
+.slc-message-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.slc-message-top strong{overflow:hidden;text-overflow:ellipsis;color:#e8dfe9;font-size:12px;white-space:nowrap}
+.slc-message-top time{flex:none;color:#756979;font-size:9px}
+.slc-message p{margin:4px 0 0;color:#b8abbc;font-size:12px;line-height:1.35;overflow-wrap:anywhere}
+.slc-empty{display:grid;place-items:center;height:100%;padding:20px;color:#796d7d;text-align:center;font-size:12px}
+.slc-status{position:absolute;left:14px;right:14px;bottom:57px;margin:0;color:#908394;font-size:9px;pointer-events:none}
+.slc-status.is-error{color:#ff8195}
+.slc-form{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 12px 12px;border-top:1px solid rgba(126,87,136,.18);background:#0e0a11}
+.slc-form input{min-width:0;height:38px;padding:0 12px;border:1px solid #302437;border-radius:10px;outline:0;background:#17101b;color:#f4eef5;font:inherit;font-size:12px}
+.slc-form input:focus{border-color:rgba(92,255,209,.48);box-shadow:0 0 0 3px rgba(92,255,209,.05)}
+.slc-form button{height:38px;padding:0 14px;border:0;border-radius:10px;background:linear-gradient(135deg,#5cffd1,#59c6f3);color:#081116;font-weight:800;cursor:pointer}
+.slc-form button:disabled{opacity:.55;cursor:default}
+@media(max-width:640px){.sleep-live-chat{right:14px;bottom:14px}.slc-launcher{min-width:0}.slc-launcher-copy strong{display:none}.slc-panel{bottom:56px;height:min(500px,calc(100vh - 92px))}}
