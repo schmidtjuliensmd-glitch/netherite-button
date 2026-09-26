@@ -8,8 +8,6 @@ const enToDe={
 "Your license is valid. Download the Fabric mod for Minecraft Java 1.21.11 and place the JAR file in your mods folder.":"Deine Lizenz ist gültig. Lade den Fabric-Mod für Minecraft Java 1.21.11 herunter und lege die JAR-Datei in deinen Mods-Ordner.",
 "Your Sleep Client is ready.":"Dein Sleep Client ist bereit.",
 "DOWNLOAD":"DOWNLOAD",
-"Lifetime · 25M selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.":"Lifetime · 25M ausgewählt. Die DonutSMP-Zahlung muss serverseitig geprüft werden, bevor ein Key ausgegeben werden kann.",
-"Monthly · 10M selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.":"Monatlich · 10M ausgewählt. Die DonutSMP-Zahlung muss serverseitig geprüft werden, bevor ein Key ausgegeben werden kann.",
 "Could not reach the Sleep Client license server.":"Der Sleep-Client-Lizenzserver konnte nicht erreicht werden.",
 "Sign in failed.":"Anmeldung fehlgeschlagen.",
 "License server is not configured yet.":"Der Lizenzserver ist noch nicht eingerichtet.",
@@ -37,14 +35,12 @@ const enToDe={
 "VERY POPULAR":"SEHR BELIEBT",
 "30-day access":"30 Tage Zugang",
 "Key activation":"Key-Aktivierung",
-"DonutSMP configs":"DonutSMP-Konfigurationen",
 "Regular client updates":"Regelmäßige Client-Updates",
 "Full access to all modules":"Voller Zugriff auf alle Module",
 "Get Monthly Access":"Monatlichen Zugang holen",
 "/ month":"/ Monat",
 "Full Sleep Client access, billed monthly.":"Voller Zugriff auf Sleep Client, monatlich.",
 "Monthly":"Monatlich",
-"Payment is planned through DonutSMP money. After payment verification you receive a product key for Sleep Client.":"Die Bezahlung erfolgt mit DonutSMP-Geld. Nach der Zahlungsprüfung erhältst du einen Product Key für Sleep Client.",
 "Choose your access.":"Wähle deinen Zugang.",
 "Simple Pricing":"Einfache Preise",
 "Compact ▾":"Kompakt ▾",
@@ -95,7 +91,6 @@ const enToDe={
 "Now-playing widget for your desktop music.":"Anzeige für aktuell laufende Musik auf deinem PC.",
 "Draggable HUD widgets.":"Verschiebbare HUD-Elemente.",
 "Schematic-guided automated building workflow.":"Automatisierter Bauablauf anhand eines Schematics.",
-"Chunk analysis tools for DonutSMP.":"Werkzeuge zur Chunk-Analyse für DonutSMP.",
 "Highlights chunks with suspicious activity patterns.":"Markiert Chunks mit verdächtigen Aktivitätsmustern.",
 "Pearl reaction helper.":"Hilfsfunktion für Perlen-Reaktionen.",
 "One-key pearl swap, throw and swap back.":"Perle mit einer Taste wechseln, werfen und zurückwechseln.",
@@ -131,7 +126,6 @@ const enToDe={
 "ESP, HUD, highlights, waypoints and custom world visuals.":"ESP, HUD, Hervorhebungen, Wegpunkte und anpassbare Welt-Darstellung.",
 "Visual Suite":"Visuelle Funktionen",
 "Sus Chunk Finder, Chunk Finder and schematic workflow.":"Sus Chunk Finder, Chunk Finder und Schematic-Abläufe.",
-"DonutSMP Tools":"DonutSMP-Werkzeuge",
 "Theme, scale, animation speed and layout.":"Design, Skalierung, Animationsgeschwindigkeit und Layout.",
 "Search modules…":"Module suchen…",
 "Settings":"Einstellungen",
@@ -145,9 +139,7 @@ const enToDe={
 "Custom GUI":"Anpassbare GUI",
 "View Modules":"Module ansehen",
 "Get Sleep Client":"Sleep Client holen",
-"A configurable Minecraft client with a modern module GUI, smooth animations, DonutSMP tools, combat modules and a complete visual suite.":"Ein anpassbarer Minecraft-Client mit moderner Modul-GUI, flüssigen Animationen, DonutSMP-Werkzeugen, Kampfmodulen und umfangreichen visuellen Funktionen.",
 "Made to feel clean.":"Sauber und übersichtlich.",
-"Built for DonutSMP.":"Für DonutSMP entwickelt.",
 "Sleep Client · Minecraft 1.21.11":"Sleep Client · Minecraft 1.21.11",
 "Payment verification and product key delivery may take up to 24 hours and, in exceptional cases, longer.":"Die Zahlungsprüfung und die Zusendung des Product Keys können bis zu 24 Stunden und in Ausnahmefällen länger dauern.",
 "Please note:":"Bitte beachten:",
@@ -162,8 +154,6 @@ const enToDe={
 "Download Sleep Client":"Sleep Client herunterladen",
 "After the payment is confirmed, a product key is created for your Minecraft username.":"Nach bestätigter Zahlung wird ein Product Key für deinen Minecraft-Namen erstellt.",
 "Payment gets verified":"Zahlung wird geprüft",
-"Choose Monthly for 10M or Lifetime for 25M and send the amount in DonutSMP.":"Wähle Monthly für 10M oder Lifetime für 25M und sende den Betrag in DonutSMP.",
-"Pay with DonutSMP money":"Mit DonutSMP-Geld bezahlen",
 "The download can be shared, but Sleep Client only works with a valid product key linked to the buyer's Minecraft account.":"Die Download-Datei kann weitergegeben werden, aber Sleep Client funktioniert nur mit einem gültigen Product Key, der mit dem Minecraft-Konto des Käufers verknüpft ist.",
 "From payment to access.":"Von der Zahlung bis zum Zugang.",
 "How it works":"So funktioniert es",
@@ -483,7 +473,7 @@ if(lightbox){
 const sleepDemoData={
   combat:["Auto Crystal","Anchor Macro","Aim Assist","Auto Totem","Reach","Auto Mace","Trigger Bot","Auto Refill Hotbar"],
   movement:["Sprint","No Slow","Step","Velocity","Freelook","Fast Place","Inventory Move","Safe Walk"],
-  donut:["Sus Chunk Finder","Chunk Finder","Auto Schematic Builder","Waypoints","StorageESP","BlockESP","Pearl Catch","Donut Config"],
+  utility:["Sus Chunk Finder","Chunk Finder","Auto Schematic Builder","Waypoints","StorageESP","BlockESP","Pearl Catch","Utility Config"],
   visuals:["PlayerESP","StorageESP","BlockESP","Hole ESP","Name Tags","LootESP","Target ESP","Fullbright"],
   misc:["Keybind Manager","Profiles","Update Center","Auto XP","Key Pearl","Notifications","Friends","Config Sync"],
   gui:["Theme Editor","HUD Editor","GUI Scale","Animation Settings","Accent Color","Panel Opacity","Compact Layout","Search"],
@@ -496,9 +486,9 @@ document.querySelectorAll('.sleep-demo-tab').forEach(tab=>{
     const key=tab.dataset.demoCategory;
     const list=sleepDemoData[key]||[];
     const title=document.getElementById('sleep-demo-title');
+    const rawTitle=key.charAt(0).toUpperCase()+key.slice(1);
     const box=document.getElementById('sleep-demo-modules');
     if(title){
-      const rawTitle=key==='donut'?'DonutSMP':key.charAt(0).toUpperCase()+key.slice(1);
       title.textContent=siteLanguage==='de'?(enToDe[rawTitle]||rawTitle):rawTitle;
     }
     if(box){
@@ -520,18 +510,6 @@ document.querySelectorAll('.sleep-category-button').forEach(btn=>{
       card.style.display=filter==='all'||card.dataset.moduleCategory===filter?'':'none';
     });
     animateVisibleItems(document.querySelectorAll('.sleep-feature-card'));
-  });
-});
-document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    const status=document.getElementById('sleep-form-status');
-    const form=document.getElementById('activation');
-    if(status){
-      const plan=btn.dataset.plan==='lifetime'?'Lifetime · 25M':'Monthly · 10M';
-      const msg=plan+' selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.';
-      status.textContent=siteLanguage==='de'?(enToDe[msg]||msg):msg;
-    }
-    if(form)form.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'center'});
   });
 });
 function refreshSleepDownload(account){
