@@ -1,0 +1,34 @@
+/* Sleep Client Minecraft profile component */
+body.mc-profile-gate-open{overflow:hidden}
+.mc-profile-gate{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:22px;opacity:0;visibility:hidden;transition:opacity .18s ease,visibility .18s ease}
+.mc-profile-gate[hidden]{display:none}
+.mc-profile-gate.is-open{opacity:1;visibility:visible}
+.mc-profile-backdrop{position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(142,84,255,.18),transparent 42%),rgba(4,5,10,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.mc-profile-modal{position:relative;width:min(430px,100%);padding:30px;border:1px solid rgba(255,255,255,.11);border-radius:24px;background:linear-gradient(155deg,rgba(24,25,38,.98),rgba(10,11,18,.98));box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 70px rgba(126,76,255,.12);transform:translateY(14px) scale(.98);transition:transform .28s var(--motion-ease,cubic-bezier(.2,.8,.2,1))}
+.mc-profile-gate.is-open .mc-profile-modal{transform:none}
+.mc-profile-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.05);color:#fff;font:inherit;font-size:20px;cursor:pointer}
+.mc-profile-preview{display:flex;justify-content:center;margin-bottom:18px}
+.mc-profile-head-wrap{width:88px;height:88px;padding:8px;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025));box-shadow:inset 0 1px rgba(255,255,255,.08),0 16px 40px rgba(0,0,0,.28)}
+.mc-profile-head{display:block;width:100%;height:100%;border-radius:15px;object-fit:cover;opacity:.2;background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.02));transition:opacity .18s ease,transform .22s ease}
+.mc-profile-head.is-ready{opacity:1;transform:scale(1.02)}
+.mc-profile-eyebrow{margin-bottom:8px;color:#bca8ff;font-size:11px;font-weight:800;letter-spacing:.15em}
+.mc-profile-modal h2{margin:0;font-size:clamp(24px,5vw,32px);line-height:1.08}
+.mc-profile-copy{margin:10px 0 22px;color:var(--muted,#9ea3b5);line-height:1.55}
+.mc-profile-field{display:grid;gap:8px}
+.mc-profile-field span{color:#c8ccda;font-size:12px;font-weight:700}
+.mc-profile-field input{width:100%;min-height:50px;box-sizing:border-box;border:1px solid rgba(255,255,255,.12);border-radius:14px;outline:none;padding:0 15px;background:rgba(255,255,255,.055);color:#fff;font:inherit;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+.mc-profile-field input:focus{border-color:rgba(169,128,255,.65);background:rgba(255,255,255,.075);box-shadow:0 0 0 4px rgba(138,87,255,.1)}
+.mc-profile-field input:disabled{opacity:.7;cursor:wait}
+.mc-profile-error{min-height:20px;margin:9px 0 0;color:#d7c8ff;font-size:12px;line-height:1.45}
+.mc-profile-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+.mc-profile-actions .btn:disabled{opacity:.6;cursor:wait;transform:none}
+.mc-profile-card{position:fixed;left:18px;bottom:18px;z-index:9000;display:flex;align-items:center;gap:11px;min-width:190px;max-width:min(280px,calc(100vw - 36px));padding:9px 12px 9px 9px;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(12,13,21,.82);color:#fff;box-shadow:0 14px 38px rgba(0,0,0,.34),inset 0 1px rgba(255,255,255,.055);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);cursor:pointer;text-align:left;transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.mc-profile-card[hidden]{display:none}
+.mc-profile-card:hover{transform:translateY(-2px);border-color:rgba(180,145,255,.28);background:rgba(18,19,30,.92)}
+.mc-profile-card-head{width:44px;height:44px;flex:0 0 44px;border-radius:11px;background:rgba(255,255,255,.06)}
+.mc-profile-card-copy{display:grid;min-width:0;flex:1;gap:2px}
+.mc-profile-card-copy small{color:#8f95a8;font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+.mc-profile-card-copy strong{overflow:hidden;color:#fff;font-size:13px;text-overflow:ellipsis;white-space:nowrap}
+.mc-profile-card-change{color:#8f95a8;font-size:16px;transition:transform .2s ease,color .2s ease}
+.mc-profile-card:hover .mc-profile-card-change{color:#c7afff;transform:rotate(-22deg)}
+@media(max-width:640px){.mc-profile-modal{padding:26px 20px 22px;border-radius:20px}.mc-profile-actions{flex-direction:column-reverse}.mc-profile-actions .btn{width:100%}.mc-profile-card{left:12px;bottom:12px;min-width:0;max-width:calc(100vw - 24px)}}
