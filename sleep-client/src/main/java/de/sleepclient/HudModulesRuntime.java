@@ -2,6 +2,7 @@ package de.sleepclient;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 import java.time.Duration;
@@ -102,7 +103,8 @@ public final class HudModulesRuntime {
         int y = g.guiHeight() - 52;
         int i = 0;
 
-        for (ItemStack stack : client.player.getArmorSlots()) {
+        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+            ItemStack stack = client.player.getItemBySlot(slot);
             if (stack.isEmpty()) continue;
             int max = stack.getMaxDamage();
             int left = max <= 0 ? 100 : (int)Math.round((max - stack.getDamageValue()) * 100.0 / max);
@@ -139,7 +141,8 @@ public final class HudModulesRuntime {
 
         if (enabled("Durability Alert")) {
             int threshold = ConfigManager.intOption("Durability Alert","percent",20);
-            for (ItemStack stack : client.player.getArmorSlots()) {
+            for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+            ItemStack stack = client.player.getItemBySlot(slot);
                 if (stack.isEmpty() || stack.getMaxDamage() <= 0) continue;
                 int left = (int)Math.round((stack.getMaxDamage() - stack.getDamageValue()) * 100.0 / stack.getMaxDamage());
                 if (left <= threshold) {
