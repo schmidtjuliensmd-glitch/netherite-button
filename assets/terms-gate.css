@@ -1,0 +1,27 @@
+.sleep-terms-locked{overflow:hidden}
+.sleep-terms-gate{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;padding:22px;opacity:1;transition:opacity .18s ease}
+.sleep-terms-gate.is-leaving{opacity:0;pointer-events:none}
+.sleep-terms-backdrop{position:absolute;inset:0;background:rgba(5,3,7,.82);backdrop-filter:blur(16px)}
+.sleep-terms-dialog{position:relative;width:min(520px,100%);padding:28px;border:1px solid rgba(133,89,143,.42);border-radius:24px;background:linear-gradient(145deg,rgba(28,15,32,.98),rgba(10,7,13,.98));box-shadow:0 32px 90px rgba(0,0,0,.58),0 0 40px rgba(181,83,205,.08);color:#f8f3f9}
+.sleep-terms-icon{display:grid;place-items:center;width:52px;height:52px;margin-bottom:18px;border-radius:16px;background:linear-gradient(135deg,#d76df2,#6b6ff8);color:#fff;font-weight:900;letter-spacing:.02em;box-shadow:0 10px 30px rgba(156,82,214,.28)}
+.sleep-terms-eyebrow{margin-bottom:8px;color:#b890c1;font-size:11px;font-weight:800;letter-spacing:.16em}
+.sleep-terms-dialog h2{margin:0;color:#fff;font-size:28px;line-height:1.08}
+.sleep-terms-copy{margin:12px 0 18px;color:#b9aabd;line-height:1.55}
+.sleep-terms-open{display:inline-flex;align-items:center;gap:5px;margin-bottom:18px;color:#e19af0;text-decoration:none;font-size:13px;font-weight:700}
+.sleep-terms-open:hover{text-decoration:underline}
+.sleep-terms-check{display:flex;gap:11px;align-items:flex-start;padding:14px;border:1px solid #3a2a40;border-radius:14px;background:#150f18;color:#d6cbd8;cursor:pointer}
+.sleep-terms-check input{width:18px;height:18px;margin:1px 0 0;accent-color:#c56ee3}
+.sleep-terms-check span{font-size:13px;line-height:1.4}
+.sleep-terms-accept{width:100%;margin-top:14px}
+.sleep-terms-accept:disabled{opacity:.42;cursor:not-allowed;transform:none!important}
+.sleep-terms-note{margin:13px 2px 0;color:#776a7b;font-size:10px;line-height:1.45}
+.footer-terms-link{color:inherit;text-decoration:none;opacity:.8}
+.footer-terms-link:hover{opacity:1;text-decoration:underline}
+.terms-page{max-width:900px;margin:0 auto;padding-bottom:80px}
+.terms-card{padding:28px;border:1px solid rgba(120,88,128,.28);border-radius:22px;background:rgba(18,12,21,.78)}
+.terms-card h2{margin:28px 0 8px;font-size:20px}
+.terms-card h2:first-child{margin-top:0}
+.terms-card p,.terms-card li{color:#b9acbc;line-height:1.65}
+.terms-card ul{padding-left:20px}
+.terms-update{margin:0 0 20px;color:#827487;font-size:12px}
+@media(max-width:640px){.sleep-terms-dialog{padding:22px;border-radius:20px}.sleep-terms-dialog h2{font-size:24px}}
