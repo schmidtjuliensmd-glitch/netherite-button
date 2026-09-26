@@ -16,7 +16,7 @@ public final class InventoryModulesRuntime {
     private static boolean previousAttackDown;
 
     public static void tick(Minecraft client) {
-        if (!LicenseManager.verified() || client.player == null || client.gameMode == null) return;
+        if (client.player == null || client.gameMode == null) return;
         if (actionCooldown > 0) actionCooldown--;
         if (restoreDelay > 0 && --restoreDelay == 0 && restoreSelectedSlot >= 0) {
             setHeldSlot(client, restoreSelectedSlot);
@@ -32,7 +32,7 @@ public final class InventoryModulesRuntime {
     }
 
     public static void triggerKeyPearl(Minecraft client) {
-        if (!LicenseManager.verified() || client.player == null || client.gameMode == null) return;
+        if (client.player == null || client.gameMode == null) return;
         if (!enabled("Key Pearl")) return;
 
         int configured = ConfigManager.intOption("Key Pearl","slot",2) - 1;
