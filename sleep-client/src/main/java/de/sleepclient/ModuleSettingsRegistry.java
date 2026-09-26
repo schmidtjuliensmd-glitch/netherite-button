@@ -323,7 +323,7 @@ public final class ModuleSettingsRegistry {
                     SettingSpec.decimal("stopHealth", "Stop bei Leben", "Bei wenig Leben stoppen.", 1.0, 20.0, 0.5, 6.0)
             );
             case "Key Pearl" -> List.of(
-                    SettingSpec.integer("slot", "Pearl Slot", "Hotbar-Slot der Pearls.", 1, 9, 1, 2),
+                    SettingSpec.integer("slot", "Pearl Slot", "Hotbar-Slot der Pearls. Taste: G.", 1, 9, 1, 2),
                     SettingSpec.bool("swapBack", "Swap Back", "Nach dem Wurf zurückwechseln.", true)
             );
             case "Auto Aggro Pearl" -> List.of(
