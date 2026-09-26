@@ -222,7 +222,7 @@ public final class SleepClient implements ClientModInitializer {
                     .executes(context -> {
                         context.getSource().sendFeedback(Component.literal(
                                 PaymentTracker.configured()
-                                        ? "Sleep Client: payment tracker is enabled."
+                                        ? "Sleep Client: payment tracker is enabled. Last status: " + PaymentTracker.lastStatus()
                                         : "Sleep Client: payment tracker is disabled. Use /sleeppaymentsecret <your admin secret>."
                         ));
                         return 1;
