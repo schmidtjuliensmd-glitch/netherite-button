@@ -8,7 +8,7 @@ import net.minecraft.world.item.Items;
 public final class TotemCounterHud {
     public static void render(GuiGraphics g) {
         Module module = ModuleRegistry.find("Totem Counter");
-        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
+        if (module == null || !module.enabled()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;
