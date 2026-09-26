@@ -1,6 +1,6 @@
 <!doctype html><html lang="de"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Nutzungsbedingungen für die Sleep Client Website.">
+<meta name="description" content="Nutzungsbedingungen / Terms of Use for the Sleep Client website.">
 <title>Nutzungsbedingungen · Sleep Client</title>
 <link rel="icon" type="image/png" href="./assets/sleep-client-icon.png?v=2">
 <link rel="stylesheet" href="./assets/site.css">
@@ -10,17 +10,24 @@
 <body data-page="terms"><div class="bg-orb one"></div><div class="bg-orb two"></div><div id="cursor-glow"></div>
 <header class="site-header"><div class="site-shell"><nav class="nav">
 <a class="brand" href="./index.html"><span class="brand-mark">SC</span><span>Sleep Client</span></a>
-<div class="nav-links"><a href="./index.html">Startseite</a><a href="./clients.html">Sleep Client</a></div>
+<div class="nav-links">
+  <a href="./index.html" id="terms-home-link">Startseite</a>
+  <a href="./clients.html">Sleep Client</a>
+  <div class="lang-switch" aria-label="Language">
+    <button type="button" class="lang-btn" data-lang="en">EN</button><span>/</span>
+    <button type="button" class="lang-btn" data-lang="de">DE</button>
+  </div>
+</div>
 </nav></div></header>
 
 <main class="site-shell terms-page">
 <section class="page-hero reveal">
   <div class="eyebrow">Sleep Client</div>
-  <h1><span class="gradient-text">Nutzungsbedingungen</span></h1>
-  <p class="lead">Regeln für die Nutzung dieser Website, ihrer Downloads und des Live-Chats.</p>
+  <h1><span class="gradient-text" id="terms-title">Nutzungsbedingungen</span></h1>
+  <p class="lead" id="terms-lead">Regeln für die Nutzung dieser Website, ihrer Downloads und des Live-Chats.</p>
 </section>
 
-<section class="terms-card">
+<section class="terms-card" id="terms-de">
 <p class="terms-update">Stand: 26.09.2026</p>
 
 <h2>1. Geltungsbereich</h2>
@@ -53,8 +60,94 @@
 <h2>10. Kontakt</h2>
 <p>Kontakt- und Anbieterangaben sollten im Impressum der Website bereitgestellt werden.</p>
 </section>
+
+<section class="terms-card" id="terms-en" hidden>
+<p class="terms-update">Last updated: September 26, 2026</p>
+
+<h2>1. Scope</h2>
+<p>These Terms of Use apply to the Sleep Client website and to downloads, features and community areas made available through it.</p>
+
+<h2>2. Independent project</h2>
+<p>Sleep Client is an independent project and is not an official product of Mojang Studios, Microsoft or DonutSMP. Minecraft and related trademarks belong to their respective owners.</p>
+
+<h2>3. Rules of other services and servers</h2>
+<p>Using this website or a download does not grant permission to bypass the rules of a Minecraft server, platform or other service. Users are responsible for checking which mods, clients or features are permitted before using them.</p>
+
+<h2>4. Downloads and use</h2>
+<p>Downloads are provided in their currently available state. Users are responsible for using files only with a compatible Minecraft version and suitable mod environment and for creating their own backups.</p>
+
+<h2>5. Accounts and access</h2>
+<p>Personal access credentials or product keys may only be used with the Minecraft account for which they are intended. Bypassing, manipulating or reselling access mechanisms is not permitted.</p>
+
+<h2>6. Live chat</h2>
+<p>Insults, threats, spam, discriminatory content, publication of another person's personal information and unlawful content are prohibited in the live chat. Messages may be stored for moderation purposes and removed in the event of violations.</p>
+
+<h2>7. Availability</h2>
+<p>There is no entitlement to uninterrupted availability of the website, individual features or downloads. Features may be changed, updated or discontinued.</p>
+
+<h2>8. Responsibility</h2>
+<p>Users remain responsible for their own conduct, their Minecraft accounts and compliance with the applicable rules of servers and platforms. These Terms of Use do not override the rules or rights of third parties.</p>
+
+<h2>9. Changes</h2>
+<p>These Terms of Use may be updated when features or legal requirements change. A new version may require users to accept the terms again.</p>
+
+<h2>10. Contact</h2>
+<p>Contact and provider information should be made available in the website's legal notice.</p>
+</section>
 </main>
 
-<footer class="footer"><div class="site-shell footer-row"><span>Sleep Client · Minecraft Java</span><span>Inoffizielles Projekt. Nicht mit Mojang Studios oder Microsoft verbunden.</span></div></footer>
+<footer class="footer"><div class="site-shell footer-row">
+<span>Sleep Client · Minecraft Java</span>
+<span id="terms-footer-note">Inoffizielles Projekt. Nicht mit Mojang Studios oder Microsoft verbunden.</span>
+<a href="./terms.html" class="footer-terms-link" id="terms-footer-link">Nutzungsbedingungen</a>
+</div></footer>
+
 <script src="./assets/site.js"></script><script src="./assets/terms-gate.js"></script>
+<script>
+(function(){
+  const de=document.getElementById('terms-de');
+  const en=document.getElementById('terms-en');
+  const title=document.getElementById('terms-title');
+  const lead=document.getElementById('terms-lead');
+  const home=document.getElementById('terms-home-link');
+  const footer=document.getElementById('terms-footer-note');
+  const footerLink=document.getElementById('terms-footer-link');
+
+  function savedLanguage(){
+    try{
+      const value=localStorage.getItem('language')||localStorage.getItem('site-language');
+      if(value==='en'||value==='de')return value;
+    }catch{}
+    return 'de';
+  }
+
+  function apply(lang){
+    const english=lang==='en';
+    document.documentElement.lang=english?'en':'de';
+    de.hidden=english;
+    en.hidden=!english;
+    title.textContent=english?'Terms of Use':'Nutzungsbedingungen';
+    lead.textContent=english
+      ?'Rules for using this website, its downloads and the live chat.'
+      :'Regeln für die Nutzung dieser Website, ihrer Downloads und des Live-Chats.';
+    home.textContent=english?'Home':'Startseite';
+    footer.textContent=english
+      ?'Unofficial project. Not affiliated with Mojang Studios or Microsoft.'
+      :'Inoffizielles Projekt. Nicht mit Mojang Studios oder Microsoft verbunden.';
+    footerLink.textContent=english?'Terms of Use':'Nutzungsbedingungen';
+    document.title=(english?'Terms of Use':'Nutzungsbedingungen')+' · Sleep Client';
+    document.querySelectorAll('.lang-btn').forEach(btn=>btn.classList.toggle('active',btn.dataset.lang===lang));
+    try{
+      localStorage.setItem('language',lang);
+      localStorage.setItem('site-language',lang);
+    }catch{}
+  }
+
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>apply(btn.dataset.lang));
+  });
+
+  apply(savedLanguage());
+})();
+</script>
 </body></html>
