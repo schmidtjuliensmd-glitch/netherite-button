@@ -8,7 +8,7 @@
     en:{
       eyebrow:'MINECRAFT PROFILE',
       title:'Enter your Minecraft username',
-      copy:'Your Minecraft name is used for your community profile and live chat.',
+      copy:'Your Minecraft name is used for Sleep Client purchases and license activation.',
       placeholder:'Minecraft username',
       continue:'Continue',
       cancel:'Cancel',
@@ -22,7 +22,7 @@
     de:{
       eyebrow:'MINECRAFT PROFIL',
       title:'Gib deinen Minecraft-Namen ein',
-      copy:'Dein Minecraft-Name wird für dein Community-Profil und den Live-Chat verwendet.',
+      copy:'Dein Minecraft-Name wird für Sleep-Client-Käufe und die Lizenzaktivierung verwendet.',
       placeholder:'Minecraft-Name',
       continue:'Weiter',
       cancel:'Abbrechen',
@@ -58,6 +58,10 @@
     return profile;
   };
 
+  const syncActivationInput=(username,force=false)=>{
+    const input=document.getElementById('sleep-mc-name');
+    if(input&&(force||!input.value.trim()))input.value=username;
+  };
 
   const createUi=()=>{
     if(document.getElementById('mc-profile-gate'))return;
@@ -205,6 +209,7 @@
     createUi();
     const profile=readProfile();
     renderCard(profile);
+    if(profile)syncActivationInput(profile.username,false);
 
     const form=document.getElementById('mc-profile-form');
     const input=document.getElementById('mc-profile-name');
@@ -243,6 +248,7 @@
           savedAt:Date.now()
         });
         renderCard(saved);
+        syncActivationInput(saved.username,true);
         hideGate();
       }catch(err){
         if(error)error.textContent=err?.code==='minecraft_user_not_found'?s.notFound:s.unavailable;

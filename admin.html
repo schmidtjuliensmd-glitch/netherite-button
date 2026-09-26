@@ -1,0 +1,92 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Sleep Client Admin</title>
+<link rel="icon" type="image/png" href="./assets/sleep-client-icon.png?v=2">
+<link rel="stylesheet" href="./assets/site.css">
+</head><body>
+<div class="bg-orb one"></div><div class="bg-orb two"></div>
+<header class="site-header"><div class="site-shell"><nav class="nav">
+<a class="brand" href="./index.html"><span class="brand-mark">SC</span><span>Sleep Client</span></a>
+<div class="nav-links"><a href="./clients.html">Back to Sleep Client</a></div>
+</nav></div></header>
+
+<main class="site-shell">
+<section class="page-hero reveal visible">
+<div class="eyebrow">Owner Tools</div>
+<h1><span class="gradient-text">License Admin</span></h1>
+<p class="lead">Create and manage Sleep Client product keys for development and account access.</p>
+</section>
+
+<section class="section">
+<div class="sleep-activation-panel">
+<div>
+<div class="eyebrow">Issue Product Key</div>
+<h2 class="section-title">Create access.</h2>
+<p class="section-copy">Monthly keys expire after 30 days. Lifetime keys do not expire. The key is bound to the Minecraft username entered here.</p>
+</div>
+<form class="sleep-key-form" id="admin-license-form">
+<label>Admin Secret<input id="admin-secret" type="password" autocomplete="current-password" placeholder="Vercel SLEEP_ADMIN_SECRET"></label>
+<label>Minecraft Username<input id="admin-mc-name" type="text" autocomplete="off" placeholder="Minecraft username"></label>
+<label>Plan
+<select id="admin-plan" class="sleep-admin-select">
+<option value="monthly">Monthly</option>
+<option value="lifetime">Lifetime</option>
+</select></label>
+<button class="btn btn-primary" type="submit">Generate Product Key</button>
+<div class="sleep-admin-result" id="admin-result">
+<p id="admin-status">No key generated yet.</p>
+<textarea id="admin-key-output" readonly placeholder="Generated key will appear here"></textarea>
+<button class="btn btn-secondary" id="copy-admin-key" type="button">Copy Key</button>
+</div>
+</form>
+</div>
+</section>
+</main>
+
+<footer class="footer"><div class="site-shell footer-row"><span>Sleep Client · Admin</span><span>Do not share your admin secret.</span></div></footer>
+<script>
+const form=document.getElementById('admin-license-form');
+const status=document.getElementById('admin-status');
+const output=document.getElementById('admin-key-output');
+const secretInput=document.getElementById('admin-secret');
+
+secretInput.value=sessionStorage.getItem('sleep-admin-secret')||'';
+secretInput.addEventListener('input',()=>{
+  sessionStorage.setItem('sleep-admin-secret',secretInput.value);
+});
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const secret=secretInput.value;
+  sessionStorage.setItem('sleep-admin-secret',secret);
+  const username=document.getElementById('admin-mc-name').value.trim();
+  const plan=document.getElementById('admin-plan').value;
+  output.value='';
+  status.textContent='Generating signed key…';
+  try{
+    const r=await fetch('/api/license/issue',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+secret},
+      body:JSON.stringify({username,plan})
+    });
+    const data=await r.json();
+    if(!r.ok||!data.ok){
+      status.textContent='Could not generate key: '+(data.error||'unknown_error');
+      return;
+    }
+    output.value=data.key;
+    const expiry=data.expiresAt?new Date(data.expiresAt).toLocaleString():'Lifetime';
+    status.textContent='Key created for '+data.username+' · '+data.plan+' · '+expiry;
+  }catch{
+    status.textContent='Could not reach the license server.';
+  }
+});
+
+document.getElementById('copy-admin-key').addEventListener('click',async()=>{
+  if(!output.value)return;
+  await navigator.clipboard.writeText(output.value);
+  status.textContent='Product key copied.';
+});
+</script>
+</body></html>

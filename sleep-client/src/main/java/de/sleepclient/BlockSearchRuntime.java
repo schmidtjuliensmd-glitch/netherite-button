@@ -23,7 +23,7 @@ public final class BlockSearchRuntime {
     private static int lastPlayerChunkZ = Integer.MIN_VALUE;
 
     public static void tick(Minecraft client) {
-        if (client.level == null || client.player == null) {
+        if (!LicenseManager.verified() || client.level == null || client.player == null) {
             clear();
             return;
         }
@@ -129,7 +129,7 @@ public final class BlockSearchRuntime {
 
     public static void renderWorld(WorldRenderContext context) {
         Minecraft client = Minecraft.getInstance();
-        if (client.player == null) return;
+        if (!LicenseManager.verified() || client.player == null) return;
 
         if (enabled("Netherite Finder")) {
             float width = ConfigManager.floatOption("Netherite Finder", "lineWidth", 2.2f);

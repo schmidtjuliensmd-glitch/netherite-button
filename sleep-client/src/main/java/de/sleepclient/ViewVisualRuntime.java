@@ -9,6 +9,11 @@ public final class ViewVisualRuntime {
     private static Integer originalFov;
 
     public static void tick(Minecraft client) {
+        if (!LicenseManager.verified()) {
+            restoreFov(client);
+            return;
+        }
+
         if (enabled("Zoom")) {
             if (originalFov == null) originalFov = client.options.fov().get();
             float factor = ConfigManager.floatOption("Zoom","factor",4.0f);
@@ -29,7 +34,7 @@ public final class ViewVisualRuntime {
 
     public static void renderWorld(WorldRenderContext context) {
         Minecraft client = Minecraft.getInstance();
-        if (client.level == null || client.player == null) return;
+        if (!LicenseManager.verified() || client.level == null || client.player == null) return;
         if (!(client.hitResult instanceof BlockHitResult hit)) return;
 
         boolean overlay = enabled("Block Overlay");

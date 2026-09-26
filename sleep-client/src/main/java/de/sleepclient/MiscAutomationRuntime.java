@@ -16,7 +16,7 @@ public final class MiscAutomationRuntime {
     private static int leaveCooldown;
 
     public static void tick(Minecraft client) {
-        if (client.player == null || client.level == null || client.gameMode == null) return;
+        if (!LicenseManager.verified() || client.player == null || client.level == null || client.gameMode == null) return;
 
         if (useCooldown > 0) useCooldown--;
         if (leaveCooldown > 0) leaveCooldown--;

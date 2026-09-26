@@ -15,7 +15,7 @@ import java.util.List;
 
 public final class NavigationVisualRuntime {
     public static void renderHud(GuiGraphics g) {
-        
+        if (!LicenseManager.verified()) return;
 
         Minecraft client=Minecraft.getInstance();
         if (client.player==null || client.level==null) return;
@@ -26,7 +26,7 @@ public final class NavigationVisualRuntime {
     }
 
     public static void renderWorld(WorldRenderContext context) {
-        if (!enabled("Waypoints")) return;
+        if (!LicenseManager.verified() || !enabled("Waypoints")) return;
 
         Minecraft client=Minecraft.getInstance();
         if (client.player==null || client.level==null) return;

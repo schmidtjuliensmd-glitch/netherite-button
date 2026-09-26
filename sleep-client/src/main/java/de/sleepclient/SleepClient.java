@@ -22,6 +22,8 @@ public final class SleepClient implements ClientModInitializer {
     );
     private static KeyMapping openGui;
     private static KeyMapping keyPearl;
+    private static boolean licenseWarningShown;
+    private static boolean activationPromptShown;
 
     @Override
     public void onInitializeClient() {
@@ -50,7 +52,7 @@ HudElementRegistry.addLast(
                 (graphics, deltaTracker) -> TotemCounterHud.render(graphics)
         );
         HudElementRegistry.addLast(
-                Identifier.fromNamespaceAndPath("sleepclient", "base_finding_hud"),
+                Identifier.fromNamespaceAndPath("sleepclient", "donut_utility_hud"),
                 (graphics, deltaTracker) -> DonutUtilityRuntime.renderHud(graphics)
         );
         HudElementRegistry.addLast(
@@ -89,7 +91,9 @@ HudElementRegistry.addLast(
         WorldRenderEvents.AFTER_ENTITIES.register(NavigationVisualRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(LoadedFinderRuntime::renderWorld);
         WorldRenderEvents.AFTER_ENTITIES.register(VisualEffectsRuntime::renderWorld);
-        UpdateManager.checkForUpdates();
+        LicenseManager.verifySaved().thenAccept(ok -> {
+            if (ok) UpdateManager.checkForUpdates();
+        });
 
         openGui = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.sleepclient.open_gui",
@@ -105,8 +109,31 @@ HudElementRegistry.addLast(
         ));
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommandManager.literal("sleepkey")
+                    .then(ClientCommandManager.argument("key", StringArgumentType.greedyString())
+                            .executes(context -> {
+                                Minecraft client = Minecraft.getInstance();
+                                String mcName = client.getUser().getName();
+                                String key = StringArgumentType.getString(context, "key");
+                                context.getSource().sendFeedback(Component.literal("Sleep Client: checking license..."));
+                                LicenseManager.saveAndVerify(mcName, key).thenAccept(ok ->
+                                        client.execute(() -> {
+                                            context.getSource().sendFeedback(Component.literal(
+                                                    ok ? "Sleep Client: signed in as " + mcName + " (" + LicenseManager.plan() + ")"
+                                                       : "Sleep Client: sign in failed (" + LicenseManager.message() + ")"
+                                            ));
+                                            if (ok) UpdateManager.checkForUpdates();
+                                        })
+                                );
+                                return 1;
+                            })));
+
             dispatcher.register(ClientCommandManager.literal("sleepupdate")
                     .executes(context -> {
+                        if (!LicenseManager.verified()) {
+                            context.getSource().sendFeedback(Component.literal("Sleep Client: sign in first with /sleepkey."));
+                            return 1;
+                        }
                         UpdateManager.checkForUpdates().thenRun(() -> Minecraft.getInstance().execute(() -> {
                             String text = UpdateManager.updateAvailable()
                                     ? "Sleep Client: version " + UpdateManager.latestVersion() + " is available. Opening download page..."
@@ -174,17 +201,45 @@ HudElementRegistry.addLast(
 
             dispatcher.register(ClientCommandManager.literal("sleepaccount")
                     .executes(context -> {
-                        String name = Minecraft.getInstance().getUser().getName();
-                        context.getSource().sendFeedback(Component.literal("Sleep Client: Minecraft account " + name));
+                        String text = LicenseManager.verified()
+                                ? "Sleep Client: " + LicenseManager.username() + " · " + LicenseManager.plan()
+                                : "Sleep Client: not signed in (" + LicenseManager.message() + ")";
+                        context.getSource().sendFeedback(Component.literal(text));
                         return 1;
                     }));
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            LicenseManager.tick();
             LifecycleModulesRuntime.tick(client);
 
+            if (!LicenseManager.verified()) {
+                if (client.player != null && !licenseWarningShown && "license_expired".equals(LicenseManager.message())) {
+                    client.player.displayClientMessage(Component.literal(
+                            "Sleep Client: your license has expired. Renew your access and enter the new key with /sleepkey."
+                    ), false);
+                    licenseWarningShown = true;
+                }
+            } else {
+                licenseWarningShown = false;
+            }
+
+            if (!LicenseManager.verified()
+                    && client.player != null
+                    && client.screen == null
+                    && !activationPromptShown
+                    && !"Checking license...".equals(LicenseManager.message())) {
+                activationPromptShown = true;
+                client.setScreen(new SleepActivationScreen());
+            }
+
             while (openGui.consumeClick()) {
-                client.setScreen(new SleepClickGuiScreen());
+                if (LicenseManager.verified()) {
+                    client.setScreen(new SleepClickGuiScreen());
+                } else {
+                    activationPromptShown = true;
+                    client.setScreen(new SleepActivationScreen());
+                }
             }
 
             while (keyPearl.consumeClick()) {

@@ -34,7 +34,7 @@ public final class LoadedFinderRuntime {
     private static int lastCenterZ = Integer.MIN_VALUE;
 
     public static void tick(Minecraft client) {
-        if (client.player == null || client.level == null) {
+        if (!LicenseManager.verified() || client.player == null || client.level == null) {
             clearCurrent();
             return;
         }
@@ -149,7 +149,7 @@ public final class LoadedFinderRuntime {
     }
 
     public static void renderWorld(WorldRenderContext context) {
-        
+        if (!LicenseManager.verified()) return;
 
         if (enabled("OreScanner")) renderBlocks(context,ORES,0xFF55E6B1,
                 ConfigManager.floatOption("BlockESP","lineWidth",2.0f),
@@ -211,7 +211,7 @@ public final class LoadedFinderRuntime {
     }
 
     public static void renderHud(GuiGraphics g) {
-        
+        if (!LicenseManager.verified()) return;
 
         List<String> rows=new ArrayList<>();
         if (enabled("OreScanner")) rows.add("OreScanner  "+ORES.size());

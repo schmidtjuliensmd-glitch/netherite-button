@@ -46,7 +46,7 @@ public final class UpdateManager {
     }
 
     public static void tick(Minecraft client) {
-        if (!checked || !updateAvailable || announced || client.player == null) return;
+        if (!checked || !updateAvailable || announced || !LicenseManager.verified() || client.player == null) return;
         announced = true;
         client.player.displayClientMessage(Component.literal(
                 "Sleep Client: New version " + latestVersion + " available. Use /sleepupdate to get it."

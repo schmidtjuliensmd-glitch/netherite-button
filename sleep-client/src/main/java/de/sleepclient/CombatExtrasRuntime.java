@@ -17,7 +17,7 @@ public final class CombatExtrasRuntime {
     private static int cooldown;
 
     public static void tick(Minecraft client) {
-        if (client.player == null || client.gameMode == null) return;
+        if (!LicenseManager.verified() || client.player == null || client.gameMode == null) return;
 
         if (cooldown > 0) cooldown--;
         if (restoreDelay > 0 && --restoreDelay == 0 && restoreSlot >= 0) {

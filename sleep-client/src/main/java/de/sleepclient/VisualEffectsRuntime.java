@@ -26,7 +26,7 @@ public final class VisualEffectsRuntime {
     private static String pearlWarning = "";
 
     public static void tick(Minecraft client) {
-        if (client.player == null || client.level == null) {
+        if (!LicenseManager.verified() || client.player == null || client.level == null) {
             TRAIL.clear();
             RINGS.clear();
             pearlWarning = "";
@@ -151,7 +151,7 @@ public final class VisualEffectsRuntime {
     }
 
     public static void renderWorld(WorldRenderContext context) {
-        
+        if (!LicenseManager.verified()) return;
 
         renderTrail(context);
         renderJumpCircles(context);
@@ -246,7 +246,7 @@ public final class VisualEffectsRuntime {
     }
 
     public static void renderHud(GuiGraphics g) {
-        if (pearlWarning.isEmpty()) return;
+        if (!LicenseManager.verified() || pearlWarning.isEmpty()) return;
 
         int tw=SmoothTextRenderer.width(pearlWarning,8.8f,true);
         int x=(g.guiWidth()-tw-28)/2;

@@ -15,18 +15,27 @@ const enToDe={
 "Download the latest version to get the newest improvements and fixes.":"Lade die neueste Version herunter, um die aktuellen Verbesserungen und Fehlerbehebungen zu erhalten.",
 "A new Sleep Client version is available.":"Eine neue Sleep Client Version ist verfügbar.",
 "Download Sleep Client 1.21.11":"Sleep Client 1.21.11 herunterladen",
+"Your license is valid. Download the Fabric mod for Minecraft Java 1.21.11 and place the JAR file in your mods folder.":"Deine Lizenz ist gültig. Lade den Fabric-Mod für Minecraft Java 1.21.11 herunter und lege die JAR-Datei in deinen Mods-Ordner.",
 "Your Sleep Client is ready.":"Dein Sleep Client ist bereit.",
 "DOWNLOAD":"DOWNLOAD",
+"Could not reach the Sleep Client license server.":"Der Sleep-Client-Lizenzserver konnte nicht erreicht werden.",
 "Sign in failed.":"Anmeldung fehlgeschlagen.",
+"License server is not configured yet.":"Der Lizenzserver ist noch nicht eingerichtet.",
 "Enter a valid Minecraft username.":"Gib einen gültigen Minecraft-Namen ein.",
+"This monthly license has expired.":"Diese monatliche Lizenz ist abgelaufen.",
 "This key belongs to another Minecraft username.":"Dieser Key gehört zu einem anderen Minecraft-Namen.",
+"Invalid product key.":"Ungültiger Product Key.",
+"Checking your Sleep Client license…":"Deine Sleep-Client-Lizenz wird geprüft…",
+"Enter your Minecraft username and product key.":"Gib deinen Minecraft-Namen und Product Key ein.",
 "Signed in as ":"Angemeldet als ",
 "JulienMChub · Minecraft Java":"Sleep Client · Minecraft Java",
 "Key backend is being prepared. No key is activated until server-side verification is connected.":"Das Key-System wird vorbereitet. Ein Key wird erst aktiviert, wenn die serverseitige Prüfung verbunden ist.",
 "Verify & Activate":"Prüfen & aktivieren",
 "Your Minecraft name":"Dein Minecraft-Name",
 "Minecraft Username":"Minecraft-Name",
+"Enter your product key and Minecraft username. The final account verification backend will bind the license to your Minecraft account.":"Gib deinen Product Key und Minecraft-Namen ein. Das Verifizierungssystem verbindet die Lizenz mit deinem Minecraft-Konto.",
 "Activate Sleep Client.":"Sleep Client aktivieren.",
+"Product Key":"Product Key",
 "No recurring payment":"Keine wiederkehrende Zahlung",
 "Priority access to new features":"Früher Zugriff auf neue Funktionen",
 "Get Lifetime Access":"Lifetime-Zugang holen",
@@ -35,6 +44,7 @@ const enToDe={
 "Lifetime":"Lifetime",
 "VERY POPULAR":"SEHR BELIEBT",
 "30-day access":"30 Tage Zugang",
+"Key activation":"Key-Aktivierung",
 "Regular client updates":"Regelmäßige Client-Updates",
 "Full access to all modules":"Voller Zugriff auf alle Module",
 "Get Monthly Access":"Monatlichen Zugang holen",
@@ -141,14 +151,20 @@ const enToDe={
 "Get Sleep Client":"Sleep Client holen",
 "Made to feel clean.":"Sauber und übersichtlich.",
 "Sleep Client · Minecraft 1.21.11":"Sleep Client · Minecraft 1.21.11",
+"Payment verification and product key delivery may take up to 24 hours and, in exceptional cases, longer.":"Die Zahlungsprüfung und die Zusendung des Product Keys können bis zu 24 Stunden und in Ausnahmefällen länger dauern.",
 "Please note:":"Bitte beachten:",
+"After the payment is confirmed, a product key is created for your Minecraft username. Payment verification may take up to 24 hours and, in exceptional cases, longer.":"Nach bestätigter Zahlung wird ein Product Key für deinen Minecraft-Namen erstellt. Die Zahlungsprüfung kann bis zu 24 Stunden und in Ausnahmefällen länger dauern.",
+"One key is tied to one Minecraft account. A copied download file does not give another player a valid license.":"Ein Key ist an ein Minecraft-Konto gebunden. Eine kopierte Download-Datei gibt einem anderen Spieler keine gültige Lizenz.",
 "Protected access":"Geschützter Zugang",
 "After successful activation, the client is unlocked for your account. Monthly access expires after 30 days, Lifetime does not expire.":"Nach erfolgreicher Aktivierung wird der Client für dein Konto freigeschaltet. Monthly läuft nach 30 Tagen ab, Lifetime nicht.",
 "Use Sleep Client":"Sleep Client nutzen",
+"Enter your Minecraft username and product key. The license server checks that the key is valid and belongs to you.":"Gib deinen Minecraft-Namen und Product Key ein. Der Lizenzserver prüft, ob der Key gültig ist und zu dir gehört.",
 "Activate with your key":"Mit deinem Key aktivieren",
 "You receive access to the Sleep Client download. Sharing the download alone does not unlock the client.":"Du erhältst Zugriff auf den Sleep-Client-Download. Nur die Datei weiterzugeben schaltet den Client nicht frei.",
 "Download Sleep Client":"Sleep Client herunterladen",
+"After the payment is confirmed, a product key is created for your Minecraft username.":"Nach bestätigter Zahlung wird ein Product Key für deinen Minecraft-Namen erstellt.",
 "Payment gets verified":"Zahlung wird geprüft",
+"The download can be shared, but Sleep Client only works with a valid product key linked to the buyer's Minecraft account.":"Die Download-Datei kann weitergegeben werden, aber Sleep Client funktioniert nur mit einem gültigen Product Key, der mit dem Minecraft-Konto des Käufers verknüpft ist.",
 "From payment to access.":"Von der Zahlung bis zum Zugang.",
 "How it works":"So funktioniert es",
 "Open menu":"Menü öffnen",
@@ -506,7 +522,71 @@ document.querySelectorAll('.sleep-category-button').forEach(btn=>{
     animateVisibleItems(document.querySelectorAll('.sleep-feature-card'));
   });
 });
+function refreshSleepDownload(account){
+  const panel=document.getElementById('sleep-download-panel');
+  if(!panel)return;
+  const valid=account&&account.username&&account.plan&&(!account.expiresAt||new Date(account.expiresAt).getTime()>Date.now());
+  panel.hidden=!valid;
+}
+const sleepKeyForm=document.getElementById('sleep-key-form');
+if(sleepKeyForm){
+  const status=document.getElementById('sleep-form-status');
+  const savedAccount=JSON.parse(localStorage.getItem('sleep-client-account')||'null');
+  if(savedAccount&&status){
+    const expiry=savedAccount.expiresAt?new Date(savedAccount.expiresAt).toLocaleDateString():'Lifetime';
+    status.textContent='Signed in as '+savedAccount.username+' · '+savedAccount.plan+' · '+expiry;
+  }
+  refreshSleepDownload(savedAccount);
+
+  sleepKeyForm.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const name=(document.getElementById('sleep-mc-name')?.value||'').trim();
+    const key=(document.getElementById('sleep-product-key')?.value||'').trim();
+    if(!name||!key){
+      if(status)status.textContent=siteLanguage==='de'?enToDe['Enter your Minecraft username and product key.']:'Enter your Minecraft username and product key.';
+      return;
+    }
+
+    if(status)status.textContent=siteLanguage==='de'?enToDe['Checking your Sleep Client license…']:'Checking your Sleep Client license…';
+
+    try{
+      const response=await fetch('/api/license/verify',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({username:name,key})
+      });
+      const data=await response.json();
+      if(!response.ok||!data.ok){
+        const messages={
+          invalid_key:'Invalid product key.',
+          key_not_bound_to_username:'This key belongs to another Minecraft username.',
+          license_expired:'This monthly license has expired.',
+          invalid_minecraft_username:'Enter a valid Minecraft username.',
+          server_not_configured:'License server is not configured yet.'
+        };
+        if(status)status.textContent=messages[data.error]||'Sign in failed.';
+        return;
+      }
+
+      const accountData={
+        username:data.username,
+        plan:data.plan,
+        expiresAt:data.expiresAt
+      };
+      localStorage.setItem('sleep-client-account',JSON.stringify(accountData));
+      refreshSleepDownload(accountData);
+      checkSleepWebsiteUpdate();
+      const expiry=data.expiresAt?new Date(data.expiresAt).toLocaleDateString():'Lifetime';
+      if(status)status.textContent='Signed in as '+data.username+' · '+data.plan+' · '+expiry;
+    }catch{
+      if(status)status.textContent='Could not reach the Sleep Client license server.';
+    }
+  });
+}
+
+
 async function checkSleepWebsiteUpdate(){
+  const account=JSON.parse(localStorage.getItem('sleep-client-account')||'null');
   const notice=document.getElementById('sleep-update-notice');
   const title=document.getElementById('sleep-update-title');
   const text=document.getElementById('sleep-update-text');

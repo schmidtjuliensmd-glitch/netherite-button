@@ -36,7 +36,7 @@ public final class DonutUtilityRuntime {
     private static boolean seedCopied;
 
     public static void tick(Minecraft client) {
-        if (client.player == null || client.level == null) {
+        if (!LicenseManager.verified() || client.player == null || client.level == null) {
             lastPosition = null;
             rtpScanTicks = 0;
             spawnerDanger = false;
@@ -209,7 +209,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderDeepPlayers(WorldRenderContext context) {
         Module module = ModuleRegistry.find("Deep Player Finder");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.level == null || client.player == null) return;
@@ -234,7 +234,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderElytra(WorldRenderContext context) {
         Module module = ModuleRegistry.find("Auto Elytra Finder");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.level == null || client.player == null) return;
@@ -269,7 +269,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderStaffList(GuiGraphics g) {
         Module module = ModuleRegistry.find("Staff List");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.level == null) return;
@@ -316,7 +316,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderRtpAlert(GuiGraphics g) {
         Module module = ModuleRegistry.find("RTP Base Alert");
-        if (module == null || !module.enabled() || rtpStatus.isEmpty()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified() || rtpStatus.isEmpty()) return;
 
         int w = 238;
         int x = (g.guiWidth() - w) / 2;
@@ -329,7 +329,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderRegionMap(GuiGraphics g) {
         Module module = ModuleRegistry.find("RegionMap");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.player == null || client.level == null) return;
@@ -364,7 +364,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderSeed(GuiGraphics g) {
         Module module = ModuleRegistry.find("SeedAnalyzer");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         String text = cachedSeed == null
                 ? "Seed: auf SMP clientseitig nicht verfügbar"
@@ -379,7 +379,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderSpawnerProtect(GuiGraphics g) {
         Module module = ModuleRegistry.find("SpawnerProtect");
-        if (module == null || !module.enabled()
+        if (module == null || !module.enabled() || !LicenseManager.verified()
                 || !spawnerDanger
                 || !ConfigManager.boolOption("SpawnerProtect", "hud", true)) return;
 
@@ -395,7 +395,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderFakeStats(GuiGraphics g) {
         Module module = ModuleRegistry.find("FakeStats");
-        if (module == null || !module.enabled()
+        if (module == null || !module.enabled() || !LicenseManager.verified()
                 || !ConfigManager.boolOption("FakeStats", "hud", true)) return;
 
         int money = ConfigManager.intOption("FakeStats", "money", 1_000_000);
@@ -412,7 +412,7 @@ public final class DonutUtilityRuntime {
 
     private static void renderDeepPlayerHud(GuiGraphics g) {
         Module module = ModuleRegistry.find("Deep Player Finder");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.player == null || client.level == null) return;

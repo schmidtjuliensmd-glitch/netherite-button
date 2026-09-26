@@ -25,7 +25,7 @@ public final class ChunkAnalysisRuntime {
     private static int lastLoadedCount;
 
     public static void tick(Minecraft client) {
-        if (client.player == null || client.level == null) {
+        if (!LicenseManager.verified() || client.player == null || client.level == null) {
             clear();
             return;
         }
@@ -114,7 +114,7 @@ public final class ChunkAnalysisRuntime {
     }
 
     public static void renderWorld(WorldRenderContext context) {
-        
+        if (!LicenseManager.verified()) return;
 
         renderBlocks(context, "SpawnerFinder", SPAWNERS, 0xFFFFC857);
         renderBlocks(context, "Beacon Finder", BEACONS, 0xFF55E6B1);
@@ -164,7 +164,7 @@ public final class ChunkAnalysisRuntime {
     }
 
     public static void renderHud(GuiGraphics g) {
-        
+        if (!LicenseManager.verified()) return;
 
         renderFinderHud(g);
         renderChestCounter(g);

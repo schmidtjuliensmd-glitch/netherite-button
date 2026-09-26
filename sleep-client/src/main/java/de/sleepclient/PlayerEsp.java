@@ -13,7 +13,7 @@ import java.util.List;
 public final class PlayerEsp {
     public static void renderWorld(WorldRenderContext context) {
         Module module = ModuleRegistry.find("PlayerESP");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.level == null || client.player == null) return;
@@ -33,7 +33,7 @@ public final class PlayerEsp {
 
     public static void renderHud(GuiGraphics g) {
         Module module = ModuleRegistry.find("PlayerESP");
-        if (module == null || !module.enabled()
+        if (module == null || !module.enabled() || !LicenseManager.verified()
                 || !ConfigManager.boolOption("PlayerESP", "distanceHud", true)) return;
 
         Minecraft client = Minecraft.getInstance();

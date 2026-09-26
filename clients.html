@@ -28,7 +28,7 @@
     <h1><span class="gradient-text">Built for Minecraft Java.</span><br>Made to feel clean.</h1>
     <p class="lead">A configurable Minecraft Java client with a modern module GUI, smooth animations, utility tools and a complete visual suite.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="./downloads/Sleep-Client-1.21.11.jar" download>Download Sleep Client</a>
+      <a class="btn btn-primary" href="#activation">Activate Sleep Client</a>
       <a class="btn btn-secondary" href="#modules">View Modules</a>
     </div>
     <div class="hero-meta">
@@ -123,31 +123,37 @@
 
 <section class="section reveal" id="how-it-works">
   <div class="section-head">
-    <div><div class="eyebrow">How it works</div><h2 class="section-title">Download and install.</h2></div>
-    <p class="section-copy">Sleep Client is available as a free Fabric client for Minecraft Java 1.21.11.</p>
+    <div><div class="eyebrow">How it works</div><h2 class="section-title">From activation to download.</h2></div>
+    <p class="section-copy">Use an existing product key to activate Sleep Client for your Minecraft account and access the current build.</p>
   </div>
   <div class="sleep-flow-grid">
-    <article class="sleep-flow-card"><span class="sleep-flow-number">01</span><h3>Download Sleep Client</h3><p>Download the current JAR file directly from this website.</p></article>
-    <article class="sleep-flow-card"><span class="sleep-flow-number">02</span><h3>Install with Fabric</h3><p>Place the JAR file in your Minecraft mods folder and start the compatible Fabric profile.</p></article>
+    <article class="sleep-flow-card"><span class="sleep-flow-number">01</span><h3>Activate your account</h3><p>Enter your Minecraft username and product key.</p></article>
+    <article class="sleep-flow-card"><span class="sleep-flow-number">02</span><h3>Download Sleep Client</h3><p>After successful activation, the current Fabric build becomes available.</p></article>
     <article class="sleep-flow-card"><span class="sleep-flow-number">03</span><h3>Use responsibly</h3><p>Only use client features where they are permitted by the rules of the server or environment you are playing on.</p></article>
   </div>
 </section>
 
-<section class="section reveal" id="download">
+<section class="section reveal" id="activation">
   <div class="sleep-activation-panel">
     <div>
-      <div class="eyebrow">FREE DOWNLOAD</div>
-      <h2 class="section-title">Download Sleep Client.</h2>
-      <p class="section-copy">No product key or paid access is required. Download the Fabric client for Minecraft Java 1.21.11.</p>
+      <div class="eyebrow">Product Key</div>
+      <h2 class="section-title">Activate Sleep Client.</h2>
+      <p class="section-copy">Enter your product key and Minecraft username. The license server checks that the key belongs to your account.</p>
     </div>
+    <form class="sleep-key-form" id="sleep-key-form">
+      <label>Minecraft Username<input id="sleep-mc-name" type="text" placeholder="Your Minecraft name" autocomplete="off"></label>
+      <label>Product Key<input id="sleep-product-key" type="text" placeholder="SLEEP-XXXX-XXXX-XXXX" autocomplete="off"></label>
+      <button class="btn btn-primary" type="submit">Verify & Activate</button>
+      <p class="sleep-form-status" id="sleep-form-status">Enter your Minecraft username and product key.</p>
+    </form>
 
     <div class="sleep-update-notice" id="sleep-update-notice" hidden>
       <div><span class="eyebrow">UPDATE</span><h3 id="sleep-update-title">A new Sleep Client version is available.</h3><p id="sleep-update-text">Download the latest version to get the newest improvements and fixes.</p></div>
       <a class="btn btn-primary" id="sleep-update-download" href="./downloads/Sleep-Client-1.21.11.jar" download>Download latest version</a>
     </div>
 
-    <div class="sleep-download-panel" id="sleep-download-panel">
-      <div><span class="eyebrow">DOWNLOAD</span><h3>Sleep Client 1.21.11</h3><p>Download the current Fabric build and place the JAR file in your mods folder.</p></div>
+    <div class="sleep-download-panel" id="sleep-download-panel" hidden>
+      <div><span class="eyebrow">DOWNLOAD</span><h3>Your Sleep Client is ready.</h3><p>Your license is valid. Download the Fabric mod for Minecraft Java 1.21.11 and place the JAR file in your mods folder.</p></div>
       <a class="btn btn-primary sleep-download-btn" id="sleep-download-btn" href="./downloads/Sleep-Client-1.21.11.jar" download>Download Sleep Client 1.21.11</a>
     </div>
   </div>

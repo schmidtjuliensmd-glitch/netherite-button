@@ -12,7 +12,7 @@ import java.util.List;
 
 public final class ExtraHudRuntime {
     public static void render(GuiGraphics g) {
-        
+        if (!LicenseManager.verified()) return;
 
         Minecraft client = Minecraft.getInstance();
         if (client.player == null) return;

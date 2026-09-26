@@ -13,7 +13,7 @@ public final class SocialCombatRuntime {
     private static int backReleaseTicks;
 
     public static void tick(Minecraft client) {
-        if (client.player==null) return;
+        if (!LicenseManager.verified() || client.player==null) return;
 
         tickMiddleFriend(client);
         tickSprintResets(client);

@@ -6,7 +6,12 @@ public final class ModuleRuntime {
     private static Double originalGamma;
 
     public static void tick(Minecraft client) {
-        SusChunkFinder.tick(client); // Also clears evidence on disconnect.
+        SusChunkFinder.tick(client); // Also clears evidence on disconnect or license changes.
+        if (!LicenseManager.verified()) {
+            restoreGamma(client);
+            return;
+        }
+
         if (client.player == null) {
             restoreGamma(client);
             return;

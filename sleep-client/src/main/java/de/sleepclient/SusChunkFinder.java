@@ -34,7 +34,7 @@ public final class SusChunkFinder {
     private static int previousX = Integer.MIN_VALUE, previousZ = Integer.MIN_VALUE;
 
     public static void tick(Minecraft client) {
-        if (client.level == null || client.player == null) {
+        if (!LicenseManager.verified() || client.level == null || client.player == null) {
             clear();
             return;
         }
@@ -121,7 +121,7 @@ public final class SusChunkFinder {
 
     private static List<Evidence> hits(String module) {
         Minecraft client = Minecraft.getInstance();
-        if (!enabled(module) || client.player == null
+        if (!enabled(module) || !LicenseManager.verified() || client.player == null
                 || client.level == null || client.level != scannedLevel) return List.of();
         int cx = client.player.blockPosition().getX() >> 4;
         int cz = client.player.blockPosition().getZ() >> 4;

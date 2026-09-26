@@ -15,6 +15,8 @@ public final class LifecycleModulesRuntime {
     private static int reconnectAttempts;
 
     public static void tick(Minecraft client) {
+        if (!LicenseManager.verified()) return;
+
         ServerData current = client.getCurrentServer();
         if (client.level != null && current != null) {
             lastServer = current;

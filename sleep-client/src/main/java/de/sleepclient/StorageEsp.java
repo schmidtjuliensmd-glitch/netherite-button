@@ -18,7 +18,7 @@ public final class StorageEsp {
 
     public static void tick(Minecraft client) {
         Module module = ModuleRegistry.find("StorageESP");
-        if (module == null || !module.enabled() || client.level == null || client.player == null) {
+        if (module == null || !module.enabled() || !LicenseManager.verified() || client.level == null || client.player == null) {
             ENTRIES.clear();
             return;
         }
@@ -84,7 +84,7 @@ public final class StorageEsp {
 
     public static void renderWorld(WorldRenderContext context) {
         Module module = ModuleRegistry.find("StorageESP");
-        if (module == null || !module.enabled()) return;
+        if (module == null || !module.enabled() || !LicenseManager.verified()) return;
 
         float width = ConfigManager.floatOption("StorageESP", "lineWidth", 2.0f);
         for (Entry entry : ENTRIES) {
@@ -97,7 +97,7 @@ public final class StorageEsp {
 
     public static void renderHud(GuiGraphics g) {
         Module module = ModuleRegistry.find("StorageESP");
-        if (module == null || !module.enabled()
+        if (module == null || !module.enabled() || !LicenseManager.verified()
                 || !ConfigManager.boolOption("StorageESP", "hud", true)) return;
 
         if (ENTRIES.isEmpty()) return;
