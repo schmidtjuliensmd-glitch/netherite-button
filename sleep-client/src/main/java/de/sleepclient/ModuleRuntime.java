@@ -20,6 +20,7 @@ public final class ModuleRuntime {
         StorageEsp.tick(client);
         BlockSearchRuntime.tick(client);
         DonutUtilityRuntime.tick(client);
+        ChunkAnalysisRuntime.tick(client);
         CombatModulesRuntime.tick(client);
         MovementModulesRuntime.tick(client);
         HudModulesRuntime.tick(client);
