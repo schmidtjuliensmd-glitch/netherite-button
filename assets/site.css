@@ -40,7 +40,7 @@ button,input{font:inherit}
   position:fixed;left:0;top:0;width:460px;height:460px;border-radius:50%;
   pointer-events:none;z-index:1;opacity:0;
   background:radial-gradient(circle,rgba(91,192,255,.22) 0%,rgba(139,92,246,.15) 26%,rgba(255,79,159,.05) 52%,transparent 72%);
-  filter:blur(28px);transform:translate(-50%,-50%);transition:opacity .18s ease;will-change:left,top
+  filter:blur(28px);transform:translate3d(-100%,-100%,0);transition:opacity .3s ease;will-change:transform
 }
 .site-header{
   position:sticky;top:0;z-index:20;
@@ -132,7 +132,7 @@ button,input{font:inherit}
 .back-link{display:inline-flex;margin-top:20px}
 .footer{border-top:1px solid var(--line);padding:32px 0 52px;color:#917f8b;font-size:.88rem}
 .footer-row{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease}
+.reveal{opacity:1;transform:none}
 .reveal.visible{opacity:1;transform:none}
 .lightbox{position:fixed;inset:0;background:rgba(4,3,5,.86);backdrop-filter:blur(12px);z-index:60;display:none;align-items:center;justify-content:center;padding:28px}
 .lightbox.open{display:flex}.lightbox img{max-width:min(1200px,96vw);max-height:88vh;border-radius:18px;box-shadow:var(--shadow)}
@@ -581,4 +581,130 @@ button,input{font:inherit}
 @media(max-width:760px){
   .sleep-update-notice{flex-direction:column;align-items:stretch}
   .sleep-update-notice .btn{text-align:center}
+}
+
+/* Sleep Client motion: lightweight accents and responsive interaction. */
+:root{--motion-ease:cubic-bezier(.16,1,.3,1)}
+main [id]{scroll-margin-top:104px}
+.motion-atmosphere{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.motion-atmosphere span{
+  position:absolute;width:3px;height:3px;border-radius:50%;
+  background:#ffcbe4;box-shadow:0 0 12px rgba(255,125,190,.5);
+  opacity:.3;animation:sleepMote var(--mote-duration) ease-in-out var(--mote-delay) infinite;
+}
+.motion-atmosphere span:nth-child(3n){width:2px;height:2px;background:#bca0ff}
+@keyframes sleepMote{
+  0%,100%{transform:translate3d(0,0,0);opacity:.12}
+  50%{transform:translate3d(12px,-26px,0);opacity:.6}
+}
+.gradient-text{
+  background-size:220% 100%;
+  animation:sleepTextGlow 9s ease-in-out infinite;
+  animation-play-state:paused;
+}
+.gradient-text.motion-in-view{animation-play-state:running}
+@keyframes sleepTextGlow{0%,100%{background-position:0% 50%}50%{background-position:85% 50%}}
+
+.brand-mark,.sleep-moon,.sleep-gui-logo-mark{
+  transition:transform .55s var(--motion-ease),box-shadow .3s ease;
+}
+.brand:hover .brand-mark,.brand:focus-visible .brand-mark{
+  transform:rotate(-9deg) scale(1.09);box-shadow:0 0 38px rgba(255,79,159,.5);
+}
+.sleep-client-nav:hover .sleep-moon,.sleep-client-nav:focus-visible .sleep-moon{transform:rotate(-14deg) scale(1.12)}
+.nav-links>a:not(.sleep-client-nav){position:relative}
+.nav-links>a:not(.sleep-client-nav)::after{
+  content:"";position:absolute;left:12px;right:12px;bottom:3px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--pink),var(--violet));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s var(--motion-ease);
+}
+.nav-links>a:hover::after,.nav-links>a.active::after,.nav-links>a:focus-visible::after{transform:scaleX(1)}
+.btn{
+  position:relative;isolation:isolate;overflow:hidden;
+  transition:transform .35s var(--motion-ease),box-shadow .3s ease,border-color .3s ease,background-color .3s ease;
+}
+.btn::before{
+  content:"";position:absolute;inset:-40% auto -40% -75%;width:45%;pointer-events:none;
+  background:linear-gradient(110deg,transparent,rgba(255,255,255,.24),transparent);
+  transform:skewX(-18deg) translateX(0);opacity:0;
+}
+.btn:hover::before,.btn:focus-visible::before{animation:sleepButtonShine .85s var(--motion-ease)}
+@keyframes sleepButtonShine{
+  0%{transform:skewX(-18deg) translateX(0);opacity:0}
+  18%{opacity:1}
+  100%{transform:skewX(-18deg) translateX(480%);opacity:0}
+}
+.btn:active{transform:translateY(0) scale(.97)}
+.motion-ripple{position:absolute;border-radius:50%;background:#fff;pointer-events:none;z-index:1}
+.card-link{transition:translate .3s var(--motion-ease),color .2s ease}
+.card-link:hover,.card-link:focus-visible{translate:4px 0;color:#ffd6e9}
+.card-icon,.step-num,.sleep-flow-number{transition:transform .4s var(--motion-ease)}
+.card:hover .card-icon,.step:hover .step-num,.sleep-flow-card:hover .sleep-flow-number{transform:translateY(-3px) rotate(-5deg)}
+.motion-surface{position:relative;isolation:isolate}
+.motion-surface::after{
+  content:"";position:absolute;inset:0;z-index:1;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(260px circle at var(--spotlight-x,50%) var(--spotlight-y,0%),rgba(255,158,205,.09),transparent 72%);
+  opacity:0;transition:opacity .4s ease;
+}
+.step,.sleep-settings-card,.sleep-price-card,.sleep-highlight-strip>div{
+  transition:transform .4s var(--motion-ease),border-color .3s ease,box-shadow .3s ease;
+}
+.sleep-category-button,.sleep-demo-tab,.lang-btn{transition:transform .3s var(--motion-ease),background .2s ease,color .2s ease,border-color .2s ease}
+.sleep-category-button:active,.sleep-demo-tab:active,.lang-btn:active{transform:scale(.96)}
+.sleep-module-row i{transition:background .25s ease,box-shadow .3s ease}
+.sleep-module-row i::after{left:2px;transition:transform .3s var(--motion-ease),background .25s ease}
+.sleep-module-row.active i::after{left:2px;transform:translateX(13px)}
+.sleep-module-row.active i{box-shadow:0 0 14px rgba(255,79,159,.3)}
+.sleep-module-row.active{background:linear-gradient(110deg,rgba(255,79,159,.065),rgba(139,92,246,.035))}
+.lightbox{
+  display:flex;opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .25s ease,visibility .25s;
+}
+.lightbox.open{opacity:1;visibility:visible;pointer-events:auto}
+.lightbox img{transform:translateY(16px) scale(.96);transition:transform .4s var(--motion-ease)}
+.lightbox.open img{transform:translateY(0) scale(1)}
+a:focus-visible,button:focus-visible{outline:2px solid #ffc0dc;outline-offset:4px}
+
+@media(hover:hover) and (pointer:fine){
+  .btn:hover{transform:translateY(-4px)}
+  .btn:active{transform:translateY(0) scale(.97)}
+  .motion-surface:hover::after{opacity:1}
+  .step:hover,.sleep-settings-card:hover,.sleep-highlight-strip>div:hover{
+    transform:translateY(-5px);border-color:rgba(255,126,188,.25);box-shadow:0 16px 40px rgba(0,0,0,.16);
+  }
+  .sleep-price-card:hover{transform:translateY(-6px);border-color:rgba(181,137,255,.55)}
+  .sleep-gui-demo{animation:sleepPanelFloat 7s ease-in-out infinite;animation-play-state:paused}
+  .sleep-gui-demo.motion-in-view{animation-play-state:running}
+  .sleep-gui-demo:hover,.sleep-gui-demo:focus-within{animation-play-state:paused}
+}
+@keyframes sleepPanelFloat{0%,100%{translate:0 0}50%{translate:0 -10px}}
+@media(max-width:720px){
+  .nav-links{
+    display:flex;opacity:0;visibility:hidden;pointer-events:none;
+    transform:translateY(-10px) scale(.98);transform-origin:top center;
+    transition:opacity .22s ease,transform .3s var(--motion-ease),visibility .3s;
+  }
+  .nav-links.open{opacity:1;visibility:visible;pointer-events:auto;transform:none}
+  .mobile-toggle{transition:transform .3s var(--motion-ease),background .2s ease;border-radius:10px}
+  .mobile-toggle[aria-expanded="true"]{transform:rotate(90deg);background:rgba(255,79,159,.12)}
+  .motion-atmosphere span:nth-child(n+7){display:none}
+}
+
+/* Native navigation animations preserve normal links, downloads and history. */
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:sleepPageOut .16s ease both}
+::view-transition-new(root){animation:sleepPageIn .34s var(--motion-ease) both}
+@keyframes sleepPageOut{to{opacity:0;transform:translateY(-5px)}}
+@keyframes sleepPageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.motion-paused *,.motion-paused *::before,.motion-paused *::after{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .motion-atmosphere,#cursor-glow{display:none}
+  .motion-surface::after,.btn::before{display:none}
+  .sleep-gui-demo,.card-link{translate:none!important}
+  .btn:hover,.btn:active,.step:hover,.sleep-settings-card:hover,.sleep-price-card:hover,
+  .sleep-feature-card:hover,.sleep-flow-card:hover,.sleep-highlight-strip>div:hover,
+  .brand:hover .brand-mark,.sleep-client-nav:hover .sleep-moon,.card:hover .card-icon,
+  .step:hover .step-num,.sleep-flow-card:hover .sleep-flow-number{transform:none}
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
 }

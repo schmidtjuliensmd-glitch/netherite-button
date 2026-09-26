@@ -280,37 +280,179 @@ document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('clic
   applyLanguage(siteLanguage);
 }));
 
+/* Shared motion: progressive enhancement, with no animation dependency. */
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+const finePointer=window.matchMedia('(hover: hover) and (pointer: fine)');
+const entranceAnimations=new Map();
+function animateEntrance(element,delay=0){
+  if(reducedMotion.matches||typeof element.animate!=='function')return;
+  entranceAnimations.get(element)?.cancel();
+  const animation=element.animate([
+    {opacity:0,translate:'0 22px'},
+    {opacity:1,translate:'0 0'}
+  ],{duration:620,delay,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'});
+  entranceAnimations.set(element,animation);
+  const cleanup=()=>{if(entranceAnimations.get(element)===animation)entranceAnimations.delete(element)};
+  animation.onfinish=cleanup;
+  animation.oncancel=cleanup;
+}
+
 const glow=document.getElementById('cursor-glow');
-let raf=0,x=0,y=0;
-window.addEventListener('pointermove',e=>{
-  if(!glow||e.pointerType==='touch')return;
-  x=e.clientX;y=e.clientY;glow.style.opacity='1';
-  if(!raf)raf=requestAnimationFrame(()=>{glow.style.left=x+'px';glow.style.top=y+'px';raf=0;});
-});
-document.documentElement.addEventListener('mouseleave',()=>{if(glow)glow.style.opacity='0'});
+let glowFrame=0,glowX=0,glowY=0;
+function hideCursorGlow(){
+  if(glow)glow.style.opacity='0';
+  cancelAnimationFrame(glowFrame);
+  glowFrame=0;
+}
+window.addEventListener('pointermove',event=>{
+  if(!glow||event.pointerType==='touch'||reducedMotion.matches||!finePointer.matches)return;
+  glowX=event.clientX;glowY=event.clientY;
+  if(!glowFrame)glowFrame=requestAnimationFrame(()=>{
+    glow.style.transform=`translate3d(${glowX-230}px,${glowY-230}px,0)`;
+    glow.style.opacity='1';
+    glowFrame=0;
+  });
+},{passive:true});
+document.documentElement.addEventListener('pointerleave',hideCursorGlow);
+window.addEventListener('blur',hideCursorGlow);
 
 const navToggle=document.querySelector('.mobile-toggle');
 const navLinks=document.querySelector('.nav-links');
-if(navToggle&&navLinks)navToggle.addEventListener('click',()=>navLinks.classList.toggle('open'));
+function setMenuOpen(open){
+  if(!navToggle||!navLinks)return;
+  navLinks.classList.toggle('open',open);
+  navToggle.setAttribute('aria-expanded',String(open));
+}
+if(navToggle&&navLinks){
+  navLinks.id=navLinks.id||'site-navigation';
+  navToggle.setAttribute('aria-controls',navLinks.id);
+  setMenuOpen(false);
+  navToggle.addEventListener('click',()=>setMenuOpen(!navLinks.classList.contains('open')));
+  navLinks.addEventListener('click',event=>{if(event.target.closest('a'))setMenuOpen(false)});
+  document.addEventListener('click',event=>{
+    if(!navLinks.contains(event.target)&&!navToggle.contains(event.target))setMenuOpen(false);
+  });
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&navLinks.classList.contains('open')){
+      setMenuOpen(false);
+      navToggle.focus();
+    }
+  });
+}
 
 const current=document.body.dataset.page;
 document.querySelectorAll('[data-nav]').forEach(a=>{if(a.dataset.nav===current)a.classList.add('active')});
 
-const io=new IntersectionObserver(entries=>entries.forEach(entry=>{
-  if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}
-}),{threshold:.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-document.querySelectorAll('[data-tilt]').forEach(card=>{
-  card.addEventListener('pointermove',e=>{
-    if(e.pointerType==='touch')return;
-    const r=card.getBoundingClientRect();
-    const rx=((e.clientY-r.top)/r.height-.5)*-5;
-    const ry=((e.clientX-r.left)/r.width-.5)*6;
-    card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-3px)`;
-  });
-  card.addEventListener('pointerleave',()=>card.style.transform='');
+// Observe individual cards, so even very long module sections can appear.
+const entranceSelector='.hero>.reveal>*,.page-hero,.sleep-product-copy>*,.sleep-gui-demo,.section-head,.catalog-toolbar,.card,.gallery-shot,.step,.featured,.sleep-highlight-strip>div,.sleep-feature-card,.sleep-settings-card,.sleep-flow-card,.sleep-purchase-notice,.sleep-price-card,.sleep-activation-panel,.sleep-category-tabs';
+const entranceTargets=[...document.querySelectorAll(entranceSelector)]
+  .filter(element=>!element.parentElement.closest(entranceSelector));
+document.querySelectorAll('.reveal').forEach(element=>{
+  element.classList.add('visible');
+  if(!element.matches(entranceSelector)&&!element.querySelector(entranceSelector)&&!element.parentElement.closest(entranceSelector))entranceTargets.push(element);
 });
+const entranceObserver='IntersectionObserver' in window?new IntersectionObserver(entries=>{
+  const entering=entries.filter(entry=>entry.isIntersecting);
+  entering.forEach((entry,index)=>{
+    animateEntrance(entry.target,Math.min(index,5)*45);
+    entranceObserver.unobserve(entry.target);
+  });
+},{threshold:0,rootMargin:'0px 0px -24px 0px'}):null;
+entranceTargets.forEach(element=>entranceObserver?.observe(element));
+
+function animateVisibleItems(elements){
+  let index=0;
+  elements.forEach(element=>{
+    entranceAnimations.get(element)?.cancel();
+    if(element.style.display==='none')return;
+    const rect=element.getBoundingClientRect();
+    if(rect.bottom>0&&rect.top<window.innerHeight){
+      entranceObserver?.unobserve(element);
+      animateEntrance(element,Math.min(index++,5)*40);
+    }else{
+      entranceObserver?.observe(element);
+    }
+  });
+}
+
+const resetSurfaces=[];
+document.querySelectorAll('[data-tilt],.sleep-feature-card,.sleep-settings-card,.sleep-gui-demo').forEach(card=>{
+  card.classList.add('motion-surface');
+  let frame=0,pointerX=0,pointerY=0;
+  function reset(){
+    cancelAnimationFrame(frame);frame=0;
+    card.style.removeProperty('transform');
+    card.style.removeProperty('--spotlight-x');
+    card.style.removeProperty('--spotlight-y');
+  }
+  resetSurfaces.push(reset);
+  card.addEventListener('pointermove',event=>{
+    if(event.pointerType==='touch'||reducedMotion.matches||!finePointer.matches)return;
+    pointerX=event.clientX;pointerY=event.clientY;
+    if(!frame)frame=requestAnimationFrame(()=>{
+      const rect=card.getBoundingClientRect();
+      card.style.setProperty('--spotlight-x',pointerX-rect.left+'px');
+      card.style.setProperty('--spotlight-y',pointerY-rect.top+'px');
+      if(card.hasAttribute('data-tilt')){
+        const rx=((pointerY-rect.top)/rect.height-.5)*-5;
+        const ry=((pointerX-rect.left)/rect.width-.5)*6;
+        card.style.transform=`perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-5px)`;
+      }
+      frame=0;
+    });
+  },{passive:true});
+  card.addEventListener('pointerleave',reset);
+  card.addEventListener('pointercancel',reset);
+});
+
+// A small, fixed layer keeps the night-sky accents independent of page length.
+const atmosphere=document.createElement('div');
+atmosphere.className='motion-atmosphere';
+atmosphere.setAttribute('aria-hidden','true');
+[[7,17],[24,7],[43,23],[68,12],[91,30],[17,60],[77,56],[95,76],[39,83],[58,68],[5,91],[83,94]].forEach(([left,top],index)=>{
+  const mote=document.createElement('span');
+  mote.style.cssText=`left:${left}%;top:${top}%;--mote-duration:${8+index%5}s;--mote-delay:${-index*1.7}s`;
+  atmosphere.append(mote);
+});
+document.body.prepend(atmosphere);
+
+const ambientObserver='IntersectionObserver' in window?new IntersectionObserver(entries=>{
+  entries.forEach(entry=>entry.target.classList.toggle('motion-in-view',entry.isIntersecting));
+},{threshold:0}):null;
+document.querySelectorAll('.sleep-gui-demo,.gradient-text').forEach(element=>ambientObserver?.observe(element));
+function pauseMotion(){
+  document.documentElement.classList.toggle('motion-paused',document.hidden);
+  if(document.hidden||reducedMotion.matches||!finePointer.matches){
+    hideCursorGlow();
+    resetSurfaces.forEach(reset=>reset());
+  }
+  if(document.hidden||reducedMotion.matches){
+    entranceAnimations.forEach(animation=>animation.cancel());
+    document.querySelectorAll('.motion-ripple').forEach(ripple=>ripple.remove());
+  }
+}
+document.addEventListener('visibilitychange',pauseMotion);
+reducedMotion.addEventListener('change',pauseMotion);
+finePointer.addEventListener('change',pauseMotion);
+pauseMotion();
+
+document.addEventListener('pointerdown',event=>{
+  const button=event.target.closest('.btn');
+  if(!button||event.button!==0||button.disabled||button.getAttribute('aria-disabled')==='true'||reducedMotion.matches||typeof button.animate!=='function')return;
+  const rect=button.getBoundingClientRect();
+  const ripple=document.createElement('span');
+  const size=Math.max(rect.width,rect.height)*2;
+  ripple.className='motion-ripple';
+  ripple.setAttribute('aria-hidden','true');
+  ripple.style.cssText=`left:${event.clientX-rect.left}px;top:${event.clientY-rect.top}px;width:${size}px;height:${size}px`;
+  button.append(ripple);
+  const animation=ripple.animate([
+    {transform:'translate(-50%,-50%) scale(0)',opacity:.36},
+    {transform:'translate(-50%,-50%) scale(1)',opacity:0}
+  ],{duration:600,easing:'cubic-bezier(.16,1,.3,1)'});
+  animation.onfinish=()=>ripple.remove();
+  animation.oncancel=()=>ripple.remove();
+},{passive:true});
 
 document.querySelectorAll('[data-search]').forEach(input=>{
   input.addEventListener('input',()=>{
@@ -318,6 +460,7 @@ document.querySelectorAll('[data-search]').forEach(input=>{
     document.querySelectorAll('[data-search-item]').forEach(item=>{
       item.style.display=item.innerText.toLowerCase().includes(q)?'':'none';
     });
+    animateVisibleItems(document.querySelectorAll('[data-search-item]'));
   });
 });
 
@@ -332,6 +475,7 @@ document.querySelectorAll('[data-lightbox]').forEach(img=>{
 });
 if(lightbox){
   lightbox.addEventListener('click',e=>{if(e.target===lightbox||e.target.classList.contains('lightbox-close'))lightbox.classList.remove('open')});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')lightbox.classList.remove('open')});
 }
 
 
@@ -359,6 +503,7 @@ document.querySelectorAll('.sleep-demo-tab').forEach(tab=>{
     }
     if(box){
       box.innerHTML=list.map((name,i)=>'<div class="sleep-module-row '+(i%3===0?'active':'')+'"><span>'+name+'</span><i></i></div>').join('');
+      box.querySelectorAll('.sleep-module-row').forEach((row,index)=>animateEntrance(row,index*35));
     }
   });
 });
@@ -374,6 +519,7 @@ document.querySelectorAll('.sleep-category-button').forEach(btn=>{
     document.querySelectorAll('.sleep-feature-card').forEach(card=>{
       card.style.display=filter==='all'||card.dataset.moduleCategory===filter?'':'none';
     });
+    animateVisibleItems(document.querySelectorAll('.sleep-feature-card'));
   });
 });
 document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
@@ -385,7 +531,7 @@ document.querySelectorAll('.sleep-buy-btn').forEach(btn=>{
       const msg=plan+' selected. Payment verification through DonutSMP still requires the server-side payment check before a key can be issued.';
       status.textContent=siteLanguage==='de'?(enToDe[msg]||msg):msg;
     }
-    if(form)form.scrollIntoView({behavior:'smooth',block:'center'});
+    if(form)form.scrollIntoView({behavior:reducedMotion.matches?'instant':'smooth',block:'center'});
   });
 });
 function refreshSleepDownload(account){
