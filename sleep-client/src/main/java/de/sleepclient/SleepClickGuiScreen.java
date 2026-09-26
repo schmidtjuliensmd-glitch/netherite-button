@@ -183,7 +183,7 @@ public final class SleepClickGuiScreen extends Screen {
         String title = query.isBlank() ? switch (selected) {
             case COMBAT -> "Kampf";
             case MOVEMENT -> "Movement";
-            case DONUT_SMP -> "DonutSMP";
+            case DONUT_SMP -> "Base Finding Tools";
             case VISUALS -> "Visuals";
             case MISC -> "Misc";
             case GUI -> "GUI";
