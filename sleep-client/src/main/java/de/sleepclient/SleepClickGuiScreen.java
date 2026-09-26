@@ -116,7 +116,7 @@ public final class SleepClickGuiScreen extends Screen {
             GuiIconArtwork.Icon icon = switch (category) {
                 case COMBAT -> GuiIconArtwork.Icon.COMBAT;
                 case MOVEMENT -> GuiIconArtwork.Icon.MOVEMENT;
-                case DONUT_SMP -> GuiIconArtwork.Icon.DONUT;
+                case DONUT_SMP -> GuiIconArtwork.Icon.BASE_FINDING;
                 case VISUALS -> GuiIconArtwork.Icon.VISUALS;
                 case MISC -> GuiIconArtwork.Icon.MISC;
                 case GUI -> GuiIconArtwork.Icon.GUI;
