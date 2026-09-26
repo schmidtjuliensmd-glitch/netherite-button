@@ -277,3 +277,186 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
   else init();
 })();
+
+
+/* Sleep Client generic payment command */
+(function sleepPurchaseCommandComponent(){
+  const PROFILE_KEY='sleep-minecraft-profile';
+  const PURCHASE_KEY='sleep-selected-purchase';
+  const PAY_TO='JulienFv';
+
+  const copyText=async value=>{
+    try{
+      await navigator.clipboard.writeText(value);
+      return true;
+    }catch{
+      try{
+        const area=document.createElement('textarea');
+        area.value=value;
+        area.style.position='fixed';
+        area.style.opacity='0';
+        document.body.appendChild(area);
+        area.select();
+        const ok=document.execCommand('copy');
+        area.remove();
+        return ok;
+      }catch{
+        return false;
+      }
+    }
+  };
+
+  const lang=()=>{
+    try{
+      const stored=localStorage.getItem('language')||localStorage.getItem('site-language')||'';
+      if(stored==='de'||stored==='en')return stored;
+    }catch{}
+    const active=document.querySelector('.lang-btn.active')?.dataset?.lang;
+    if(active==='de'||active==='en')return active;
+    return document.documentElement.lang==='de'?'de':'en';
+  };
+
+  const readProfile=()=>{
+    try{return JSON.parse(localStorage.getItem(PROFILE_KEY)||'null');}
+    catch{return null;}
+  };
+
+  const strings={
+    en:{
+      eyebrow:'PAYMENT',
+      monthly:'Monthly Access',
+      lifetime:'Lifetime Access',
+      buyer:'Minecraft account',
+      amount:'Amount',
+      instruction:'Run this payment command exactly as shown:',
+      note:'Pay from the same Minecraft account shown here. After the payment is verified, your product key can be created.',
+      copy:'Copy Command',
+      copied:'Copied!',
+      close:'Close'
+    },
+    de:{
+      eyebrow:'ZAHLUNG',
+      monthly:'Monatlicher Zugang',
+      lifetime:'Lifetime Zugang',
+      buyer:'Minecraft Account',
+      amount:'Betrag',
+      instruction:'Führe diesen Zahlungsbefehl genau so aus:',
+      note:'Bezahle mit demselben Minecraft Account, der hier angezeigt wird. Nach der Prüfung kann dein Product Key erstellt werden.',
+      copy:'Befehl kopieren',
+      copied:'Kopiert!',
+      close:'Schließen'
+    }
+  };
+
+  const createModal=()=>{
+    if(document.getElementById('sleep-payment-modal'))return;
+    const modal=document.createElement('div');
+    modal.id='sleep-payment-modal';
+    modal.className='sleep-payment-modal';
+    modal.hidden=true;
+    modal.innerHTML=`
+      <div class="sleep-payment-backdrop" data-payment-close></div>
+      <section class="sleep-payment-dialog" role="dialog" aria-modal="true" aria-labelledby="sleep-payment-title">
+        <button class="sleep-payment-x" type="button" data-payment-close aria-label="Close">×</button>
+        <div class="sleep-payment-eyebrow" id="sleep-payment-eyebrow"></div>
+        <h2 id="sleep-payment-title"></h2>
+
+        <div class="sleep-payment-info">
+          <div><span id="sleep-payment-buyer-label"></span><strong id="sleep-payment-buyer"></strong></div>
+          <div><span id="sleep-payment-amount-label"></span><strong id="sleep-payment-amount"></strong></div>
+        </div>
+
+        <p class="sleep-payment-instruction" id="sleep-payment-instruction"></p>
+
+        <div class="sleep-payment-command-row">
+          <code id="sleep-payment-command"></code>
+          <button type="button" class="sleep-payment-copy" id="sleep-payment-copy"></button>
+        </div>
+
+        <p class="sleep-payment-note" id="sleep-payment-note"></p>
+        <button type="button" class="btn btn-secondary sleep-payment-close-btn" data-payment-close id="sleep-payment-close"></button>
+      </section>`;
+    document.body.appendChild(modal);
+
+    modal.querySelectorAll('[data-payment-close]').forEach(el=>{
+      el.addEventListener('click',hideModal);
+    });
+
+    document.getElementById('sleep-payment-copy')?.addEventListener('click',async()=>{
+      const command=document.getElementById('sleep-payment-command')?.textContent||'';
+      const button=document.getElementById('sleep-payment-copy');
+      const s=strings[lang()];
+      if(!button||!command)return;
+      const ok=await copyText(command);
+      button.textContent=ok?s.copied:s.copy;
+      if(ok)setTimeout(()=>{button.textContent=strings[lang()].copy;},1400);
+    });
+  };
+
+  const hideModal=()=>{
+    const modal=document.getElementById('sleep-payment-modal');
+    if(!modal)return;
+    modal.classList.remove('is-open');
+    document.body.classList.remove('sleep-payment-open');
+    setTimeout(()=>{modal.hidden=true;},180);
+  };
+
+  const showModal=plan=>{
+    createModal();
+    const profile=readProfile();
+    const s=strings[lang()];
+    if(!profile?.username){
+      const card=document.getElementById('mc-profile-card');
+      if(card&&!card.hidden)card.click();
+      return;
+    }
+
+    const isLifetime=plan==='lifetime';
+    const amount=isLifetime?'25m':'10m';
+    const amountLabel=isLifetime?'25M':'10M';
+    const command='/pay '+PAY_TO+' '+amount;
+
+    try{
+      localStorage.setItem(PURCHASE_KEY,JSON.stringify({
+        username:profile.username,
+        plan:isLifetime?'lifetime':'monthly',
+        amount:amountLabel,
+        command,
+        selectedAt:Date.now()
+      }));
+    }catch{}
+
+    const modal=document.getElementById('sleep-payment-modal');
+    if(!modal)return;
+
+    document.getElementById('sleep-payment-eyebrow').textContent=s.eyebrow;
+    document.getElementById('sleep-payment-title').textContent=isLifetime?s.lifetime:s.monthly;
+    document.getElementById('sleep-payment-buyer-label').textContent=s.buyer;
+    document.getElementById('sleep-payment-buyer').textContent=profile.username;
+    document.getElementById('sleep-payment-amount-label').textContent=s.amount;
+    document.getElementById('sleep-payment-amount').textContent=amountLabel;
+    document.getElementById('sleep-payment-instruction').textContent=s.instruction;
+    document.getElementById('sleep-payment-command').textContent=command;
+    document.getElementById('sleep-payment-copy').textContent=s.copy;
+    document.getElementById('sleep-payment-note').textContent=s.note;
+    document.getElementById('sleep-payment-close').textContent=s.close;
+
+    modal.hidden=false;
+    document.body.classList.add('sleep-payment-open');
+    requestAnimationFrame(()=>modal.classList.add('is-open'));
+  };
+
+  document.addEventListener('click',event=>{
+    const button=event.target.closest?.('.sleep-buy-btn');
+    if(!button)return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    showModal(button.dataset.plan);
+  },true);
+
+  document.addEventListener('keydown',event=>{
+    const modal=document.getElementById('sleep-payment-modal');
+    if(event.key==='Escape'&&modal&&!modal.hidden)hideModal();
+  });
+})();
