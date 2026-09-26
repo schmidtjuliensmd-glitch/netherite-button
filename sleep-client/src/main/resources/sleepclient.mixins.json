@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "de.sleepclient.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "ScreenEffectRendererMixin",
+    "ClientLevelParticleMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
